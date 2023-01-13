@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+	font-family: 'Inter';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url('/Inter-Regular.woff2') format('woff2');
+}
+
+@layer base {
+	html {
+		font-family: 'Inter', sans-serif;
+		background-color: theme('colors.tb_background');
+	}
+}
+
+@layer components {
+	.input-base {
+		@apply px-2 h-10 rounded shadow-sm border focus:outline-cyan-500;
+	}
+
+	.btn-base {
+		@apply px-4 py-2;
+	}
+}

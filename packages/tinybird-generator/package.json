@@ -1,0 +1,30 @@
+{
+  "name": "tinybird-generator",
+  "description": "Tinybird data generator",
+  "version": "1.0.0",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist/**"
+  ],
+  "type": "module",
+  "homepage": "https://github.com/tinybirdco/mockingbird#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tinybirdco/mockingbird/packages/tinybird-generator"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "npm run build --watch"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^7.6.0",
+    "cross-fetch": "^3.1.5",
+    "zod": "^3.20.2"
+  },
+  "devDependencies": {
+    "tsup": "^6.5.0",
+    "typescript": "^4.9.4"
+  }
+}

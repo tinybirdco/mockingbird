@@ -16,6 +16,24 @@ const dataTypes: Record<TinybirdSchemaType, TinybirdDataType> = {
       return extendedFaker.datatype.number().toString();
     },
   },
+  float: {
+    tinybird_type: "float",
+    generator(params) {
+      return extendedFaker.datatype.float();
+    },
+  },
+  floatString: {
+    tinybird_type: "string",
+    generator(params) {
+      return extendedFaker.datatype.float().toString();
+    },
+  },
+  hex: {
+    tinybird_type: "string",
+    generator(params) {
+      return extendedFaker.datatype.hexadecimal();
+    },
+  },
   string: {
     tinybird_type: "string",
     generator(params) {
@@ -113,15 +131,6 @@ const dataTypes: Record<TinybirdSchemaType, TinybirdDataType> = {
     }),
     generator(params) {
       return extendedFaker.date.between(params.start, params.end).toISOString();
-    },
-  },
-  function: {
-    tinybird_type: "params.type, need to find a way to pass it",
-    params: z.object({
-      function: z.string(),
-    }),
-    generator(params) {
-      return new Function(`return ${params.function};`)()();
     },
   },
   range: {

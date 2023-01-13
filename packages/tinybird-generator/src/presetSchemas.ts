@@ -87,11 +87,7 @@ const presetSchemas = {
   },
   "Stock Prices": {
     amount: {
-      type: "function",
-      params: {
-        function:
-          "function () { return parseFloat((Math.random() * (2.12 - 0.02) + 15).toFixed(2))}",
-      },
+      type: "float",
     },
     date: {
       type: "datetime",

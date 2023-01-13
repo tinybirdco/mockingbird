@@ -86,6 +86,9 @@ Current types are:
 ```txt
 int
 intString
+float
+floatString
+hex
 string
 first_name
 last_name
@@ -97,7 +100,6 @@ values
 values_weighted
 datetime //values up to the second -> DateTime
 timestamp //values up to the millisecond -> DateTime64(3)
-function // returns a user defined function. E.g.,  "udf": {"type": "function", "params": {"function": "function () { date = new Date(); return date.toISOString()}"}}
 range //supports two params:  'params': ['start', 'end'] and returns ints between the params
 timestamp_range
 datetime_range

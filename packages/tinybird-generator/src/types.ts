@@ -3,6 +3,9 @@ import { z } from "zod";
 const ALL_SCHEMA_TYPES = [
   "int",
   "intString",
+  "float",
+  "floatString",
+  "hex",
   "string",
   "first_name",
   "last_name",
@@ -16,7 +19,6 @@ const ALL_SCHEMA_TYPES = [
   "datetime_range",
   "timestamp",
   "timestamp_range",
-  "function",
   "range",
   "bool",
   "uuid",
@@ -35,7 +37,7 @@ const ALL_SCHEMA_TYPES = [
   "semver",
 ] as const;
 
-export type TinybirdSchemaType = typeof ALL_SCHEMA_TYPES[number];
+export type TinybirdSchemaType = (typeof ALL_SCHEMA_TYPES)[number];
 
 export type TinybirdSchema = Record<
   string,

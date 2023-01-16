@@ -9,6 +9,7 @@ import {
   setConfig,
   createRowGenerator,
   sendData,
+  ALL_TINYBIRD_ENDPOINTS,
 } from "tinybird-generator";
 
 const presetSchemaNames = Object.keys(presetSchemas);
@@ -68,7 +69,9 @@ if (argv.eps < 1000) {
 }
 
 setConfig({
-  endpoint: argv.endpoint,
+  endpoint: ALL_TINYBIRD_ENDPOINTS.includes(argv.endpoint)
+    ? endpoint
+    : process.env.TB_ENDPOINT,
   datasource: argv.datasource,
   token: argv.token,
 });

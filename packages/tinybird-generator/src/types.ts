@@ -1,6 +1,10 @@
 import { z } from "zod";
 
-const ALL_SCHEMA_TYPES = [
+export const ALL_TINYBIRD_ENDPOINTS = ["eu_gcp", "us_gcp"];
+
+export type TinybirdEndpointType = (typeof ALL_TINYBIRD_ENDPOINTS)[number];
+
+export const ALL_SCHEMA_TYPES = [
   "int",
   "intString",
   "float",

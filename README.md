@@ -99,16 +99,18 @@ domain
 values
 values_weighted
 datetime //values up to the second -> DateTime
-timestamp //values up to the millisecond -> DateTime64(3)
-range //supports two params:  'params': ['start', 'end'] and returns ints between the params
-timestamp_range
 datetime_range
-uuid
+timestamp //values up to the millisecond -> DateTime64(3)
+timestamp_now //values up to the millisecond -> DateTime64(3)
+timestamp_range
+range //supports two params:  'params': ['start', 'end'] and returns ints between the params
 bool
+uuid
 browser_name
 browser_engine_name
 city_name
 country_code_iso2
+country_code_iso3
 operating_system
 search_engine
 lat_or_lon_string

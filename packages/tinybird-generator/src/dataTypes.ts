@@ -123,6 +123,13 @@ const dataTypes: Record<TinybirdSchemaType, TinybirdDataType> = {
       return faker.date.recent().toISOString();
     },
   },
+  timestamp_now: {
+    tinybird_type: "DateTime64(3)",
+    generator() {
+      const current_date = new Date()
+      return current_date.toISOString()
+    },
+  },
   timestamp_range: {
     tinybird_type: "DateTime64(3)",
     params: z.object({

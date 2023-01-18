@@ -22,6 +22,7 @@ export const ALL_SCHEMA_TYPES = [
   "datetime",
   "datetime_range",
   "timestamp",
+  "timestamp_now",
   "timestamp_range",
   "range",
   "bool",

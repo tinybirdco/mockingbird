@@ -1,10 +1,12 @@
-# Tinybird Data Generator
+# Mockingbird
 
-## Description
+Mockingbird is dummy-data generator built by [Tinybird](https://tinybird.co).
 
-The Tinybird Data Generator is a tool for generating fake data and sending it to Tinybird via the [Events API](https://www.tinybird.co/docs/guides/ingest-from-the-events-api.html).
+Mockingbird can be used as a package in other projects, or on its own via the UI or CLI.
 
-Go to [https://data-generator-v2-tinybird.vercel.app/](https://data-generator-v2-tinybird.vercel.app/)
+Data is generted in NDJSON format, and pushed to an HTTP endpoint. You can use it to send data to Tinybird via the [Tinybird Events API](https://www.tinybird.co/docs/guides/ingest-from-the-events-api.html).
+
+Go to [https://mockingbird.tinybird.co/](https://mockingbird.tinybird.co/)
 or alternatively run it [locally](#local-install) on your machine.
 
 ![Generator UI!](/readme/img/ui.png "Generator UI")
@@ -15,7 +17,7 @@ To run the generator locally, first install Node.js (developed using v18 lts/hyd
 
 Then:
 
-1. Clone this monorepo: `git clone https://github.com/tinybirdco/data_generator_2.git`
+1. Clone this monorepo: `git clone https://github.com/tinybirdco/mockingbird.git`
 2. Install dependencies with npm: `npm install`
 
 Repository has the following structure:

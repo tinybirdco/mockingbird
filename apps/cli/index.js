@@ -70,7 +70,7 @@ if (argv.eps < 1000) {
 
 setConfig({
   endpoint: ALL_TINYBIRD_ENDPOINTS.includes(argv.endpoint)
-    ? endpoint
+    ? argv.endpoint
     : process.env.TB_ENDPOINT,
   datasource: argv.datasource,
   token: argv.token,

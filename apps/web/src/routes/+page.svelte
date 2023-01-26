@@ -6,7 +6,7 @@
 	import {
 		presetSchemas,
 		validateSchema,
-		validateConfig,
+		initializeGenerator,
 		createRowGenerator
 	} from 'tinybird-generator';
 	import { create_worker, init_worker, stop_worker, start_worker } from '../lib/worker_builder';
@@ -67,7 +67,7 @@
 		let eps = parseInt(url_params.get('eps') ?? '1');
 		const worker_params = { datasource, endpoint, token, eps };
 
-		if (schema && validateConfig({ datasource, endpoint, token }) && is_saved) {
+		if (schema && initializeGenerator({ datasource, endpoint, token }, true) && is_saved) {
 			is_generating = true;
 			messages_sent_session = 0;
 			worker = create_worker(generator_worker_callback);

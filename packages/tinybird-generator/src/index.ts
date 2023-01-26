@@ -1,5 +1,7 @@
+export * from "./config";
 export { default as createRowGenerator } from "./createRowGenerator";
 export { default as dataTypes } from "./dataTypes";
+export { default as generate } from "./generate";
 export { default as presetSchemas } from "./presetSchemas";
 export * from "./tinybirdAPI";
 export * from "./types";

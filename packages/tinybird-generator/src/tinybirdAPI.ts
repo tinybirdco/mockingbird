@@ -1,5 +1,5 @@
 import fetch from "cross-fetch";
-import { z } from "zod";
+import { config } from "./config";
 import { ALL_TINYBIRD_ENDPOINTS, TinybirdEndpointType } from "./types";
 
 const endpoints: Record<TinybirdEndpointType, string> = {
@@ -9,37 +9,17 @@ const endpoints: Record<TinybirdEndpointType, string> = {
 
 const events_path = "/v0/events";
 
-const configSchema = z.object({
-  endpoint: z.string(),
-  datasource: z.string(),
-  token: z.string(),
-});
-
-type TinybirdConfig = z.infer<typeof configSchema>;
-
-let config: TinybirdConfig;
-
-export function validateConfig(cfg: Record<string, unknown>) {
-  return configSchema.parse(cfg);
-}
-
-export function setConfig(cfg: Record<string, unknown>) {
-  config = validateConfig(cfg);
-}
-
 export async function sendData(data: object[]) {
-  const { endpoint, datasource, token } = config;
-
-  const params = { name: datasource };
-  const endpointURL = ALL_TINYBIRD_ENDPOINTS.includes(endpoint)
-    ? endpoints[endpoint as TinybirdEndpointType]
-    : endpoint;
+  const params = { name: config.datasource };
+  const endpointURL = ALL_TINYBIRD_ENDPOINTS.includes(config.endpoint)
+    ? endpoints[config.endpoint as TinybirdEndpointType]
+    : config.endpoint;
   const url = new URL(`${endpointURL}${events_path}`);
   Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v));
 
   return fetch(url, {
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${config.token}`,
     },
     method: "POST",
     body: data.map((d) => JSON.stringify(d)).join("\n"),

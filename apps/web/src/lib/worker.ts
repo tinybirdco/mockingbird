@@ -1,5 +1,5 @@
 import type { TinybirdRowGenerator } from 'tinybird-generator';
-import { createRowGenerator, setConfig, sendData } from 'tinybird-generator';
+import { createRowGenerator, initializeGenerator, sendData } from 'tinybird-generator';
 
 let rowGenerator: TinybirdRowGenerator;
 const rows: object[] = [];
@@ -23,7 +23,7 @@ onmessage = async function (e) {
 				batch_size = eps / max_batches_per_second;
 				delay_per_batch = min_delay_per_batch;
 			}
-			setConfig({
+			initializeGenerator({
 				endpoint: e.data.config.endpoint,
 				datasource: e.data.config.datasource,
 				token: e.data.config.token

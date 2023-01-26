@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { validateConfig } from 'tinybird-generator';
+	import { initializeGenerator } from 'tinybird-generator';
 	import Modal from '../components/Modal.svelte';
 
 	export let on_close: () => void;
@@ -19,7 +19,7 @@
 	let error = '';
 
 	function handle_submit() {
-		if (validateConfig({ datasource, endpoint, token })) {
+		if (initializeGenerator({ datasource, endpoint, token }, true)) {
 			const url_params = new URLSearchParams(window.location.search);
 			url_params.set('host', endpoint.toString());
 			url_params.set('token', token.toString());

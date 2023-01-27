@@ -9,7 +9,7 @@
 ## Installing
 
 ```bash
-$ npm install axios
+$ npm install @tinybirdco/data-generator
 ```
 
 ## Usage

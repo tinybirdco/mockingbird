@@ -5,11 +5,9 @@ import yargs from "yargs/yargs";
 import { hideBin } from "yargs/helpers";
 import {
   presetSchemas,
-  validateSchema,
-  setConfig,
-  createRowGenerator,
-  sendData,
+  initializeGenerator,
   ALL_TINYBIRD_ENDPOINTS,
+  generate,
 } from "tinybird-generator";
 
 const presetSchemaNames = Object.keys(presetSchemas);
@@ -54,51 +52,15 @@ const schema = argv.schema
   ? JSON.parse(fs.readFileSync(argv.schema, "utf8"))
   : presetSchemas[argv.template];
 
-if (!validateSchema(schema).valid) throw new Error("Invalid schema");
-
-const min_delay_per_batch = 200;
-const max_batches_per_second = 1000 / min_delay_per_batch;
-
-let batch_size, delay_per_batch;
-if (argv.eps < 1000) {
-  batch_size = argv.eps;
-  delay_per_batch = 1000;
-} else {
-  batch_size = argv.eps / max_batches_per_second;
-  delay_per_batch = min_delay_per_batch;
-}
-
-setConfig({
+initializeGenerator({
+  schema,
   endpoint: ALL_TINYBIRD_ENDPOINTS.includes(argv.endpoint)
     ? argv.endpoint
     : process.env.TB_ENDPOINT,
   datasource: argv.datasource,
   token: argv.token,
+  eps: argv.eps,
+  limit: argv.limit,
 });
 
-const rowGenerator = createRowGenerator(schema),
-  rows = [];
-
-let limit = argv.limit,
-  sent_rows = 0;
-
-while (true) {
-  rows.push(rowGenerator.generate());
-  if (rows.length >= batch_size) {
-    const data = rows.splice(0, batch_size);
-
-    try {
-      await sendData(data);
-    } catch (ex) {
-      console.log(`ERR > ${ex}.`);
-      break;
-    }
-
-    sent_rows += data.length;
-    console.log(`INFO> ${sent_rows} rows sent so far...`);
-
-    if (limit != -1 && sent_rows >= limit) break;
-
-    await new Promise((r) => setTimeout(r, delay_per_batch));
-  }
-}
+await generate();

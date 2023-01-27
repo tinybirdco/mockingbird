@@ -1,5 +1,5 @@
 {
-  "name": "tinybird-generator",
+  "name": "@tinybirdco/data-generator",
   "description": "Tinybird data generator",
   "version": "1.0.0",
   "main": "./dist/index.js",
@@ -7,6 +7,11 @@
   "types": "./dist/index.d.ts",
   "files": [
     "dist/**"
+  ],
+  "keywords": [
+    "tinybird",
+    "data",
+    "generator"
   ],
   "type": "module",
   "homepage": "https://github.com/tinybirdco/mockingbird#readme",

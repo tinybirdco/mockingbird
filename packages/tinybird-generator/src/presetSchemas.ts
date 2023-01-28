@@ -287,6 +287,12 @@ const presetSchemas = {
     },
   },
   "Log Analytics Starter Kit": {
+    acceptcharset: {
+      type: "values",
+      params: {
+        values: ["unknown"],
+      },
+    },
     acceptencoding: {
       type: "values",
       params: {

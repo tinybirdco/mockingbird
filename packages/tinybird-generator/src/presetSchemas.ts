@@ -329,6 +329,18 @@ const presetSchemas = {
         values: ["Keep-Alive"],
       },
     },
+    contentlength: {
+      type: "values",
+      params: {
+        values: ["unknown"],
+      },
+    },
+    contenttype: {
+      type: "values",
+      params: {
+        values: ["unknown"],
+      },
+    },
     country: {
       type: "country_code_iso2",
     },
@@ -367,6 +379,12 @@ const presetSchemas = {
     },
     event_ts: {
       type: "timestamp",
+    },
+    from: {
+      type: "values",
+      params: {
+        values: ["unknown"],
+      },
     },
     headers: {
       type: "values",
@@ -519,6 +537,12 @@ const presetSchemas = {
     method: {
       type: "http_method",
     },
+    origin: {
+      type: "values",
+      params: {
+        values: ["unknown"],
+      },
+    },
     osname: {
       type: "operating_system",
     },
@@ -530,6 +554,9 @@ const presetSchemas = {
       params: {
         values: ["https"],
       },
+    },
+    referer: {
+      type: "search_engine",
     },
     region: {
       type: "country_code_iso3",
@@ -550,6 +577,12 @@ const presetSchemas = {
     },
     useragent: {
       type: "user_agent",
+    },
+    via: {
+      type: "values",
+      params: {
+        values: ["unknown"],
+      },
     },
     xforwaredforip: {
       type: "values",
@@ -656,33 +689,6 @@ const presetSchemas = {
           "198.205.143.144",
           "89.219.76.53",
         ],
-      },
-    },
-    origin: {
-      type: "values",
-      params: {
-        values: ["unknown"],
-      },
-    },
-    referer: {
-      type: "search_engine",
-    },
-    contenttype: {
-      type: "values",
-      params: {
-        values: ["unknown"],
-      },
-    },
-    from: {
-      type: "values",
-      params: {
-        values: ["unknown"],
-      },
-    },
-    via: {
-      type: "values",
-      params: {
-        values: ["unknown"],
       },
     },
   },

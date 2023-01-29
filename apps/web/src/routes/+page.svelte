@@ -2,12 +2,13 @@
 	import { onMount } from 'svelte';
 	import Prism from 'prismjs';
 	import 'prismjs/components/prism-json';
-	import type { TinybirdRowGenerator, TinybirdSchema } from 'tinybird-generator';
 	import {
 		presetSchemas,
 		validateSchema,
 		initializeGenerator,
-		createRowGenerator
+		createRowGenerator,
+		type TinybirdRowGenerator,
+		type TinybirdSchema
 	} from 'tinybird-generator';
 	import { create_worker, stop_worker, start_worker } from '../lib/worker_builder';
 	import { decompress_JSON, compress_JSON } from '../lib/helpers';

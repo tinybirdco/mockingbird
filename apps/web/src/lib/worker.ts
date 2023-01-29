@@ -1,5 +1,4 @@
-import { generate } from 'tinybird-generator';
-import { initializeGenerator } from 'tinybird-generator';
+import { initializeGenerator, generate } from 'tinybird-generator';
 
 onmessage = async function (e) {
 	if ('init' in e.data) {

@@ -1,4 +1,6 @@
 import { z } from "zod";
+import presetSchemas from "./presetSchemas";
+import validateSchema from "./validateSchema";
 
 export const ALL_TINYBIRD_ENDPOINTS = ["eu_gcp", "us_gcp"];
 
@@ -44,10 +46,28 @@ export const ALL_SCHEMA_TYPES = [
 
 export type TinybirdSchemaType = (typeof ALL_SCHEMA_TYPES)[number];
 
-export type TinybirdSchema = Record<
-  string,
-  { type: TinybirdSchemaType; params: z.AnyZodObject }
->;
+export const schemaSchema = z.record(
+  z.object({
+    type: z.string().refine((t) => [...ALL_SCHEMA_TYPES].includes(t as any)),
+    params: z.any(),
+  })
+);
+
+export const configSchema = z.object({
+  schema: schemaSchema
+    .optional()
+    .default(presetSchemas["Web Analytics Starter Kit"])
+    .refine(validateSchema),
+  endpoint: z.string(),
+  datasource: z.string(),
+  token: z.string(),
+  eps: z.number().optional().default(1),
+  limit: z.number().optional().default(-1),
+});
+
+export type TinybirdConfig = z.infer<typeof configSchema>;
+
+export type TinybirdSchema = z.infer<typeof schemaSchema>;
 
 export interface TinybirdDataType {
   tinybird_type: string;

@@ -9,7 +9,7 @@
 		initializeGenerator,
 		createRowGenerator
 	} from 'tinybird-generator';
-	import { create_worker, init_worker, stop_worker, start_worker } from '../lib/worker_builder';
+	import { create_worker, stop_worker, start_worker } from '../lib/worker_builder';
 	import { decompress_JSON, compress_JSON } from '../lib/helpers';
 
 	const url_params = new URLSearchParams(
@@ -52,12 +52,9 @@
 		}
 	});
 
-	function generator_worker_callback(message: number) {
-		messages_sent_session += message;
-		messages_sent_total += message;
-	}
-
 	function start_generating() {
+		if (!schema) return;
+
 		const url_params = new URLSearchParams(
 			typeof window !== 'undefined' ? window.location.search : ''
 		);
@@ -65,14 +62,25 @@
 		let token = url_params.get('token') || '';
 		let datasource = url_params.get('datasource') || '';
 		let eps = parseInt(url_params.get('eps') ?? '1');
-		const worker_params = { datasource, endpoint, token, eps };
+		const worker_params = { schema, datasource, endpoint, token, eps, limit: -1 };
 
 		if (schema && initializeGenerator({ datasource, endpoint, token }, true) && is_saved) {
+			worker = create_worker(
+				worker_params,
+				({ data }: MessageEvent<number>) => {
+					messages_sent_session += data;
+					messages_sent_total += data;
+				},
+				(e) => {
+					console.log(e);
+				}
+			);
+
+			if (!worker) return;
+
+			start_worker(worker);
 			is_generating = true;
 			messages_sent_session = 0;
-			worker = create_worker(generator_worker_callback);
-			init_worker(worker, schema, worker_params);
-			start_worker(worker);
 		}
 	}
 
@@ -80,9 +88,9 @@
 	function stop_generating() {
 		if (!worker) return;
 
-		is_generating = false;
 		stop_worker(worker);
 		worker = undefined;
+		is_generating = false;
 	}
 
 	const on_template_change = (e: Event) => {

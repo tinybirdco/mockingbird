@@ -9,13 +9,13 @@
 ## Installing
 
 ```bash
-$ npm install @tinybirdco/data-generator
+$ npm install @tinybirdco/mockingbird
 ```
 
 ## Usage
 
 ```js
-import { initializeGenerator, generate } from "tinybird-generator";
+import { initializeGenerator, generate } from "@tinybirdco/mockingbird";
 
 initializeGenerator({
   schema: z
@@ -36,7 +36,7 @@ await generate();
 ### Preset schemas
 
 ```js
-import { presetSchemas } from "tinybird-generator";
+import { presetSchemas } from "@tinybirdco/mockingbird";
 
 const schema = presetSchemas["Web Analytics Starter Kit"];
 

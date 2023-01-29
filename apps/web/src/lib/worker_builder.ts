@@ -1,34 +1,27 @@
-import type { TinybirdSchema } from 'tinybird-generator';
+import type { TinybirdConfig } from 'tinybird-generator';
 
-export function create_worker(callback?: (message: number) => void) {
-	const worker = new Worker(new URL('$lib/worker.ts', import.meta.url), {
-		type: 'module'
+export function create_worker(
+	config: TinybirdConfig,
+	onMessage?: (message: MessageEvent<number>) => void,
+	onError?: (e: ErrorEvent) => void
+) {
+	if (!window.Worker) return undefined;
+
+	const worker = new Worker(new URL('$lib/worker.ts', import.meta.url), { type: 'module' });
+
+	if (onMessage) worker.onmessage = onMessage;
+	if (onError) worker.onerror = onError;
+
+	worker.postMessage({
+		init: config.schema,
+		config: config
 	});
-
-	if (window.Worker) {
-		worker.onmessage = function (e) {
-			if (callback) callback(e.data);
-		};
-
-		worker.onerror = function (event) {
-			console.log(event);
-		};
-	}
 
 	return worker;
 }
 
-export function init_worker(worker: Worker, schema: TinybirdSchema, config: object) {
-	const data = {
-		init: schema,
-		config: config
-	};
-	worker.postMessage(data);
-}
-
 export function start_worker(worker: Worker) {
-	const data = {};
-	worker.postMessage(data);
+	worker.postMessage({});
 }
 
 export function stop_worker(worker: Worker) {

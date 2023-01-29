@@ -2,7 +2,11 @@ import { config } from "./config";
 import createRowGenerator from "./createRowGenerator";
 import { sendData } from "./tinybirdAPI";
 
-export default async function generate() {
+export default async function generate(
+  onMessage?: (data: Record<string, unknown>[]) => void
+) {
+  if (!config) return;
+
   const minDelayPerBatch = 200;
   const maxBatchesPerSecond = 1000 / minDelayPerBatch;
 
@@ -28,6 +32,7 @@ export default async function generate() {
 
       try {
         await sendData(data);
+        if (onMessage) onMessage(data);
       } catch (ex) {
         console.log(`ERR > ${ex}.`);
         break;

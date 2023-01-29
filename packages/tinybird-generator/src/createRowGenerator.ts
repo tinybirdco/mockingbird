@@ -1,5 +1,5 @@
 import dataTypes from "./dataTypes";
-import { TinybirdRowGenerator, TinybirdSchema } from "./types";
+import { TinybirdRowGenerator, TinybirdSchema, TinybirdSchemaType } from "./types";
 
 export default function createRowGenerator(
   schema: TinybirdSchema
@@ -8,7 +8,7 @@ export default function createRowGenerator(
     (acc, [key, value]) => ({
       ...acc,
       [key]: {
-        generator: dataTypes[value.type].generator,
+        generator: dataTypes[value.type as TinybirdSchemaType].generator,
         params: value.params ?? {},
       },
     }),

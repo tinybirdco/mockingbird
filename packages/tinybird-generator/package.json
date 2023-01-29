@@ -1,5 +1,5 @@
 {
-  "name": "@tinybirdco/data-generator",
+  "name": "@tinybirdco/mockingbird",
   "description": "Tinybird data generator",
   "version": "1.0.0",
   "main": "./dist/index.js",

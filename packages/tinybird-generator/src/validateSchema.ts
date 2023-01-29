@@ -1,5 +1,5 @@
 import dataTypes from "./dataTypes";
-import { TinybirdSchema } from "./types";
+import { TinybirdSchema, TinybirdSchemaType } from "./types";
 
 export default function validateSchema(schema: TinybirdSchema) {
   const errors = [];
@@ -12,9 +12,11 @@ export default function validateSchema(schema: TinybirdSchema) {
       errors.push("Invalid type: " + type + " for item: " + key);
     } else {
       // The type was recognised, validate provided parameters (if required)
-      if ("params" in dataTypes[type]) {
+      if ("params" in dataTypes[type as TinybirdSchemaType]) {
         const provided_params = schema[key].params;
-        const validity = dataTypes[type].params?.safeParse(provided_params) ?? {
+        const validity = dataTypes[
+          type as TinybirdSchemaType
+        ].params?.safeParse(provided_params) ?? {
           success: true,
         };
 

@@ -1,5 +1,5 @@
 {
-  "name": "tinybird-generator-cli",
+  "name": "@tinybirdco/mockingbird-cli",
   "description": "CLI for tinybird data generator",
   "version": "1.0.0",
   "main": "index.js",
@@ -7,6 +7,12 @@
   "scripts": {
     "start": "node index.js"
   },
+  "keywords": [
+    "tinybird",
+    "data",
+    "generator",
+    "cli"
+  ],
   "type": "module",
   "homepage": "https://github.com/tinybirdco/mockingbird#readme",
   "repository": {

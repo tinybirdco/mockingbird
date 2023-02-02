@@ -8,7 +8,7 @@ import {
   initializeGenerator,
   ALL_TINYBIRD_ENDPOINTS,
   generate,
-} from "tinybird-generator";
+} from "@tinybirdco/mockingbird";
 
 const presetSchemaNames = Object.keys(presetSchemas);
 

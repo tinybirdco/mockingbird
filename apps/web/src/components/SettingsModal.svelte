@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { initializeGenerator } from 'tinybird-generator';
+	import { initializeGenerator } from '@tinybirdco/mockingbird';
 	import Modal from '../components/Modal.svelte';
 
 	export let on_close: () => void;

@@ -3,7 +3,8 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
-    "lint": "turbo run lint"
+    "lint": "turbo run lint",
+    "postinstall": "cd packages/tinybird-generator && npm link && cd ../../apps/cli && npm link @tinybirdco/mockingbird && cd ../web && npm link @tinybirdco/mockingbird"
   },
   "devDependencies": {
     "turbo": "latest"

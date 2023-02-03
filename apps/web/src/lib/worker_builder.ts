@@ -1,4 +1,4 @@
-import type { TinybirdConfig } from 'tinybird-generator';
+import type { TinybirdConfig } from '@tinybirdco/mockingbird';
 
 export function create_worker(
 	config: TinybirdConfig,

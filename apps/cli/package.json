@@ -14,13 +14,16 @@
     "cli"
   ],
   "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
   "homepage": "https://github.com/tinybirdco/mockingbird#readme",
   "repository": {
     "type": "git",
     "url": "https://github.com/tinybirdco/mockingbird/apps/cli"
   },
   "dependencies": {
-    "tinybird-generator": "*",
+    "@tinybirdco/mockingbird": "^1.0.2",
     "yargs": "^17.6.2"
   }
 }

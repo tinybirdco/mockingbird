@@ -9,7 +9,7 @@
 		createRowGenerator,
 		type TinybirdRowGenerator,
 		type TinybirdSchema
-	} from 'tinybird-generator';
+	} from '@tinybirdco/mockingbird';
 	import { create_worker, stop_worker, start_worker } from '../lib/worker_builder';
 	import { decompress_JSON, compress_JSON } from '../lib/helpers';
 

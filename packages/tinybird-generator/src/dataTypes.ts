@@ -117,6 +117,12 @@ const dataTypes: Record<TinybirdSchemaType, TinybirdDataType> = {
         .slice(0, 19);
     },
   },
+  datetime_lasthour: {
+    tinybird_type: "DateTime",
+    generator() {
+      return faker.date.recent(1 / 24).toISOString().slice(0, 19);
+    },
+  },
   timestamp: {
     tinybird_type: "DateTime64(3)",
     generator() {
@@ -138,6 +144,12 @@ const dataTypes: Record<TinybirdSchemaType, TinybirdDataType> = {
     }),
     generator(params) {
       return extendedFaker.date.between(params.start, params.end).toISOString();
+    },
+  },
+  timestamp_lasthour: {
+    tinybird_type: "DateTime64(3)",
+    generator() {
+      return faker.date.recent(1 / 24).toISOString();
     },
   },
   range: {

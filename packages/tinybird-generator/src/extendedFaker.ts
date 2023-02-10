@@ -24,7 +24,6 @@ const browserModule = {
       "https://www.bing.com/",
       "https://duckduckgo.com/",
       "https://yandex.com/",
-      "https://yahoo.com",
     ];
     return faker.helpers.arrayElement(searchEngines);
   },

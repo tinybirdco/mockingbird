@@ -24,7 +24,13 @@ export async function sendData(data: object[]) {
     method: "POST",
     body: data.map((d) => JSON.stringify(d)).join("\n"),
   })
-    .then((res) => res.json())
+    .then((res) => {
+      const contentType = res.headers.get('Content-Type')
+      if (contentType && contentType.toLowerCase().indexOf('text') > -1) {
+        return res.text()
+      }
+      return res.json()
+    })
     .then(console.log)
-    .catch(console.log);
+    .catch(console.error);
 }

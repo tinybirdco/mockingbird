@@ -1,40 +1,32 @@
 {
-  "name": "tinybird-generator-web",
-  "version": "1.0.0",
+  "name": "web",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "dev": "vite dev --port 3000 --open",
-    "build": "vite build",
-    "package": "vite package",
-    "preview": "vite preview",
-    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-    "lint": "prettier --plugin-search-dir . --check . && eslint .",
-    "format": "prettier --plugin-search-dir . --write ."
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
-    "@tinybirdco/mockingbird": "^1.0.2",
+    "@headlessui/react": "^1.7.13",
+    "@tinybirdco/mockingbird": "^1.0.4",
+    "@types/node": "18.15.10",
+    "@types/react": "18.0.30",
+    "@types/react-dom": "18.0.11",
+    "eslint": "8.36.0",
+    "eslint-config-next": "13.2.4",
     "jsoncrush": "^1.1.8",
-    "prismjs": "^1.29.0"
+    "next": "13.2.4",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "typescript": "5.0.2"
   },
   "devDependencies": {
-    "@sveltejs/adapter-auto": "^2.0.0",
-    "@sveltejs/kit": "^1.5.0",
-    "@types/prismjs": "^1.26.0",
-    "@typescript-eslint/eslint-plugin": "^5.45.0",
-    "@typescript-eslint/parser": "^5.45.0",
-    "autoprefixer": "^10.4.13",
-    "eslint": "^8.28.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-svelte3": "^4.0.0",
-    "postcss": "^8.4.20",
-    "prettier": "^2.8.0",
-    "prettier-plugin-svelte": "^2.8.1",
-    "svelte": "^3.54.0",
-    "svelte-check": "^2.9.2",
-    "tailwindcss": "^3.2.4",
-    "tslib": "^2.4.1",
-    "typescript": "^4.9.3",
-    "vite": "^4.0.0"
-  },
-  "type": "module"
+    "autoprefixer": "^10.4.14",
+    "eslint-config-prettier": "^8.8.0",
+    "postcss": "^8.4.21",
+    "prettier": "^2.8.7",
+    "tailwindcss": "^3.2.7"
+  }
 }

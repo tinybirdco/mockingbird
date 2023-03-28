@@ -1,5 +1,9 @@
+import Head from 'next/head'
+import { useRouter } from 'next/router'
+import { ChangeEvent, useEffect, useState } from 'react'
+
 import Layout from '@/components/Layout'
-import { decompressJSON, compressJSON } from '@/lib/helpers'
+import { compressJSON, decompressJSON } from '@/lib/helpers'
 import { cx } from '@/lib/utils'
 import { createWorker, startWorker, stopWorker } from '@/lib/workerBuilder'
 import {
@@ -9,9 +13,6 @@ import {
   TinybirdSchema,
   validateSchema,
 } from '@tinybirdco/mockingbird'
-import Head from 'next/head'
-import { useRouter } from 'next/router'
-import { ChangeEvent, useEffect, useState } from 'react'
 
 export default function Home() {
   const router = useRouter()

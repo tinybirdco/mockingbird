@@ -1,7 +1,8 @@
+import { useRouter } from 'next/router'
 import { FormEvent, useState } from 'react'
+
 import Modal from '@/components/Modal'
 import { initializeGenerator } from '@tinybirdco/mockingbird'
-import { useRouter } from 'next/router'
 
 type SettingsModalProps = {
   isOpen: boolean

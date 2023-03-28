@@ -1,5 +1,6 @@
-import SettingsModal from '@/components/SettingsModal'
 import { useState } from 'react'
+
+import SettingsModal from '@/components/SettingsModal'
 
 type LayoutProps = {
   children: React.ReactNode

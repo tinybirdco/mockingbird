@@ -1,5 +1,6 @@
-import { Dialog } from '@headlessui/react'
 import { forwardRef, HTMLAttributes } from 'react'
+
+import { Dialog } from '@headlessui/react'
 
 import { cx } from '../lib/utils'
 

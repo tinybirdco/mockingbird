@@ -20,7 +20,8 @@
     "next": "13.2.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "typescript": "5.0.2"
+    "typescript": "5.0.2",
+    "vanilla-jsoneditor": "^0.16.1"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.14",

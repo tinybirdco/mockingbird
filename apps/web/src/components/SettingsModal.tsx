@@ -100,7 +100,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
 
           <button
             type="submit"
-            className="btn-base bg-tb_emerald text-white col-span-2"
+            className="btn-base bg-tb-primary text-white col-span-2"
           >
             Save
           </button>

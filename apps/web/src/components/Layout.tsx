@@ -20,14 +20,14 @@ export default function Layout({ children }: LayoutProps) {
         </a>
 
         <button
-          className="btn-base bg-tb-primary text-white"
+          className="text-white btn-base bg-tb-primary hover:scale-105"
           onClick={() => setIsSettingsModalOpen(true)}
         >
           Tinybird Settings
         </button>
       </nav>
 
-      <main className="px-4 md:px-12 max-w-5xl mx-auto">{children}</main>
+      <main className="max-w-5xl px-4 mx-auto md:px-12">{children}</main>
 
       <SettingsModal
         isOpen={isSetttingsModalOpen}

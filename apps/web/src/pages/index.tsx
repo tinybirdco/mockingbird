@@ -64,7 +64,7 @@ export default function Home() {
 
         <button
           className={cx(
-            'btn-base w-full bg-tb-primary text-white',
+            'btn-base w-full bg-tb-primary text-white hover:scale-105',
             !isSaved && 'bg-opacity-40 cursor-not-allowed'
           )}
           disabled={!isSaved}

@@ -136,7 +136,7 @@ export default function Editor({
             onClick={onSchemaSave}
           >
             <span>{isSaved ? 'Saved' : 'Save'}</span>
-            <CheckmarkIcon />
+            {isSaved && <CheckmarkIcon />}
           </button>
         </div>
       </div>

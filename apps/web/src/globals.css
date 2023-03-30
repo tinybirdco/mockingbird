@@ -2,19 +2,42 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --jse-theme-color: theme('colors.tb-primary') !important;
+  --jse-main-border: 1px solid #d6d4df !important;
+}
+
 @layer base {
-	html {
-		font-family: 'Inter', sans-serif;
-		background-color: theme('colors.tb_background');
-	}
+  html {
+    font-family: 'Inter', sans-serif;
+    background-color: theme('colors.tb-body');
+    color: theme('colors.tb-text');
+  }
 }
 
 @layer components {
-	.input-base {
-		@apply px-2 h-10 rounded shadow-sm border focus:outline-cyan-500;
-	}
+  .input-base {
+    @apply px-2 h-10 rounded shadow-sm border focus:outline-cyan-500;
+  }
 
-	.btn-base {
-		@apply px-4 py-2;
-	}
+  .btn-base {
+    @apply px-4 py-2;
+  }
+
+  .card {
+    background: white;
+    border: 1px solid rgba(48, 40, 96, 0.2);
+    box-shadow: 0px 1px 4px rgba(11, 19, 36, 0.1),
+      inset 0px -0.888689px 0px rgba(0, 0, 0, 0.1);
+    border-radius: 14.219px;
+    @apply p-4 md:p-9;
+  }
+
+  .preview {
+    background: theme('colors.tb-body2');
+    border: 0.8px solid rgba(48, 40, 96, 0.2);
+    box-shadow: inset 0px -0.9px 0px rgba(0, 0, 0, 0.1);
+    border-radius: 6px;
+    @apply h-[326px] overflow-y-auto p-4 whitespace-pre-wrap text-tb-text1;
+  }
 }

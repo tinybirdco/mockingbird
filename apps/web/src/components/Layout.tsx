@@ -12,22 +12,22 @@ export default function Layout({ children }: LayoutProps) {
   return (
     <>
       <nav
-        className="flex justify-between min-h-[3.25rem] px-3 py-2 shadow-sm"
+        className="flex items-center justify-between px-6 py-4"
         aria-label="main navigation"
       >
-        <a href="https://tinybird.co">
+        <a href="https://tinybird.co" rel="noopener noreferrer" target="_blank">
           <img src="/logo.svg" alt="Tinybird" width="112" height="28" />
         </a>
 
         <button
-          className="btn-base bg-tb_emerald text-white"
+          className="text-white btn-base bg-tb-primary hover:scale-105"
           onClick={() => setIsSettingsModalOpen(true)}
         >
           Tinybird Settings
         </button>
       </nav>
 
-      <main className="p-4 max-w-7xl mx-auto">{children}</main>
+      <main className="max-w-5xl px-4 mx-auto md:px-12">{children}</main>
 
       <SettingsModal
         isOpen={isSetttingsModalOpen}

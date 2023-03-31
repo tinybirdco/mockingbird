@@ -2,7 +2,7 @@ import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { Content, JSONContent } from 'vanilla-jsoneditor'
-
+import _isEqual from 'lodash.isequal'
 import { CheckmarkIcon } from '@/components/Icons'
 import { compressJSON, decompressJSON } from '@/lib/helpers'
 import { cx } from '@/lib/utils'
@@ -18,22 +18,19 @@ const JSONEditor = dynamic(() => import('@/components/JSONEditor'), {
   ssr: false,
 })
 
+const TEMPLATE_OPTIONS = [...Object.keys(presetSchemas), 'Custom']
+
 type PresetTemplate = keyof typeof presetSchemas & string
 
 type EditorProps = {
   onSchemaChange: (schema: TinybirdSchema) => void
   isSaved: boolean
-  onIsSavedChange: (isSaved: boolean) => void
 }
 
-export default function Editor({
-  onSchemaChange,
-  isSaved,
-  onIsSavedChange,
-}: EditorProps) {
+export default function Editor({ onSchemaChange, isSaved }: EditorProps) {
   const router = useRouter()
   const [validationErrors, setValidationErrors] = useState<string[]>([])
-  const [template, setTemplate] = useState<PresetTemplate | ''>('')
+  const [template, setTemplate] = useState<PresetTemplate | 'Custom'>('Custom')
   const [content, setContent] = useState<Content>({
     json: '',
   })
@@ -47,31 +44,31 @@ export default function Editor({
 
     if (template && template in presetSchemas) {
       onTemplateChange(template as PresetTemplate)
-    } else if (schema) {
+    } else if (schema && schema !== 'Preset') {
       const json = JSON.parse(decompressJSON(schema))
       setContent({ json })
     } else {
       onTemplateChange('Default')
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router.isReady, router.query.template, router.query.schema])
+  }, [router.isReady])
 
   const onContentChange = (newContent: Content) => {
+    if (
+      template !== 'Custom' &&
+      !_isEqual((newContent as JSONContent).json, presetSchemas[template])
+    ) {
+      setTemplate('Custom')
+    }
+
     setContent(newContent)
-    onIsSavedChange(false)
+    onSchemaChange({})
   }
 
   const onTemplateChange = (newTemplate: PresetTemplate) => {
-    const newContent = presetSchemas[newTemplate]
-    const urlParams = new URLSearchParams({
-      ...router.query,
-      template: newTemplate,
-    })
-    router.push(`?${urlParams}`)
-
     setTemplate(newTemplate)
-    setContent({ json: newContent })
-    onIsSavedChange(false)
+    setContent({ json: presetSchemas[newTemplate] })
+    onSchemaChange({})
   }
 
   const onSchemaSave = () => {
@@ -82,28 +79,27 @@ export default function Editor({
 
       if (schema && validation.valid) {
         setValidationErrors([])
-        const rowGenerator = createRowGenerator(schema)
-        setSampleCode(JSON.stringify(rowGenerator.generate(), null, 4))
+        setSampleCode(
+          JSON.stringify(createRowGenerator(schema).generate(), null, 4)
+        )
 
-        if (
-          template !== '' &&
-          JSON.stringify(schema, null, 4) !==
-            JSON.stringify(presetSchemas[template], null, 4)
-        ) {
-          setTemplate('')
-        }
-
-        if (template === '') {
-          let lzma = compressJSON(schema)
+        if (template === 'Custom') {
           const urlParams = new URLSearchParams({
             ...router.query,
-            schema: lzma,
+            template: 'Custom',
+            schema: compressJSON(schema),
+          })
+          router.push(`?${urlParams}`)
+        } else {
+          const urlParams = new URLSearchParams({
+            ...router.query,
+            template,
+            schema: 'Preset',
           })
           router.push(`?${urlParams}`)
         }
 
         onSchemaChange(schema)
-        onIsSavedChange(true)
       }
     } catch (e) {
       setValidationErrors([(e as Error).toString()])
@@ -118,10 +114,10 @@ export default function Editor({
         <div className="flex items-center justify-between gap-4 md:justify-start">
           <select
             className="input-base"
-            value={template ?? ''}
+            value={template}
             onChange={e => onTemplateChange(e.target.value as PresetTemplate)}
           >
-            {Object.keys(presetSchemas).map(presetSchemaName => (
+            {TEMPLATE_OPTIONS.map(presetSchemaName => (
               <option key={presetSchemaName} value={presetSchemaName}>
                 {presetSchemaName}
               </option>

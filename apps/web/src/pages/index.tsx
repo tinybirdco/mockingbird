@@ -12,7 +12,7 @@ import { initializeGenerator, TinybirdSchema } from '@tinybirdco/mockingbird'
 export default function Home() {
   const router = useRouter()
   const [schema, setSchema] = useState<TinybirdSchema>({})
-  const [isSaved, setIsSaved] = useState(false)
+  const isSaved = Object.keys(schema).length > 0
 
   const config = {
     endpoint: (router.query.host as string | undefined) ?? '',
@@ -54,11 +54,7 @@ export default function Home() {
           </h4>
         </div>
 
-        <Editor
-          onSchemaChange={setSchema}
-          isSaved={isSaved}
-          onIsSavedChange={setIsSaved}
-        />
+        <Editor onSchemaChange={setSchema} isSaved={isSaved} />
 
         <div className="h-12" />
 

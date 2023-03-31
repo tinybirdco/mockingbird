@@ -30,7 +30,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     eps = parseInt((router.query.eps as string | undefined) ?? '1')
   const defaultHost =
     ENDPOINT_OPTIONS.find(endpoint => endpoint.value === host)?.value ??
-    HostType.Custom
+    HostType.EU_GCP
 
   const [error, setError] = useState('')
   const [selectedHost, setSelectedHost] = useState<HostType>(defaultHost)

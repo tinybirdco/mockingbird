@@ -1,7 +1,7 @@
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { Content, JSONContent } from 'vanilla-jsoneditor'
+import { Content, JSONContent, TextContent } from 'vanilla-jsoneditor'
 import _isEqual from 'lodash.isequal'
 import { CheckmarkIcon } from '@/components/Icons'
 import { compressJSON, decompressJSON } from '@/lib/helpers'
@@ -53,12 +53,17 @@ export default function Editor({ onSchemaChange, isSaved }: EditorProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.isReady])
 
+  const isJSONContent = (content: Content): content is JSONContent =>
+    'json' in content
+
   const onContentChange = (newContent: Content) => {
-    if (
-      template !== 'Custom' &&
-      !_isEqual((newContent as JSONContent).json, presetSchemas[template])
-    ) {
-      setTemplate('Custom')
+    if (template !== 'Custom') {
+      const parsedContent = isJSONContent(content)
+        ? (content as JSONContent).json
+        : JSON.parse((content as TextContent).text)
+
+      if (!_isEqual(parsedContent, presetSchemas[template]))
+        setTemplate('Custom')
     }
 
     setContent(newContent)
@@ -73,7 +78,9 @@ export default function Editor({ onSchemaChange, isSaved }: EditorProps) {
 
   const onSchemaSave = () => {
     try {
-      const schema = (content as JSONContent).json as TinybirdSchema
+      const schema: TinybirdSchema = isJSONContent(content)
+        ? (content as JSONContent).json
+        : JSON.parse((content as TextContent).text)
       const validation = validateSchema(schema!)
       setValidationErrors(validation.errors)
 
@@ -102,6 +109,7 @@ export default function Editor({ onSchemaChange, isSaved }: EditorProps) {
         onSchemaChange(schema)
       }
     } catch (e) {
+      console.error(e)
       setValidationErrors([(e as Error).toString()])
       setSampleCode('Save to start generating')
     }

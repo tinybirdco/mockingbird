@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import { FormEvent, useState } from 'react'
+import { FormEvent, useMemo, useState } from 'react'
 
 import Modal from '@/components/Modal'
 import { initializeGenerator } from '@tinybirdco/mockingbird'
@@ -9,20 +9,41 @@ type SettingsModalProps = {
   onClose: () => void
 }
 
+enum HostType {
+  EU_GCP = 'eu_gcp',
+  US_GCP = 'us_gcp',
+  Custom = 'custom',
+}
+
 const ENDPOINT_OPTIONS = [
-  { label: 'EU (GCP)', value: 'eu_gcp' },
-  { label: 'US (GCP)', value: 'us_gcp' },
+  { label: 'EU (GCP)', value: HostType.EU_GCP },
+  { label: 'US (GCP)', value: HostType.US_GCP },
+  { label: 'Custom', value: HostType.Custom },
 ] as const
 
 export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const router = useRouter()
+
+  const host = (router.query.host as string | undefined) ?? '',
+    token = (router.query.token as string | undefined) ?? '',
+    datasource = (router.query.datasource as string | undefined) ?? '',
+    eps = parseInt((router.query.eps as string | undefined) ?? '1')
+  const defaultHost =
+    ENDPOINT_OPTIONS.find(endpoint => endpoint.value === host)?.value ??
+    HostType.EU_GCP
+
   const [error, setError] = useState('')
+  const [selectedHost, setSelectedHost] = useState<HostType>(defaultHost)
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault()
 
     const values = new FormData(e.target as HTMLFormElement)
-    const { datasource, token, host, eps } = Object.fromEntries(values)
+    const { datasource, token, eps } = Object.fromEntries(values)
+    const host =
+      values.get('host') === 'custom'
+        ? values.get('endpoint')!
+        : values.get('host')!
 
     const isValid = initializeGenerator(
       { datasource, endpoint: host, token },
@@ -44,18 +65,13 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     }
   }
 
-  const host = (router.query.host as string | undefined) ?? '',
-    token = (router.query.token as string | undefined) ?? '',
-    datasource = (router.query.datasource as string | undefined) ?? '',
-    eps = parseInt((router.query.eps as string | undefined) ?? '1')
-
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <Modal.Content>
         <Modal.Title>Settings</Modal.Title>
         <form
           onSubmit={onSubmit}
-          className="grid grid-cols-2 items-center justify-between gap-6"
+          className="grid items-center justify-between grid-cols-2 gap-6"
         >
           <label htmlFor="datasource">Data Source</label>
           <input
@@ -77,8 +93,9 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
           <select
             id="host"
             name="host"
-            defaultValue={host}
             className="input-base"
+            value={selectedHost}
+            onChange={e => setSelectedHost(e.target.value as HostType)}
           >
             {ENDPOINT_OPTIONS.map(({ label, value }) => (
               <option key={value} value={value}>
@@ -86,6 +103,20 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               </option>
             ))}
           </select>
+
+          {selectedHost === HostType.Custom && (
+            <>
+              <label htmlFor="endpoint">Endpoint</label>
+              <input
+                id="endpoint"
+                name="endpoint"
+                defaultValue={
+                  defaultHost === HostType.Custom ? host : undefined
+                }
+                className="input-base"
+              />
+            </>
+          )}
 
           <label htmlFor="eps">EPS</label>
           <input
@@ -100,7 +131,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
 
           <button
             type="submit"
-            className="btn-base bg-tb-primary text-white col-span-2"
+            className="col-span-2 text-white btn-base bg-tb-primary"
           >
             Save
           </button>

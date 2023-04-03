@@ -58,12 +58,17 @@ export default function Editor({ onSchemaChange, isSaved }: EditorProps) {
 
   const onContentChange = (newContent: Content) => {
     if (template !== 'Custom') {
-      const parsedContent = isJSONContent(content)
-        ? (content as JSONContent).json
-        : JSON.parse((content as TextContent).text)
+      try {
+        const parsedContent = isJSONContent(content)
+          ? (content as JSONContent).json
+          : JSON.parse((content as TextContent).text)
 
-      if (!_isEqual(parsedContent, presetSchemas[template]))
+        if (!_isEqual(parsedContent, presetSchemas[template]))
+          setTemplate('Custom')
+      } catch (e) {
+        console.error(e)
         setTemplate('Custom')
+      }
     }
 
     setContent(newContent)
@@ -90,21 +95,12 @@ export default function Editor({ onSchemaChange, isSaved }: EditorProps) {
           JSON.stringify(createRowGenerator(schema).generate(), null, 4)
         )
 
-        if (template === 'Custom') {
-          const urlParams = new URLSearchParams({
-            ...router.query,
-            template: 'Custom',
-            schema: compressJSON(schema),
-          })
-          router.push(`?${urlParams}`)
-        } else {
-          const urlParams = new URLSearchParams({
-            ...router.query,
-            template,
-            schema: 'Preset',
-          })
-          router.push(`?${urlParams}`)
-        }
+        const urlParams = new URLSearchParams({
+          ...router.query,
+          template,
+          schema: template === 'Custom' ? compressJSON(schema) : 'Preset',
+        })
+        router.push(`?${urlParams}`, undefined, { scroll: false })
 
         onSchemaChange(schema)
       }

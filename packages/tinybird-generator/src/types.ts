@@ -49,14 +49,25 @@ export const schemaSchema = z.record(
   z.object({
     type: z.enum(SCHEMA_KEY_NAMES),
     params: z.any().optional(),
+    count: z.number().optional(),
   })
 );
 
 export type Schema = z.infer<typeof schemaSchema>;
 
-export interface SchemaValue {
-  params?: z.AnyZodObject;
-  generator: (params: Record<string, any>) => unknown;
+type SchemaValue<T extends z.ZodRawShape, S> = {
+  generator: (params: z.infer<z.ZodObject<T, any, any>>) => S;
+  params?: z.ZodObject<T, any, any>;
+};
+
+export function createSchemaValue<T extends z.ZodRawShape, S = unknown>(
+  generator: (params: z.infer<z.ZodObject<T, any, any>>) => S,
+  params?: z.ZodObject<T, any, any>
+): SchemaValue<T, ReturnType<typeof generator>> {
+  return {
+    generator,
+    params,
+  };
 }
 
 export function validateSchema(schema: Schema) {
@@ -89,6 +100,6 @@ export const baseConfigSchema = z.object({
 
 export type BaseConfig = z.infer<typeof baseConfigSchema>;
 
-export interface RowGenerator {
-  generate: () => Record<string, unknown>;
+export interface RowGenerator<T> {
+  generate: () => T;
 }

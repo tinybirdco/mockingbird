@@ -1,7 +1,8 @@
 import fetch from "cross-fetch";
 import { z } from "zod";
 import BaseGenerator from "./BaseGenerator";
-import { baseConfigSchema, SchemaKey } from "./types";
+import { baseConfigSchema, RowGenerator, Schema, SchemaKey } from "../types";
+import schemaTypes from "../schemaTypes";
 
 const tinybirdConfigSchema = baseConfigSchema.merge(
   z.object({
@@ -13,7 +14,12 @@ const tinybirdConfigSchema = baseConfigSchema.merge(
 
 export type TinybirdConfig = z.infer<typeof tinybirdConfigSchema>;
 
-export default class TinybirdGenerator extends BaseGenerator<TinybirdConfig> {
+export type TinybirdMessage = Record<string, unknown>;
+
+export default class TinybirdGenerator extends BaseGenerator<
+  TinybirdConfig,
+  TinybirdMessage
+> {
   config: TinybirdConfig;
 
   endpoints = {
@@ -90,7 +96,33 @@ export default class TinybirdGenerator extends BaseGenerator<TinybirdConfig> {
     }
   }
 
-  async sendData(data: Record<string, unknown>[]): Promise<void> {
+  createRowGenerator(schema: Schema): RowGenerator<TinybirdMessage> {
+    const generatorSchema = Object.entries(schema).reduce(
+      (acc, [key, value]) => ({
+        ...acc,
+        [key]: {
+          generator: schemaTypes[value.type].generator,
+          params: value.params ?? {},
+        },
+      }),
+      {}
+    );
+
+    return {
+      generate() {
+        return Object.entries(generatorSchema).reduce((acc, [key, value]) => {
+          const v = value as { generator: Function; params: unknown[] };
+
+          return {
+            ...acc,
+            [key]: v.generator(v.params),
+          };
+        }, {});
+      },
+    };
+  }
+
+  async sendData(data: TinybirdMessage[]): Promise<void> {
     const params = { name: this.config.datasource };
     const endpointURL =
       this.config.endpoint in this.endpoints

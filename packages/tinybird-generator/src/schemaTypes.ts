@@ -1,238 +1,115 @@
 import { faker } from "@faker-js/faker";
 import { z } from "zod";
 import extendedFaker from "./extendedFaker";
-import { SchemaKey, SchemaValue } from "./types";
+import { createSchemaValue } from "./types";
 
-const schemaTypes: Record<SchemaKey, SchemaValue> = {
-  int: {
-    generator(params) {
-      return extendedFaker.datatype.number();
-    },
-  },
-  uint: {
-    generator(params) {
-      return extendedFaker.datatype.number({ min: 0 });
-    },
-  },
-  float: {
-    generator(params) {
-      return extendedFaker.datatype.float();
-    },
-  },
-  intString: {
-    generator(params) {
-      return extendedFaker.datatype.number().toString();
-    },
-  },
-  uintString: {
-    generator(params) {
-      return extendedFaker.datatype.number({ min: 0 }).toString();
-    },
-  },
-  floatString: {
-    generator(params) {
-      return extendedFaker.datatype.float().toString();
-    },
-  },
-  hex: {
-    generator(params) {
-      return extendedFaker.datatype.hexadecimal();
-    },
-  },
-  string: {
-    generator(params) {
-      return extendedFaker.datatype.string();
-    },
-  },
-  first_name: {
-    generator(params) {
-      return extendedFaker.name.firstName();
-    },
-  },
-  last_name: {
-    generator(params) {
-      return extendedFaker.name.lastName();
-    },
-  },
-  full_name: {
-    generator(params) {
-      return extendedFaker.name.fullName();
-    },
-  },
-  email: {
-    generator(params) {
-      return extendedFaker.internet.email();
-    },
-  },
-  word: {
-    generator(params) {
-      return extendedFaker.word.noun();
-    },
-  },
-  domain: {
-    generator(params) {
-      return extendedFaker.internet.domainName();
-    },
-  },
-  values: {
-    params: z.object({
-      values: z.array(z.any()),
-    }),
-    generator(params) {
-      return params.values[Math.floor(Math.random() * params.values.length)];
-    },
-  },
-  values_weighted: {
-    params: z.object({
+const schemaTypes = {
+  int: createSchemaValue(() => extendedFaker.datatype.number()),
+  uint: createSchemaValue(() => extendedFaker.datatype.number({ min: 0 })),
+  float: createSchemaValue(() => extendedFaker.datatype.float()),
+  intString: createSchemaValue(() =>
+    extendedFaker.datatype.number().toString()
+  ),
+  uintString: createSchemaValue(() =>
+    extendedFaker.datatype.number({ min: 0 }).toString()
+  ),
+  floatString: createSchemaValue(() =>
+    extendedFaker.datatype.float().toString()
+  ),
+  hex: createSchemaValue(() => extendedFaker.datatype.hexadecimal()),
+  string: createSchemaValue(() => extendedFaker.datatype.string()),
+  first_name: createSchemaValue(() => extendedFaker.name.firstName()),
+  last_name: createSchemaValue(() => extendedFaker.name.lastName()),
+  full_name: createSchemaValue(() => extendedFaker.name.fullName()),
+  email: createSchemaValue(() => extendedFaker.internet.email()),
+  word: createSchemaValue(() => extendedFaker.word.noun()),
+  domain: createSchemaValue(() => extendedFaker.internet.domainName()),
+  values: createSchemaValue(
+    (params) => params.values[Math.floor(Math.random() * params.values.length)],
+    z.object({ values: z.array(z.any()) })
+  ),
+  values_weighted: createSchemaValue(
+    (params) =>
+      extendedFaker.helpers.weightedRandom(params.values, params.weights),
+    z.object({
       values: z.array(z.any()),
       weights: z.array(z.number()),
-    }),
-    generator(params) {
-      return extendedFaker.helpers.weightedRandom(
-        params.values,
-        params.weights
-      );
-    },
-  },
-  datetime: {
-    generator() {
-      return faker.date.recent().toISOString().slice(0, 19);
-    },
-  },
-  datetime_range: {
-    params: z.object({
-      start: z.union([z.string(), z.number(), z.date()]),
-      end: z.union([z.string(), z.number(), z.date()]),
-    }),
-    generator(params) {
-      return extendedFaker.date
+    })
+  ),
+  datetime: createSchemaValue(() =>
+    faker.date.recent().toISOString().slice(0, 19)
+  ),
+  datetime_range: createSchemaValue(
+    (params) =>
+      extendedFaker.date
         .between(params.start, params.end)
         .toISOString()
-        .slice(0, 19);
-    },
-  },
-  datetime_lasthour: {
-    generator() {
-      return faker.date
-        .recent(1 / 24)
-        .toISOString()
-        .slice(0, 19);
-    },
-  },
-  timestamp: {
-    generator() {
-      return faker.date.recent().toISOString();
-    },
-  },
-  timestamp_now: {
-    generator() {
-      return new Date().toISOString();
-    },
-  },
-  timestamp_range: {
-    params: z.object({
+        .slice(0, 19),
+    z.object({
       start: z.union([z.string(), z.number(), z.date()]),
       end: z.union([z.string(), z.number(), z.date()]),
-    }),
-    generator(params) {
-      return extendedFaker.date.between(params.start, params.end).toISOString();
-    },
-  },
-  timestamp_lasthour: {
-    generator() {
-      return faker.date.recent(1 / 24).toISOString();
-    },
-  },
-  range: {
-    params: z.object({
-      min: z.number(),
-      max: z.number(),
-    }),
-    generator(params) {
-      return extendedFaker.datatype.number({
+    })
+  ),
+  datetime_lasthour: createSchemaValue(() =>
+    faker.date
+      .recent(1 / 24)
+      .toISOString()
+      .slice(0, 19)
+  ),
+  timestamp: createSchemaValue(() => faker.date.recent().toISOString()),
+  timestamp_now: createSchemaValue(() => new Date().toISOString()),
+  timestamp_range: createSchemaValue(
+    (params) =>
+      extendedFaker.date.between(params.start, params.end).toISOString(),
+    z.object({
+      start: z.union([z.string(), z.number(), z.date()]),
+      end: z.union([z.string(), z.number(), z.date()]),
+    })
+  ),
+  timestamp_lasthour: createSchemaValue(() =>
+    faker.date.recent(1 / 24).toISOString()
+  ),
+  range: createSchemaValue(
+    (params) =>
+      extendedFaker.datatype.number({
         min: params.min,
         max: params.max,
-      });
-    },
-  },
-  bool: {
-    generator(params) {
-      return extendedFaker.datatype.boolean();
-    },
-  },
-  uuid: {
-    generator(params) {
-      return extendedFaker.datatype.uuid();
-    },
-  },
-  browser_name: {
-    generator(params) {
-      return extendedFaker.browser.browserName();
-    },
-  },
-  browser_engine_name: {
-    generator(params) {
-      return extendedFaker.browser.browserEngineName();
-    },
-  },
-  city_name: {
-    generator(params) {
-      return extendedFaker.address.cityName();
-    },
-  },
-  country_code_iso2: {
-    generator(params) {
-      return extendedFaker.address.countryCode("alpha-2");
-    },
-  },
-  country_code_iso3: {
-    generator(params) {
-      return extendedFaker.address.countryCode("alpha-3");
-    },
-  },
-  operating_system: {
-    generator(params) {
-      return extendedFaker.browser.osName();
-    },
-  },
-  search_engine: {
-    generator(params) {
-      return extendedFaker.browser.searchEngineName();
-    },
-  },
-  lat_or_lon_string: {
-    generator(params) {
-      return extendedFaker.address.latitude();
-    },
-  },
-  lat_or_lon_numeric: {
-    generator(params) {
-      return parseFloat(extendedFaker.address.latitude());
-    },
-  },
-  words: {
-    params: z.object({
+      }),
+    z.object({
+      min: z.number(),
+      max: z.number(),
+    })
+  ),
+  bool: createSchemaValue(() => extendedFaker.datatype.boolean()),
+  uuid: createSchemaValue(() => extendedFaker.datatype.uuid()),
+  browser_name: createSchemaValue(() => extendedFaker.browser.browserName()),
+  browser_engine_name: createSchemaValue(() =>
+    extendedFaker.browser.browserEngineName()
+  ),
+  city_name: createSchemaValue(() => extendedFaker.address.cityName()),
+  country_code_iso2: createSchemaValue(() =>
+    extendedFaker.address.countryCode("alpha-2")
+  ),
+  country_code_iso3: createSchemaValue(() =>
+    extendedFaker.address.countryCode("alpha-3")
+  ),
+  operating_system: createSchemaValue(() => extendedFaker.browser.osName()),
+  search_engine: createSchemaValue(() =>
+    extendedFaker.browser.searchEngineName()
+  ),
+  lat_or_lon_string: createSchemaValue(() => extendedFaker.address.latitude()),
+  lat_or_lon_numeric: createSchemaValue(() =>
+    parseFloat(extendedFaker.address.latitude())
+  ),
+  words: createSchemaValue(
+    (params) => extendedFaker.random.words(params.amount),
+    z.object({
       amount: z.number(),
-    }),
-    generator(params) {
-      return extendedFaker.random.words(params.amount);
-    },
-  },
-  http_method: {
-    generator(params) {
-      return extendedFaker.internet.httpMethod();
-    },
-  },
-  user_agent: {
-    generator(params) {
-      return extendedFaker.internet.userAgent();
-    },
-  },
-  semver: {
-    generator(params) {
-      return extendedFaker.system.semver();
-    },
-  },
-};
+    })
+  ),
+  http_method: createSchemaValue(() => extendedFaker.internet.httpMethod()),
+  user_agent: createSchemaValue(() => extendedFaker.internet.userAgent()),
+  semver: createSchemaValue(() => extendedFaker.system.semver()),
+} as const;
 
 export default schemaTypes;

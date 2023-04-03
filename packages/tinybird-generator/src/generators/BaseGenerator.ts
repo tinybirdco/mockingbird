@@ -1,44 +1,19 @@
-import dataTypes from "./schemaTypes";
-import { BaseConfig, RowGenerator, Schema, SchemaKey } from "./types";
+import { BaseConfig, RowGenerator, Schema } from "../types";
 
-export default abstract class BaseGenerator<C extends BaseConfig> {
+export default abstract class BaseGenerator<C extends BaseConfig, M> {
   abstract readonly config: C;
 
-  readonly rowGenerator: RowGenerator;
+  readonly rowGenerator: RowGenerator<M>;
 
   constructor(config: C) {
     this.rowGenerator = this.createRowGenerator(config.schema);
   }
 
-  abstract sendData(data: Record<string, unknown>[]): Promise<void>;
+  abstract sendData(data: M[]): Promise<void>;
 
-  createRowGenerator(schema: Schema): RowGenerator {
-    const generatorSchema = Object.entries(schema).reduce(
-      (acc, [key, value]) => ({
-        ...acc,
-        [key]: {
-          generator: dataTypes[value.type as SchemaKey].generator,
-          params: value.params ?? {},
-        },
-      }),
-      {}
-    );
+  abstract createRowGenerator(schema: Schema): RowGenerator<M>;
 
-    return {
-      generate() {
-        return Object.entries(generatorSchema).reduce((acc, [key, value]) => {
-          const v = value as { generator: Function; params: unknown[] };
-
-          return {
-            ...acc,
-            [key]: v.generator(v.params),
-          };
-        }, {});
-      },
-    };
-  }
-
-  async generate(onMessage?: (data: Record<string, unknown>[]) => void) {
+  async generate(onMessage?: (data: M[]) => void) {
     const minDelayPerBatch = 200;
     const maxBatchesPerSecond = 1000 / minDelayPerBatch;
 

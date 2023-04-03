@@ -59,9 +59,9 @@ export default function Editor({ onSchemaChange, isSaved }: EditorProps) {
   const onContentChange = (newContent: Content) => {
     if (template !== 'Custom') {
       try {
-        const parsedContent = isJSONContent(content)
-          ? (content as JSONContent).json
-          : JSON.parse((content as TextContent).text)
+        const parsedContent = isJSONContent(newContent)
+          ? (newContent as JSONContent).json
+          : JSON.parse((newContent as TextContent).text)
 
         if (!_isEqual(parsedContent, presetSchemas[template]))
           setTemplate('Custom')

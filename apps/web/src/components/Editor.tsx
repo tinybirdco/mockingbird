@@ -151,6 +151,9 @@ export default function Editor({ onSchemaChange, isSaved }: EditorProps) {
         content={content}
         onChange={onContentChange}
         statusBar={false}
+        onRenderMenu={(items, _context) =>
+          items.filter(item => ('text' in item ? item.text !== 'table' : true))
+        }
       />
 
       <div className="h-11" />

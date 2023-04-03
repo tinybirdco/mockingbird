@@ -1,4 +1,6 @@
-const presetSchemas = {
+import { Schema } from "./types";
+
+const presetSchemas: Record<string, Schema> = {
   Default: {
     some_int: {
       type: "int",

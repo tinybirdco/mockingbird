@@ -3,15 +3,11 @@ import { BaseConfig, RowGenerator, Schema } from "../types";
 export default abstract class BaseGenerator<C extends BaseConfig, M> {
   abstract readonly config: C;
 
-  readonly rowGenerator: RowGenerator<M>;
-
-  constructor(config: C) {
-    this.rowGenerator = this.createRowGenerator(config.schema);
-  }
+  abstract readonly rowGenerator: RowGenerator<M>;
 
   abstract sendData(data: M[]): Promise<void>;
 
-  abstract createRowGenerator(schema: Schema): RowGenerator<M>;
+  abstract createRowGenerator(): RowGenerator<M>;
 
   async generate(onMessage?: (data: M[]) => void) {
     const minDelayPerBatch = 200;

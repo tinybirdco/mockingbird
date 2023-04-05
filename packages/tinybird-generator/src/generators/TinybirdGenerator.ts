@@ -4,7 +4,6 @@ import BaseGenerator from "./BaseGenerator";
 import {
   baseConfigSchema,
   RowGenerator,
-  Schema,
   SchemaGenerator,
   SchemaKey,
 } from "../types";
@@ -28,6 +27,8 @@ export default class TinybirdGenerator extends BaseGenerator<
 > {
   config: TinybirdConfig;
 
+  rowGenerator: RowGenerator<TinybirdMessage>;
+
   endpoints = {
     eu_gcp: "https://api.tinybird.co",
     us_gcp: "https://api.us-east.tinybird.co",
@@ -36,9 +37,10 @@ export default class TinybirdGenerator extends BaseGenerator<
   events_path = "/v0/events" as const;
 
   constructor(config: TinybirdConfig) {
-    config = tinybirdConfigSchema.parse(config);
-    super(config);
-    this.config = config;
+    super();
+
+    this.config = tinybirdConfigSchema.parse(config);
+    this.rowGenerator = this.createRowGenerator();
   }
 
   mapType(type: SchemaKey): string {
@@ -102,20 +104,20 @@ export default class TinybirdGenerator extends BaseGenerator<
     }
   }
 
-  createRowGenerator(schema: Schema): RowGenerator<TinybirdMessage> {
-    const generatorSchema = Object.entries(schema).reduce(
-      (acc, [key, value]) => ({
-        ...acc,
-        [key]: {
-          generator: schemaTypes[value.type].generator,
-          params: value.params ?? {},
-        },
-      }),
-      {}
-    );
-
+  createRowGenerator(): RowGenerator<TinybirdMessage> {
     return {
-      generate() {
+      generate: () => {
+        const generatorSchema = Object.entries(this.config.schema).reduce(
+          (acc, [key, value]) => ({
+            ...acc,
+            [key]: {
+              generator: schemaTypes[value.type].generator,
+              params: value.params ?? {},
+            },
+          }),
+          {}
+        );
+
         const generator: Record<string, unknown | unknown[]> = (
           Object.entries(generatorSchema) as [string, SchemaGenerator][]
         ).reduce((acc, [key, value]) => {

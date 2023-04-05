@@ -1,12 +1,7 @@
 import fetch from "cross-fetch";
 import { z } from "zod";
 import BaseGenerator from "./BaseGenerator";
-import {
-  RowGenerator,
-  Schema,
-  SchemaGenerator,
-  baseConfigSchema,
-} from "../types";
+import { RowGenerator, SchemaGenerator, baseConfigSchema } from "../types";
 import schemaTypes from "../schemaTypes";
 
 const upstashKafkaConfigSchema = baseConfigSchema.merge(
@@ -28,19 +23,22 @@ export default class UpstashKafkaGenerator extends BaseGenerator<
 > {
   config: UpstashKafkaConfig;
 
+  rowGenerator: RowGenerator<UpstashKafkaMessage>;
+
   auth: string;
 
   constructor(config: UpstashKafkaConfig) {
-    config = upstashKafkaConfigSchema.parse(config);
-    super(config);
-    this.config = config;
+    super();
+
+    this.config = upstashKafkaConfigSchema.parse(config);
+    this.rowGenerator = this.createRowGenerator();
     this.auth = Buffer.from(`${this.config.user}:${this.config.pass}`).toString(
       "base64"
     );
   }
 
-  createRowGenerator(schema: Schema): RowGenerator<UpstashKafkaMessage> {
-    const values = Object.values(schema);
+  createRowGenerator(): RowGenerator<UpstashKafkaMessage> {
+    const values = Object.values(this.config.schema);
 
     if (values.length === 1) {
       const { type, params, count } = values[0];
@@ -57,8 +55,8 @@ export default class UpstashKafkaGenerator extends BaseGenerator<
     }
 
     return {
-      generate() {
-        const generatorSchema = Object.entries(schema).reduce(
+      generate: () => {
+        const generatorSchema = Object.entries(this.config.schema).reduce(
           (acc, [key, value]) => ({
             ...acc,
             [key]: {

@@ -5,7 +5,7 @@ import { TinybirdConfig } from '@tinybirdco/mockingbird'
 
 export default function useGeneratorWorker(
   config: TinybirdConfig,
-  canGenerate: boolean
+  isSaved: boolean
 ) {
   const [worker, setWorker] = useState<Worker>()
   const [isGenerating, setIsGenerating] = useState(false)
@@ -15,7 +15,7 @@ export default function useGeneratorWorker(
   })
 
   function startGenerating() {
-    if (canGenerate) {
+    if (isSaved) {
       const createdWorker = createWorker(
         config,
         ({ data }: MessageEvent<number>) => {

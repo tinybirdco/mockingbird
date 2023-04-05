@@ -1,7 +1,13 @@
 import fetch from "cross-fetch";
 import { z } from "zod";
 import BaseGenerator from "./BaseGenerator";
-import { baseConfigSchema, RowGenerator, Schema, SchemaKey } from "../types";
+import {
+  baseConfigSchema,
+  RowGenerator,
+  Schema,
+  SchemaGenerator,
+  SchemaKey,
+} from "../types";
 import schemaTypes from "../schemaTypes";
 
 const tinybirdConfigSchema = baseConfigSchema.merge(
@@ -110,14 +116,21 @@ export default class TinybirdGenerator extends BaseGenerator<
 
     return {
       generate() {
-        return Object.entries(generatorSchema).reduce((acc, [key, value]) => {
-          const v = value as { generator: Function; params: unknown[] };
-
+        const generator: Record<string, unknown | unknown[]> = (
+          Object.entries(generatorSchema) as [string, SchemaGenerator][]
+        ).reduce((acc, [key, value]) => {
           return {
             ...acc,
-            [key]: v.generator(v.params),
+            [key]:
+              (value.count ?? 1) === 1
+                ? value.generator(value.params)
+                : new Array(value.count ?? 1)
+                    .fill(null)
+                    .map(() => value.generator(value.params)),
           };
         }, {});
+
+        return generator;
       },
     };
   }

@@ -103,3 +103,9 @@ export type BaseConfig = z.infer<typeof baseConfigSchema>;
 export interface RowGenerator<T> {
   generate: () => T;
 }
+
+export interface SchemaGenerator {
+  generator: (params: Record<string, unknown>) => unknown | unknown[];
+  params: Record<string, unknown>;
+  count: number;
+}

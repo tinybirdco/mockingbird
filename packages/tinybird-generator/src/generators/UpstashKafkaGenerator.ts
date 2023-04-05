@@ -1,7 +1,12 @@
 import fetch from "cross-fetch";
 import { z } from "zod";
 import BaseGenerator from "./BaseGenerator";
-import { RowGenerator, Schema, baseConfigSchema } from "../types";
+import {
+  RowGenerator,
+  Schema,
+  SchemaGenerator,
+  baseConfigSchema,
+} from "../types";
 import schemaTypes from "../schemaTypes";
 
 const upstashKafkaConfigSchema = baseConfigSchema.merge(
@@ -42,60 +47,60 @@ export default class UpstashKafkaGenerator extends BaseGenerator<
 
       return {
         generate() {
-          return new Array(count ?? 1)
-            .fill(null)
-            .map(() =>
-              schemaTypes[type].generator(params)
-            ) as UpstashKafkaMessage;
+          return count === 1
+            ? [{ value: schemaTypes[type].generator(params) }]
+            : new Array(count ?? 1)
+                .fill(null)
+                .map(() => ({ value: schemaTypes[type].generator(params) }));
         },
       };
     }
 
     return {
       generate() {
-        return [{ value: "NYC" }];
+        const generatorSchema = Object.entries(schema).reduce(
+          (acc, [key, value]) => ({
+            ...acc,
+            [key]: {
+              generator: schemaTypes[value.type].generator,
+              params: value.params ?? {},
+              count: value.count ?? 1,
+            },
+          }),
+          {}
+        );
+
+        const generator: Record<string, unknown | unknown[]> = (
+          Object.entries(generatorSchema) as [string, SchemaGenerator][]
+        ).reduce((acc, [key, value]) => {
+          return {
+            ...acc,
+            [key]:
+              (value.count ?? 1) === 1
+                ? value.generator(value.params)
+                : new Array(value.count ?? 1)
+                    .fill(null)
+                    .map(() => value.generator(value.params)),
+          };
+        }, {});
+
+        return [{ value: JSON.stringify(generator) }];
       },
     };
-
-    // TODO: implement this with count & add to TinybirdGenerator
-
-    /*    const generatorSchema = Object.entries(schema).reduce(
-      (acc, [key, value]) => ({
-        ...acc,
-        [key]: {
-          generator: schemaTypes[value.type].generator,
-          params: value.params ?? {},
-        },
-      }),
-      {}
-    );
-
-    return {
-      generate() {
-        return {
-          value: JSON.stringify(
-            Object.entries(generatorSchema).reduce((acc, [key, value]) => {
-              const v = value as { generator: Function; params: unknown[] };
-
-              return {
-                ...acc,
-                [key]: v.generator(v.params),
-              };
-            }, {})
-          ),
-        };
-      },
-    }; */
   }
 
   async sendData(data: UpstashKafkaMessage[]): Promise<void> {
     return fetch(`${this.config.address}/produce/${this.config.topic}`, {
       headers: { Authorization: `Basic ${this.auth}` },
       method: "POST",
-      body: JSON.stringify(data),
+      body: JSON.stringify(data.flat()),
     })
       .then((res) => res.json())
       .then((metadata) => {
+        if (metadata.error) {
+          throw new Error(metadata.error);
+        }
+
         metadata.forEach((m: { topic: any; partition: any; offset: any }) => {
           console.log(
             `Topic: ${m.topic}, Partition: ${m.partition}, Offset: ${m.offset}`

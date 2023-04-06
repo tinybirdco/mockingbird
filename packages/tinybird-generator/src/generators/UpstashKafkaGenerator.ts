@@ -38,22 +38,6 @@ export default class UpstashKafkaGenerator extends BaseGenerator<
   }
 
   createRowGenerator(): RowGenerator<UpstashKafkaMessage> {
-    const values = Object.values(this.config.schema);
-
-    if (values.length === 1) {
-      const { type, params, count } = values[0];
-
-      return {
-        generate() {
-          return count === 1
-            ? [{ value: schemaTypes[type].generator(params) }]
-            : new Array(count ?? 1)
-                .fill(null)
-                .map(() => ({ value: schemaTypes[type].generator(params) }));
-        },
-      };
-    }
-
     return {
       generate: () => {
         const generatorSchema = Object.entries(this.config.schema).reduce(

@@ -2,7 +2,7 @@
 
 Schemas are how you define what your synthetic data should look like. They are defined as JSON Objects, with each key representing a field in the data.
 
-Each top-level key is the name of the field, in database terms, this would be your column name. Each key is an object, beneath which, you must define a `type` field. The value of the `type` field must be one of the supported [Data Types](./data_types.md). Some Data Type required parameters, which are supplied with a `params` key at the same level as the `type` key. The `params` key is also an object, beneath which you must supply the key-value pairs as required by the `type`.
+Each top-level key is the name of the field, in database terms, this would be your column name. Each key is an object, beneath which, you must define a `type` field. The value of the `type` field must be one of the supported [Data Types](./data_types.md). Some Data Type require parameters, which are supplied with a `params` key at the same level as the `type` key. The `params` key is also an object, beneath which you must supply the key-value pairs as required by the `type`.
 
 It's very simple, but it can be easier to understand with an example. This is a valid Mockingbird schema:
 

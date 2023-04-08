@@ -31,6 +31,19 @@ The output of this schema would look like:
 }
 ```
 
+### Arrays
+
+All types can be generated as arrays. Simply add a `count` key at the same level as the `type` key.
+
+```json
+{
+  "my_int": {
+    "type": "int",
+    "count": 3
+  }
+}
+```
+
 ## Preset Schemas
 
 You can write your own custom schema, or use any of the preset schemas.

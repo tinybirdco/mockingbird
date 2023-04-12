@@ -101,6 +101,8 @@ export default class TinybirdGenerator extends BaseGenerator<
 
       case "words":
         return "Array(String)";
+      default:
+        return "String";
     }
   }
 

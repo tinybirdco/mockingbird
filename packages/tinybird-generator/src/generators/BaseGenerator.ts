@@ -1,4 +1,4 @@
-import { BaseConfig, RowGenerator, Schema } from "../types";
+import { BaseConfig, RowGenerator } from "../types";
 
 export default abstract class BaseGenerator<C extends BaseConfig, M> {
   abstract readonly config: C;

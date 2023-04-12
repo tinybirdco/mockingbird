@@ -4,6 +4,21 @@ import extendedFaker from "./extendedFaker";
 import { createSchemaValue } from "./types";
 
 const schemaTypes = {
+  ...Object.values(extendedFaker)
+    .map((v) => Object.values(v))
+    .flat()
+    .reduce(
+      (acc, f) =>
+        typeof f === "function"
+          ? {
+              ...acc,
+              [f.name.replace("bound ", "faker-")]: createSchemaValue(
+                (params) => f(...Object.values(params))
+              ),
+            }
+          : acc,
+      {}
+    ),
   int: createSchemaValue(() => extendedFaker.datatype.number()),
   uint: createSchemaValue(() => extendedFaker.datatype.number({ min: 0 })),
   float: createSchemaValue(() => extendedFaker.datatype.float()),

@@ -1,8 +1,8 @@
 import { useRouter } from 'next/router'
-import { FormEvent, useMemo, useState } from 'react'
+import { FormEvent, useState } from 'react'
 
 import Modal from '@/components/Modal'
-import { initializeGenerator } from '@tinybirdco/mockingbird'
+import { TinybirdGenerator } from '@tinybirdco/mockingbird'
 
 type SettingsModalProps = {
   isOpen: boolean
@@ -39,18 +39,27 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     e.preventDefault()
 
     const values = new FormData(e.target as HTMLFormElement)
-    const { datasource, token, eps } = Object.fromEntries(values)
-    const host =
+    const { datasource, token, eps } = Object.fromEntries(values) as Record<
+      string,
+      string
+    >
+    const host = (
       values.get('host') === 'custom'
         ? values.get('endpoint')!
         : values.get('host')!
+    ) as string
 
-    const isValid = initializeGenerator(
-      { datasource, endpoint: host, token },
-      true
-    )
+    try {
+      // Validates config
+      new TinybirdGenerator({
+        datasource,
+        endpoint: host,
+        token,
+        schema: {},
+        eps: parseInt(eps),
+        limit: -1,
+      })
 
-    if (isValid) {
       const urlParams = new URLSearchParams({
         ...router.query,
         host: host.toString(),
@@ -60,7 +69,8 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
       })
       router.push(`?${urlParams}`)
       onClose()
-    } else {
+    } catch (e) {
+      console.log(e)
       setError('Invalid configuration')
     }
   }

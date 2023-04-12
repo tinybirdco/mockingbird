@@ -7,9 +7,9 @@ import { CheckmarkIcon } from '@/components/Icons'
 import { compressJSON, decompressJSON } from '@/lib/helpers'
 import { cx } from '@/lib/utils'
 import {
-  createRowGenerator,
   presetSchemas,
-  TinybirdSchema,
+  Schema,
+  TinybirdGenerator,
   validateSchema,
 } from '@tinybirdco/mockingbird'
 
@@ -23,7 +23,7 @@ const TEMPLATE_OPTIONS = [...Object.keys(presetSchemas), 'Custom']
 type PresetTemplate = keyof typeof presetSchemas & string
 
 type EditorProps = {
-  onSchemaChange: (schema: TinybirdSchema) => void
+  onSchemaChange: (schema: Schema) => void
   isSaved: boolean
 }
 
@@ -83,17 +83,33 @@ export default function Editor({ onSchemaChange, isSaved }: EditorProps) {
 
   const onSchemaSave = () => {
     try {
-      const schema: TinybirdSchema = isJSONContent(content)
-        ? (content as JSONContent).json
-        : JSON.parse((content as TextContent).text)
+      const schema = (
+        isJSONContent(content)
+          ? (content as JSONContent).json
+          : JSON.parse((content as TextContent).text)
+      ) as Schema
       const validation = validateSchema(schema!)
       setValidationErrors(validation.errors)
 
       if (schema && validation.valid) {
         setValidationErrors([])
-        setSampleCode(
-          JSON.stringify(createRowGenerator(schema).generate(), null, 4)
-        )
+        const rowGenerator = new TinybirdGenerator({
+          schema,
+          datasource: '',
+          endpoint: '',
+          token: '',
+          eps: 1,
+          limit: -1,
+        }).createRowGenerator()
+        setSampleCode(JSON.stringify(rowGenerator.generate(), null, 4))
+
+        if (
+          template !== '' &&
+          JSON.stringify(schema, null, 4) !==
+            JSON.stringify(presetSchemas[template], null, 4)
+        ) {
+          setTemplate('')
+        }
 
         const urlParams = new URLSearchParams({
           ...router.query,

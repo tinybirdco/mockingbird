@@ -7,11 +7,11 @@ import Layout from '@/components/Layout'
 import MessageCount from '@/components/MessageCount'
 import useGeneratorWorker from '@/lib/useGeneratorWorker'
 import { cx } from '@/lib/utils'
-import { initializeGenerator, TinybirdSchema } from '@tinybirdco/mockingbird'
+import { Schema } from '@tinybirdco/mockingbird'
 
 export default function Home() {
   const router = useRouter()
-  const [schema, setSchema] = useState<TinybirdSchema>({})
+  const [schema, setSchema] = useState<Schema>({})
   const isSaved = Object.keys(schema).length > 0
 
   const config = {
@@ -22,10 +22,9 @@ export default function Home() {
     limit: -1,
     schema,
   }
-  const isValid = initializeGenerator(config, true)
 
   const { startGenerating, stopGenerating, isGenerating, sentMessages } =
-    useGeneratorWorker(config, isValid && isSaved)
+    useGeneratorWorker(config, isSaved)
 
   const onGenerationClick = () => {
     isGenerating ? stopGenerating() : startGenerating()

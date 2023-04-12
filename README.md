@@ -87,8 +87,10 @@ Current types are:
 
 ```txt
 int
-intString
+uint
 float
+intString
+uintString
 floatString
 hex
 string
@@ -116,7 +118,7 @@ country_code_iso3
 operating_system
 search_engine
 lat_or_lon_string
-lat_or_lon_int
+lat_or_lon_numeric
 words
 http_method
 user_agent

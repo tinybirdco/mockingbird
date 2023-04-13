@@ -166,7 +166,7 @@ None
 
 ## full_name
 
-Returns a last name string, simple wrapper for Faker.js [`fullname`](https://fakerjs.dev/api/name.html#fullname) type.
+Returns a full name string, simple wrapper for Faker.js [`fullname`](https://fakerjs.dev/api/name.html#fullname) type.
 
 **Parameters**
 
@@ -319,7 +319,7 @@ Uses the Faker.js [`between`](https://fakerjs.dev/api/date.html#between) type to
 **Parameters**
 
 - start: date string, start time boundary
-- end: date string, start time boundary
+- end: date string, end time boundary
 
 **Returns**
 
@@ -369,7 +369,7 @@ None
 
 **Returns**
 
-`2023-04-06T17:31:57`
+`2023-04-06T17:31:57.342Z`
 
 **Example usage**
 
@@ -388,7 +388,7 @@ Same as [datetime_range](#datetime_range) but with millisecond precision.
 **Parameters**
 
 - start: date string, start time boundary
-- end: date string, start time boundary
+- end: date string, end time boundary
 
 **Returns**
 
@@ -412,7 +412,8 @@ Returns a number, simple wrapper for Faker.js [`number`](https://fakerjs.dev/api
 
 **Parameters**
 
-None
+- min: number, minimum boundary
+- max: number, maximum boundary
 
 **Returns**
 

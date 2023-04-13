@@ -357,8 +357,6 @@ None
 }
 ```
 
-values up to the millisecond -> DateTime64(3)
-
 ## timestamp_now 
 
 Same as [timestamp](#timestamp) but using `now()` to get the latest system time when generating the record.
@@ -378,8 +376,6 @@ None
     "type": "timestamp_now"
 }
 ```
-
-values up to the millisecond -> DateTime64(3)
 
 ## timestamp_range
 

@@ -65,6 +65,10 @@ const argv = yargs(hideBin(process.argv)).options({
     describe: "Max number of rows to send (-1 for unlimited)",
     default: -1,
   },
+  logs: {
+    describe: "Enable logs",
+    default: true,
+  },
   generator: {
     describe: "Generator to use",
     demandOption: true,
@@ -84,6 +88,7 @@ if (argv.generator === "tinybird") {
     schema,
     eps: argv.eps,
     limit: argv.limit,
+    logs: argv.logs,
     endpoint: ["eu_gcp", "us_gcp"].includes(argv.endpoint)
       ? argv.endpoint
       : process.env.TB_ENDPOINT,
@@ -95,6 +100,7 @@ if (argv.generator === "tinybird") {
     schema,
     eps: argv.eps,
     limit: argv.limit,
+    logs: argv.logs,
     address: argv.address,
     user: argv.user,
     pass: argv.pass,

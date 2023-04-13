@@ -23,6 +23,7 @@ const tbGenerator = new TinybirdGenerator({
   schema: z.object({}), // Javascript object containing valid generator schema
   eps: z.number().optional().default(1), // Events per second
   limit: z.number().optional().default(-1), // Event limit
+  logs: z.boolean().optional().default(false), // Enables logs
   endpoint: z.string(), // Tinybird endpoint (eu_gcp, us_gcp or custom one)
   datasource: z.string(), // Name of the Tinybird datasource
   token: z.string(), // Tinybird admin token
@@ -38,6 +39,7 @@ const ukGenerator = new UpstashKafkaGenerator({
   schema: z.object({}), // Javascript object containing valid generator schema
   eps: z.number().optional().default(1), // Events per second
   limit: z.number().optional().default(-1), // Event limit
+  logs: z.boolean().optional().default(false), // Enables logs
   address: z.string().url(), // Upstash URL
   user: z.string(), // Upstash user
   pass: z.string(), // Upstash password

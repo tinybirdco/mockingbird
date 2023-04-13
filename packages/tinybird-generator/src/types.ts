@@ -96,6 +96,7 @@ export const baseConfigSchema = z.object({
   schema: schemaSchema.refine(validateSchema),
   eps: z.number().optional().default(1),
   limit: z.number().optional().default(-1),
+  logs: z.boolean().optional().default(false),
 });
 
 export type BaseConfig = z.infer<typeof baseConfigSchema>;

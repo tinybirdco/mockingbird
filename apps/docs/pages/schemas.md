@@ -60,11 +60,11 @@ The `z-sales` schema is an example of e-commerce style sales data.
 
 ### Stock Prices
 
-The `Stock Prices` schema is an example of a stocker ticker data feed.
+The `Stock Prices` schema is an example of a stock ticker data feed.
 
 ### Flights
 
-The `Flights` schema is an example of a travel-agent style data feed.
+The `Flights` schema is an example of a travel agent-style data feed.
 
 ### Content Tracking
 

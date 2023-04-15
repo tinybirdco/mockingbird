@@ -3,4 +3,6 @@ const withNextra = require('nextra')({
   themeConfig: './theme.config.tsx',
 })
 
-module.exports = withNextra()
+module.exports = withNextra({
+  basePath: process.env.VERCEL_ENV === 'production' ? '/docs' : '',
+})

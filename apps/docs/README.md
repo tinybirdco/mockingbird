@@ -18,6 +18,9 @@ First, run `pnpm i` to install the dependencies.
 
 Then, run `pnpm dev` to start the development server and visit localhost:3000.
 
+> **Warning**
+> During local development the base path is `''` but in production `'/docs'` will be used instead to be able to serve the docs from the mockingbird website under the `/docs` path.
+
 ## License
 
 This project is licensed under the MIT License.

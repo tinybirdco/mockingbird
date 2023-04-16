@@ -129,8 +129,8 @@ export default class TinybirdGenerator extends BaseGenerator<
               (value.count ?? 1) === 1
                 ? value.generator(value.params)
                 : new Array(value.count ?? 1)
-                    .fill(null)
-                    .map(() => value.generator(value.params)),
+                  .fill(null)
+                  .map(() => value.generator(value.params)),
           };
         }, {});
 
@@ -140,7 +140,10 @@ export default class TinybirdGenerator extends BaseGenerator<
   }
 
   async sendData(data: TinybirdMessage[]): Promise<void> {
-    const params = { name: this.config.datasource };
+    const params = {
+      name: this.config.datasource,
+      from: 'mockingbird'
+    };
     const endpointURL =
       this.config.endpoint in this.endpoints
         ? this.endpoints[this.config.endpoint as keyof typeof this.endpoints]

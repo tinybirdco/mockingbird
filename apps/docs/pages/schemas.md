@@ -31,7 +31,7 @@ The output of this schema would look like:
 }
 ```
 
-### Arrays
+## Arrays
 
 All types can be generated as arrays. Simply add a `count` key at the same level as the `type` key.
 
@@ -46,7 +46,9 @@ All types can be generated as arrays. Simply add a `count` key at the same level
 
 ## Preset Schemas
 
-You can write your own custom schema, or use any of the preset schemas.
+You can write your own custom schema, or use any of the preset schemas. 
+
+You can find the definitions of all preset Schemas [here](https://github.com/tinybirdco/mockingbird/blob/main/packages/tinybird-generator/src/presetSchemas.ts). 
 
 Contributions for more preset schemas are welcome!
 

@@ -1,217 +1,164 @@
+![Mockingbird Logo](assets/logo/logo_white.png)
+
 # Mockingbird
 
-Mockingbird is dummy-data generator built by [Tinybird](https://tinybird.co).
+Mockingbird is synthetic streaming data generator built by [Tinybird](https://tinybird.co).
 
-Mockingbird can be used as a package in other projects, or on its own via the UI or CLI.
+It can be used as a library in other projects, or on its own via the UI or CLI.
 
-Data is generted in NDJSON format, and pushed to an HTTP endpoint. You can use it to send data to Tinybird via the [Tinybird Events API](https://www.tinybird.co/docs/guides/ingest-from-the-events-api.html).
+Mockingbird can send data to any downstream HTTP endpoint through Destination plugins. If you don't see a Destination that you want, feel free to request it or contribute it!
 
-Go to [https://mockingbird.tinybird.co/](https://mockingbird.tinybird.co/)
-or alternatively run it [locally](#local-install) on your machine.
+If you simply want to use the Web UI, you use the hosted one here: [https://mockingbird.tinybird.co/](https://mockingbird.tinybird.co/)
 
-![Generator UI!](/readme/img/ui.png "Generator UI")
+## Docs
 
-## Local Install
+Find the docs at [https://mockingbird.tinybird.co/docs](https://mockingbird.tinybird.co/docs)
 
-To run the generator locally, first install Node.js (developed using v18 lts/hydrogen).
+## Usage
 
-Then:
+### Web UI
 
-1. Clone this monorepo: `git clone https://github.com/tinybirdco/mockingbird.git`
-2. Install dependencies with npm: `npm install`
+The Web UI provides and easy to use, guided experience. It should be pretty easy to get started with, so give it a go!
 
-Repository has the following structure:
+If you need help with defining schemas, or configuring particular Destinations, you can find more complete documentation [here](https://mockingbird.tinybird.co/docs).
+
+### Passing params in the URL
+
+If you want to re-use configurations from a previous session, you can simply save the URL. All settings are saved as parameters in the URL, so you can re-use and share configs with your team. For example: [http://localhost:3000/?schema=z_sales&eps=1&host=eu_gcp&datasource=sales_dg&token=p.eyJ1IjogIjg4Nzk5NGUxLWZmNmMtNGUyMi1iZTg5LTNlYzBmNmRmMzlkZCIsICJpZCI6ICIwN2RlZThhMS0wNGMzLTQ4OTQtYmQxNi05ZTlkMmM3ZWRhMTgifQ.p_N4EETK7dbxOgHtugAUue3BUWwyGHT461Ha8P-d3Go](http://localhost:3000/?schema=z_sales&eps=1&host=eu_gcp&datasource=sales_dg&token=p.eyJ1IjogIjg4Nzk5NGUxLWZmNmMtNGUyMi1iZTg5LTNlYzBmNmRmMzlkZCIsICJpZCI6ICIwN2RlZThhMS0wNGMzLTQ4OTQtYmQxNi05ZTlkMmM3ZWRhMTgifQ.p_N4EETK7dbxOgHtugAUue3BUWwyGHT461Ha8P-d3Go)
+
+**Warning**: all settings are saved in the URL including senstive field such as tokens & passwords! This is helpful in many occasions for demos, POCs and tests where these credentials are short-lived and disposable - but take care if you are using credentials that must not be shared!
+
+### CLI
+
+Mockingbird is available as a standalone CLI.
+
+Install the CLI with:
+
+```
+npm install @tinybirdco/mockingbird-cli
+```
+
+Here is an example of sending data to the Tinybird Events API:
+
+```sh
+> mockingbird-cli \
+  --generator tinybird
+  --schema schema.txt \
+  --tb-datasource "my_data_source" \
+  --tb-token "e.Pdjdbfsbhksd...." \
+  --tb-endpoint eu_gcp \
+  --eps 50 \
+  --limit 200
+```
+
+## Contributing
+
+All contributions are welcome! We encourages individuals & commerical vendors to contribute to Mockingbird to build a data generator that works for everyone.
+
+The repository has the following structure:
 
 ```bash
 ├── apps
 │   ├── cli
+│   ├── docs
 │   └── web
 └── packages
     └── tinybird-generator
 ```
 
-## Web
+### Generator
 
-### How To Use
+The core Mockingbird generator is under `./packages/tinybird-generator`. All new Data Types, Schemas and Destinations are added here.
 
-1. Run the development server: `npm run dev`. The web app will be available on [http://localhost:3000](http://localhost:3000).
-2. Input your Tinybird config by clicking the __Tinybird Settings__ button in the top right & click __Save__.
-3. Customise the schema in the text box on the left & click __Save__. This will first validate that it is valid JSON, and second, validate that you have used known data types. If you pass validation, you'll see a preview of your data on the right.
-4. Click the __Generate!__ button to start sending data to Tinybird.
+The generator is written in TypeScript & uses [Faker.js](https://fakerjs.dev/) under the hood to power much of the fake data generation. Custom Data Types are added on-top of Faker to supplement where needed.
 
-### Passing params in the URL
+#### Adding new Data Types
 
-To allow faster demoing, you can pass the desired params in the url. E.g., [http://localhost:3000/?schema=z_sales&eps=1&host=eu_gcp&datasource=sales_dg&token=p.eyJ1IjogIjg4Nzk5NGUxLWZmNmMtNGUyMi1iZTg5LTNlYzBmNmRmMzlkZCIsICJpZCI6ICIwN2RlZThhMS0wNGMzLTQ4OTQtYmQxNi05ZTlkMmM3ZWRhMTgifQ.p_N4EETK7dbxOgHtugAUue3BUWwyGHT461Ha8P-d3Go](http://localhost:3000/?schema=z_sales&eps=1&host=eu_gcp&datasource=sales_dg&token=p.eyJ1IjogIjg4Nzk5NGUxLWZmNmMtNGUyMi1iZTg5LTNlYzBmNmRmMzlkZCIsICJpZCI6ICIwN2RlZThhMS0wNGMzLTQ4OTQtYmQxNi05ZTlkMmM3ZWRhMTgifQ.p_N4EETK7dbxOgHtugAUue3BUWwyGHT461Ha8P-d3Go)
+DataTypes are defined in [/packages/tinybird-generator/src/schemaTypes.ts](./packages/tinybird-generator/src/schemaTypes.ts).
 
-***
-__NOTE:__ shown token has been deprecated so it won't work
-***
+To add a new Data Type, add a new item to the `schemaTypes` object.
 
-### Passing predefined Schemas
+They key of the item will become the name of the Data Type. Ensure that you choose a name that does not clash with an existing Faker.js or custom type.
 
-Apart from passing the schema templates —`schema=z_sales`— as you can see [above](#passing-params-in-the-url), you can also pass a hash that contains the JSON Schema.
-This way you can save it for later and using it for quick demos.
+The value of the item must be the `createSchemaValue()` function. The `createSchemaValue` function has 1 required parameter, and 1 optional parameter. The first parameter must be a valid function, and this function is used to generate the fake data. The second (optional) parameter, is a [Zod validator](https://zod.dev/) for any parameters required by your new Data Type. This validator is only required if your generator function accepts incoming parameters, otherwise you can ignore it.
 
-To generate new valid schemas without [adding default templates](#adding-new-default-templates) you can simply edit the JSON in the Schema Builder, click on Save, and, if it is a valid one, a new hash of the JSON will be saved in the url. E.g., `schema=XQAAAAJxAQAAAAAAAABtAElZc5EUiPjRVsymUw6kCv7vrUcchRGo2mUJw1XM3QbdEbjcCYxEyOlqpifLRoogkVAEtr4ISWOmu33DlLoNC_p6GQaSv1x6BIitOL-wxXI56XzsFLA0JJEAl4NmVrBsCzjgHzv0MIgS5NF7EEnU7qypT5jWdjF8Svh9vy1epdoW6QCBCYbevwnEVck6v-SvIsw5D_ggGs7AOZMlRRwbj4gl_57mYFDOcqi2AXzhPmmQNKpmf3EaZWtzauwCUNUmU7u57rgynqMaWgZTysoukECAVA1mIPGEI3cMA0C-l7kRc_J7qCpAObcGfciJ_XYA1AiiWylgDcU4BxXTY3D4DhFX_r1oIA`
-
-## CLI
-
-The tool has a CLI mode you can use:
-
-```sh
-> node cli/index.js --schema schema.txt \
-  --datasource $DS_NAME \
-  --token $TB_TOKEN \
-  --endpoint eu_gcp \
-  --eps 50 \
-  --limit 200
-```
-
-And for your local Tinybird development environment:
-
-```sh
-> TB_ENDPOINT=http://localhost:8300 \
-    node cli/index.js --schema schema.txt \
-    --datasource $DS_NAME \
-    --token $TB_TOKEN \
-    --endpoint custom \
-    --eps 50 \
-    --limit 200
-```
-
-## DataTypes
-
-See [/packages/tinybird-generator/src/dataTypes.ts](./packages/tinybird-generator/src/dataTypes.ts) for DataTypes supported in schemas. We use [Faker](https://fakerjs.dev/) to generate random data with some custom extensions. Not all Faker types are exposed, only types explicitly added via `dataTypes.ts` can be used in schemas.
-
-Current types are:
-
-```txt
-int
-uint
-float
-intString
-uintString
-floatString
-hex
-string
-first_name
-last_name
-full_name
-email
-word
-domain
-values
-values_weighted
-datetime //values up to the second -> DateTime
-datetime_range
-timestamp //values up to the millisecond -> DateTime64(3)
-timestamp_now //values up to the millisecond -> DateTime64(3)
-timestamp_range
-range //supports two params:  'params': ['start', 'end'] and returns ints between the params
-bool
-uuid
-browser_name
-browser_engine_name
-city_name
-country_code_iso2
-country_code_iso3
-operating_system
-search_engine
-lat_or_lon_string
-lat_or_lon_numeric
-words
-http_method
-user_agent
-semver
-```
-
-### Adding new DataTypes
-
-DataTypes are defined in [/packages/tinybird-generator/src/dataTypes.ts](./packages/tinybird-generator/src/dataTypes.ts).
-
-To add a new DataType, add a new object to the data type array.
-
-Requires properties:
-
-`tinybird_type` - The Type to use for the column in Tinybird (Current not implemented)
-
-`generator` - A function that generates and returns the actual value to use in the data
-
-Optional properties:
-
-`params` - An array of key names to use for input parameters
-
-`param_validator` - A function that validates incoming parameters and returns true/false
-
-For example, a minimal type takes no input params, thus requires no param validator:
+For example, a custom Data Type that takes no input params:
 
 ```javascript
-    'int': {
-        'tinybird_type': 'int',
-        generator() {
-            return Math.floor(Math.random() * 100) + 1;
-        }
-    },
+http_method: createSchemaValue(() => extendedFaker.internet.httpMethod())
 ```
 
-A more complex type can take input parameters and must provide a validator:
+A custom Data Type that accepts incoming parameters & has a validator:
 
 ```javascript
-    'values': {
-        'tinybird_type': 'string',
-        'params': ['values'],
-        'param_validator': function (params) {
-            const validators = [
-                param_validators.length,
-                param_validators.keys
-            ]
-            return RunValidators(validators, this.params, params);
-        },
-        'generator': function (params) {
-            return params.values[Math.floor(Math.random() * params.values.length)];
-        }
-    },
+values: createSchemaValue(
+    (params) => params.values[Math.floor(Math.random() * params.values.length)],
+    z.object({ values: z.array(z.any()) })
+),
 ```
 
-### Adding new default templates
+#### Adding mew preset Schemas
 
-Templates are defined in [/packages/tinybird-generator/src/presetSchemas.ts](./packages/tinybird-generator/src/presetSchemas.ts).
+Preset Schemas are defined in [/packages/tinybird-generator/src/presetSchemas.ts](./packages/tinybird-generator/src/presetSchemas.ts).
 
-To add a new template, add a new property containing the schema to the presetSchemas object.
+To add a new Schema, add a new item to the `presetSchemas` object.
+
+They key of the item will become the name of the Schema. Ensure that you choose a name that does not clash with an existing preset Schema.
+
+The value of the item is an object that defined the Schema, just as you would define it via the Web UI.
 
 ```javascript
-export const presetSchemas = {
-    'default': {
-        "some_int": {
-            "type": "int"
-        },
-        "some_values": {
-            "type": "values",
-            "params": {
-                "values": [123, 456]
-            }
-        },
-        "values_weighted": {
-            "type": "values_weighted",
-            "params": {
-                "values": [123, 456, 789],
-                "weights": [90, 7, 3]
-            }
-        }
+Default: {
+    some_int: {
+        type: "int",
     },
-    'acme store': {
-        "datetime": {
-            "type": "datetime"
+    some_values: {
+        type: "values",
+        params: {
+        values: [123, 456],
         },
-        "article_id": {
-            "type": "values",
-            "params": {
-                "values": [709138001,517762001,675068002,712216001,507909003,762846008,469039019,631878001,697054003,682511001,618800001,710056003,507910001,470985003,697054014,762846001,762846007,721435001,734460001,762846006,581298005,682509001,502224001,850917001,622955001,695632001,349301001,507909001,859125001,623115001,622958003,716672001]
-            }
+    },
+    values_weighted: {
+        type: "values_weighted",
+        params: {
+        values: [123, 456, 789],
+        weights: [90, 7, 3],
         },
-        "customer_id": {
-            "type": "string"
-        }
-    }
-}
+    },
+},
 ```
+
+### CLI
+
+The CLI is under `./apps/cli`
+
+The CLI is Node based and uses [`yargs`](https://github.com/yargs/yargs).
+
+### Web UI
+
+The Web UI is under `./apps/web`
+
+The Web UI is a Next.js application written in TypeScript.
+
+#### Running the local dev server
+
+To run the Mockingbird UI locally, first install Node.js (developed using v18).
+
+Then, use these commands:
+
+```
+git clone https://github.com/tinybirdco/mockingbird.git
+cd mockingbrid
+npm install
+npm run dev
+```
+
+This will serve both the Web UI & the documentation site locally. By default, the UI is available on `http://localhost:3001` and the docs are on `http://localhost:3000`.
+
+### Docs
+
+The Docs are under `./apps/docs`
+
+The Docs are written in MDX using [Nextra](https://nextra.site/) as a static site generator.
+
+To run the docs locally, see the instructions for the running the [Web UI](#running-the-local-dev-server).

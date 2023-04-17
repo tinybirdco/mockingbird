@@ -2,7 +2,7 @@
 
 # Mockingbird
 
-Mockingbird is synthetic streaming data generator built by [Tinybird](https://tinybird.co).
+Mockingbird is mock streaming data generator built by [Tinybird](https://tinybird.co).
 
 It can be used as a library in other projects, or on its own via the UI or CLI.
 

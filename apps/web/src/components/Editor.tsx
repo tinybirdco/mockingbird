@@ -45,8 +45,13 @@ export default function Editor({ onSchemaChange, isSaved }: EditorProps) {
     if (template && template in presetSchemas) {
       onTemplateChange(template as PresetTemplate)
     } else if (schema && schema !== 'Preset') {
-      const json = JSON.parse(decompressJSON(schema))
-      setContent({ json })
+      try {
+        const json = JSON.parse(decompressJSON(schema))
+        setContent({ json })
+      } catch (e) {
+        console.error(e)
+        onTemplateChange('Default')
+      }
     } else {
       onTemplateChange('Default')
     }
@@ -152,7 +157,7 @@ export default function Editor({ onSchemaChange, isSaved }: EditorProps) {
             onClick={onSchemaSave}
           >
             <span>{isSaved ? 'Saved' : 'Save'}</span>
-            {isSaved && <CheckmarkIcon />}
+            {isSaved && <CheckmarkIcon className="w-5 h-5 fill-white" />}
           </button>
         </div>
       </div>

@@ -162,7 +162,11 @@ export default class TinybirdGenerator extends BaseGenerator<
         }
         return res.json();
       })
-      .then(console.log)
+      .then((res) => {
+        if (this.config.logs) {
+          console.log(`Tinybird response: ${res}`);
+        }
+      })
       .catch(console.error);
   }
 }

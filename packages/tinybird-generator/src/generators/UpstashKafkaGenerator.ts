@@ -84,9 +84,10 @@ export default class UpstashKafkaGenerator extends BaseGenerator<
         }
 
         metadata.forEach((m: { topic: any; partition: any; offset: any }) => {
-          console.log(
-            `Topic: ${m.topic}, Partition: ${m.partition}, Offset: ${m.offset}`
-          );
+          if (this.config.logs)
+            console.log(
+              `Topic: ${m.topic}, Partition: ${m.partition}, Offset: ${m.offset}`
+            );
         });
       })
       .catch(console.error);

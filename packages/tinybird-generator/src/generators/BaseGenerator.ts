@@ -36,12 +36,14 @@ export default abstract class BaseGenerator<C extends BaseConfig, M> {
           await this.sendData(data);
           if (onMessage) onMessage(data);
         } catch (ex) {
-          console.log(`ERR > ${ex}.`);
+          if (this.config.logs) console.log(`ERR > ${ex}.`);
           break;
         }
 
         sentRows += data.length;
-        console.log(`INFO> ${sentRows} rows sent so far...`);
+
+        if (this.config.logs)
+          console.log(`INFO> ${sentRows} rows sent so far...`);
 
         if (limit != -1 && sentRows >= limit) break;
 

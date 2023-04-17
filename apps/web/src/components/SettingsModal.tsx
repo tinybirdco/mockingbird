@@ -4,6 +4,9 @@ import { FormEvent, useState } from 'react'
 import Modal from '@/components/Modal'
 import { TinybirdGenerator } from '@tinybirdco/mockingbird'
 
+import { ArrowTopRightOnSquareIcon, QuestionMarkCircleIcon } from './Icons'
+import Tooltip from './Tooltip'
+
 type SettingsModalProps = {
   isOpen: boolean
   onClose: () => void
@@ -83,7 +86,16 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
           onSubmit={onSubmit}
           className="grid items-center justify-between grid-cols-2 gap-6"
         >
-          <label htmlFor="datasource">Data Source</label>
+          <label htmlFor="datasource" className="flex items-center gap-1">
+            <span>Data Source</span>
+            <a
+              href="https://www.tinybird.co/docs/concepts/data-sources.html"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <ArrowTopRightOnSquareIcon className="w-4 h-4 text-tb-text3 hover:text-tb-primary" />
+            </a>
+          </label>
           <input
             id="datasource"
             name="datasource"
@@ -91,7 +103,16 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             className="input-base"
           />
 
-          <label htmlFor="token">API Token</label>
+          <label htmlFor="token" className="flex items-center gap-1">
+            <span>Auth Token</span>
+            <a
+              href="https://www.tinybird.co/docs/concepts/auth-tokens.html"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <ArrowTopRightOnSquareIcon className="w-4 h-4 text-tb-text3 hover:text-tb-primary" />
+            </a>
+          </label>
           <input
             id="token"
             name="token"
@@ -99,7 +120,12 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             className="input-base"
           />
 
-          <label htmlFor="host">Host</label>
+          <label htmlFor="host" className="flex items-center gap-1">
+            <span>Region</span>
+            <Tooltip text="Workspace region">
+              <QuestionMarkCircleIcon className="w-4 h-4 text-tb-text3 hover:text-tb-primary cursor-help" />
+            </Tooltip>
+          </label>
           <select
             id="host"
             name="host"
@@ -128,7 +154,12 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             </>
           )}
 
-          <label htmlFor="eps">EPS</label>
+          <label htmlFor="eps" className="flex items-center gap-1">
+            <span>Events Per Second</span>
+            <Tooltip text="Events sent per second">
+              <QuestionMarkCircleIcon className="w-4 h-4 text-tb-text3 hover:text-tb-primary cursor-help" />
+            </Tooltip>
+          </label>
           <input
             id="eps"
             name="eps"

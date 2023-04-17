@@ -1,23 +1,26 @@
 import { useState } from 'react'
 
 import { createWorker, startWorker, stopWorker } from '@/lib/workerBuilder'
-import { TinybirdConfig } from '@tinybirdco/mockingbird'
+import { Schema } from '@tinybirdco/mockingbird'
+import useGeneratorConfig from './useGeneratorConfig'
 
-export default function useGeneratorWorker(
-  config: TinybirdConfig,
-  isSaved: boolean
-) {
+export default function useGeneratorWorker(schema: Schema, isSaved: boolean) {
   const [worker, setWorker] = useState<Worker>()
   const [isGenerating, setIsGenerating] = useState(false)
   const [sentMessages, setSentMessages] = useState({
     total: 0,
     session: 0,
   })
+  const { generator, config: generatorConfig } = useGeneratorConfig()
 
   function startGenerating() {
-    if (isSaved) {
+    if (isSaved && generator) {
       const createdWorker = createWorker(
-        config,
+        generator,
+        {
+          schema,
+          ...generatorConfig,
+        },
         ({ data }: MessageEvent<number>) => {
           setSentMessages(prev => ({
             total: prev.total + data,

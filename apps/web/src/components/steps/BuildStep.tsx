@@ -4,7 +4,6 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { Content, JSONContent, TextContent } from 'vanilla-jsoneditor'
 
-import { CheckmarkIcon } from '@/components/Icons'
 import { compressJSON, decompressJSON } from '@/lib/helpers'
 import { cx } from '@/lib/utils'
 import {
@@ -15,6 +14,9 @@ import {
   validateSchema,
 } from '@tinybirdco/mockingbird'
 
+import { ArrowDownIcon, CheckmarkIcon } from '../Icons'
+import Layout from '../Layout'
+
 const JSONEditor = dynamic(() => import('@/components/JSONEditor'), {
   loading: () => <p>Loading...</p>,
   ssr: false,
@@ -23,12 +25,17 @@ const JSONEditor = dynamic(() => import('@/components/JSONEditor'), {
 const TEMPLATE_OPTIONS = [...PRESET_SCHEMA_NAMES, 'Custom'] as const
 type PresetSchemaNameWithCustom = (typeof TEMPLATE_OPTIONS)[number]
 
-type EditorProps = {
+type BuildStepProps = {
   onSchemaChange: (schema: Schema) => void
   isSaved: boolean
+  onGenerationStartClick: () => void
 }
 
-export default function Editor({ onSchemaChange, isSaved }: EditorProps) {
+export default function BuildStep({
+  onGenerationStartClick,
+  onSchemaChange,
+  isSaved,
+}: BuildStepProps) {
   const router = useRouter()
   const [validationErrors, setValidationErrors] = useState<string[]>([])
   const [template, setTemplate] = useState<PresetSchemaNameWithCustom>('Custom')
@@ -140,69 +147,92 @@ export default function Editor({ onSchemaChange, isSaved }: EditorProps) {
   }
 
   return (
-    <div className="flex flex-col card">
-      <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center md:gap-0">
-        <h2 className="text-3xl font-semibold">Schema Designer</h2>
-        <div className="flex items-center justify-between gap-4 md:justify-start">
-          <select
-            className="input-base"
-            value={template}
-            onChange={e =>
-              onTemplateChange(e.target.value as PresetSchemaNameWithCustom)
+    <Layout>
+      <Layout.LeftCol stepIndex={2} />
+
+      <Layout.RightCol>
+        <div className="px-10 pt-8 pb-10 bg-white rounded-lg">
+          <h3 className="text-lg font-semibold">Schema Designer</h3>
+
+          <div className="h-6" />
+
+          <div className="flex items-center justify-between">
+            <p className="text-sm font-semibold">Schema</p>
+
+            <select
+              className="input-base"
+              value={template}
+              onChange={e =>
+                onTemplateChange(e.target.value as PresetSchemaNameWithCustom)
+              }
+            >
+              {TEMPLATE_OPTIONS.map(presetSchemaName => (
+                <option key={presetSchemaName} value={presetSchemaName}>
+                  {presetSchemaName}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="h-4" />
+
+          <JSONEditor
+            content={content}
+            onChange={onContentChange}
+            statusBar={false}
+            onRenderMenu={(items, _context) =>
+              items.filter(item =>
+                'text' in item ? item.text !== 'table' : true
+              )
             }
-          >
-            {TEMPLATE_OPTIONS.map(presetSchemaName => (
-              <option key={presetSchemaName} value={presetSchemaName}>
-                {presetSchemaName}
-              </option>
-            ))}
-          </select>
-          <button
-            className={cx(
-              'py-[10px] px-[14px] flex items-center gap-4 bg-tb-primary rounded-[4px] shadow-[0px_1px_3px_rgba(11,19,36,0.1)] text-sm text-white tracking-[-0.01em] hover:scale-105',
-              isSaved && 'bg-opacity-40 cursor-not-allowed'
-            )}
-            disabled={isSaved}
-            onClick={onSchemaSave}
-          >
-            <span>{isSaved ? 'Saved' : 'Save'}</span>
-            {isSaved && <CheckmarkIcon className="w-5 h-5 fill-white" />}
-          </button>
+          />
+
+          {validationErrors.length > 0 && (
+            <ul className="my-4">
+              {validationErrors.map(validationError => (
+                <li key={validationError} className="text-red-500">
+                  {validationError}
+                </li>
+              ))}
+            </ul>
+          )}
+
+          <div className="h-6" />
+
+          <p className="text-sm font-semibold">Preview</p>
+
+          <div className="h-4" />
+
+          <div className="preview">{sampleCode}</div>
+
+          <div className="h-6" />
+
+          <div className="flex justify-end gap-6">
+            <button
+              className={cx(
+                'py-[10px] px-[14px] flex items-center gap-4 bg-tb-primary rounded-[4px] shadow-[0px_1px_3px_rgba(11,19,36,0.1)] text-sm text-white tracking-[-0.01em] hover:scale-105',
+                isSaved && 'bg-opacity-40 cursor-not-allowed'
+              )}
+              disabled={isSaved}
+              onClick={onSchemaSave}
+            >
+              <span>{isSaved ? 'Saved' : 'Save'}</span>
+              {isSaved && <CheckmarkIcon />}
+            </button>
+            <button
+              type="button"
+              className={cx(
+                'btn-base btn-primary',
+                !isSaved && 'bg-opacity-40 cursor-not-allowed'
+              )}
+              disabled={!isSaved}
+              onClick={onGenerationStartClick}
+            >
+              Start Generating! <ArrowDownIcon />
+            </button>
+          </div>
         </div>
-      </div>
-
-      <div className="h-6" />
-
-      <p className="font-medium text-[22px] leading-7 text-tb-text1">Schema</p>
-
-      <div className="h-6" />
-
-      <JSONEditor
-        content={content}
-        onChange={onContentChange}
-        statusBar={false}
-        onRenderMenu={(items, _context) =>
-          items.filter(item => ('text' in item ? item.text !== 'table' : true))
-        }
-      />
-
-      <div className="h-11" />
-
-      <p className="font-medium text-[22px] leading-7 text-tb-text1">Preview</p>
-
-      <div className="h-6" />
-
-      <div className="preview">{sampleCode}</div>
-
-      {validationErrors.length > 0 && (
-        <ul className="my-4">
-          {validationErrors.map(validationError => (
-            <li key={validationError} className="text-red-500">
-              {validationError}
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
+      </Layout.RightCol>
+    </Layout>
   )
 }

@@ -7,6 +7,10 @@
   --jse-main-border: 1px solid #d6d4df !important;
 }
 
+input[type='radio'] {
+  accent-color: theme('colors.tb-primary');
+}
+
 @layer base {
   html {
     font-family: 'Inter', sans-serif;
@@ -21,7 +25,11 @@
   }
 
   .btn-base {
-    @apply px-4 py-2;
+    @apply px-4 py-[10px] rounded-[4px] flex items-center gap-2;
+  }
+
+  .btn-primary {
+    @apply bg-tb-primary text-white hover:bg-tb-primary/80;
   }
 
   .card {

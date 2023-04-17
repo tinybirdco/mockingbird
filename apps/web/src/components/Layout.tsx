@@ -1,38 +1,80 @@
-import { useState } from 'react'
+import { ReactNode } from 'react'
 
-import SettingsModal from '@/components/SettingsModal'
+import { steps } from '@/lib/constants'
+
+import StepTitle from './StepTitle'
 
 type LayoutProps = {
-  children: React.ReactNode
+  children: ReactNode
 }
 
-export default function Layout({ children }: LayoutProps) {
-  const [isSetttingsModalOpen, setIsSettingsModalOpen] = useState(false)
+type LeftColProps = {
+  stepIndex: number
+}
 
+function LeftCol({ stepIndex }: LeftColProps) {
   return (
-    <>
-      <nav
-        className="flex items-center justify-between px-6 py-4"
-        aria-label="main navigation"
-      >
-        <a href="https://tinybird.co" rel="noopener noreferrer" target="_blank">
-          <img src="/logo.svg" alt="Tinybird" width="112" height="28" />
-        </a>
+    <div className="md:sticky flex flex-col md:col-span-3 gap-4 justify-between top-8 md:h-[80vh]">
+      <div>
+        <h2 className="text-[34px] leading-[41px] font-semibold -tracking-wide">
+          Mockingbird.
+        </h2>
+        <h6 className="text-[15px] leading-[18px] font-semibold">
+          by tinybird
+        </h6>
 
-        <button
-          className="text-white btn-base bg-tb-primary hover:scale-105"
-          onClick={() => setIsSettingsModalOpen(true)}
-        >
-          Tinybird Settings
-        </button>
-      </nav>
+        {stepIndex > 0 && (
+          <>
+            <div className="h-10" />
 
-      <main className="max-w-5xl px-4 mx-auto md:px-12">{children}</main>
+            <div className="flex flex-col gap-2">
+              {steps.map((step, index) => (
+                <StepTitle
+                  key={step.title}
+                  stepNumber={index + 1}
+                  title={step.title}
+                  isActive={index <= stepIndex}
+                />
+              ))}
+            </div>
+          </>
+        )}
+      </div>
 
-      <SettingsModal
-        isOpen={isSetttingsModalOpen}
-        onClose={() => setIsSettingsModalOpen(false)}
-      />
-    </>
+      {stepIndex > 0 && (
+        <h3 className="text-sm font-semibold leading-4 text-tb-text1 -tracking-wide max-w-[152px]">
+          <span className="italic font-bold font-ia-writer">Generate</span>{' '}
+          synthetic{' '}
+          <span className="italic font-bold font-ia-writer">data</span> streams
+          for your next data{' '}
+          <span className="italic font-bold font-ia-writer">project.</span>
+        </h3>
+      )}
+    </div>
   )
 }
+
+function RightCol({ children }: LayoutProps) {
+  return <div className="md:col-span-9">{children}</div>
+}
+
+function Layout({ children }: LayoutProps) {
+  return (
+    <div className="max-w-[1072px] mx-auto pt-8 pb-6 px-4 md:px-0 flex flex-col gap-16">
+      <div className="grid flex-1 grid-cols-1 gap-16 md:grid-cols-12">
+        {children}
+      </div>
+      <div className="flex items-center justify-between w-full">
+        <p className="text-xs text-tb-text1">
+          Copyright © 2023 Tinybird. All rights reserved
+        </p>
+        <p className="text-xs text-tb-text1">Terms of service | Legal notice</p>
+      </div>
+    </div>
+  )
+}
+
+export default Object.assign(Layout, {
+  LeftCol,
+  RightCol,
+})

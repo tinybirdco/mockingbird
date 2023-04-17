@@ -1,7 +1,11 @@
-import type { TinybirdConfig } from '@tinybirdco/mockingbird'
+import type {
+  TinybirdConfig,
+  UpstashKafkaConfig,
+} from '@tinybirdco/mockingbird'
 
 export function createWorker(
-  config: TinybirdConfig,
+  generator: 'Tinybird' | 'UpstashKafka',
+  config: TinybirdConfig | UpstashKafkaConfig,
   onMessage?: (message: MessageEvent<number>) => void,
   onError?: (e: ErrorEvent) => void
 ) {
@@ -16,7 +20,8 @@ export function createWorker(
 
   worker.postMessage({
     init: config.schema,
-    config: config,
+    generator,
+    config,
   })
 
   return worker

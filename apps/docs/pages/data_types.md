@@ -1,6 +1,6 @@
 # Data Types
 
-You can find the definitions of all Data Types [here](https://github.com/tinybirdco/mockingbird/blob/main/packages/tinybird-generator/src/dataTypes.ts). 
+You can find the definitions of all Data Types [here](https://github.com/tinybirdco/mockingbird/blob/main/packages/tinybird-generator/src/schemaTypes.ts). 
 
 Please feel free to contribute new Data Types!
 

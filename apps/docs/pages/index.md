@@ -1,6 +1,6 @@
 # Mockingbird
  
-Mockingbird is a flexible, synthetic, streaming data generator. 
+Mockingbird is a mock streaming data generator. 
 
 It is FOSS & available as a library, CLI or UI.
 

@@ -37,7 +37,7 @@ npm run dev
 
 To deploy to Vercel, simply click the button below:
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Ftinybirdco%2Fmockingbird&project-name=tinybird-mockingbird&repository-name=tinybird-mockingbird&demo-title=Mockingbird&demo-description=Mockingbird%20is%20a%20synthetic%20streaming%20data%20generator&demo-url=https%3A%2F%2Fmockingbird.tinybird.co%2F&root-directory%3D.%2Fapps%2Fweb)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Ftinybirdco%2Fmockingbird&project-name=tinybird-mockingbird&repository-name=tinybird-mockingbird&demo-title=Mockingbird&demo-description=Mockingbird%20is%20a%mock%20streaming%20data%20generator&demo-url=https%3A%2F%2Fmockingbird.tinybird.co%2F&root-directory%3D.%2Fapps%2Fweb)
 
 
 ## Basic Usage

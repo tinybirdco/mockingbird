@@ -1,6 +1,6 @@
 # Schemas
 
-Schemas are how you define what your synthetic data should look like. They are defined as JSON Objects, with each key representing a field in the data.
+Schemas are how you define what your mock data should look like. They are defined as JSON Objects, with each key representing a field in the data.
 
 Each top-level key is the name of the field, in database terms, this would be your column name. Each key is an object, beneath which, you must define a `type` field. The value of the `type` field must be one of the supported [Data Types](./data_types.md). Some Data Type require parameters, which are supplied with a `params` key at the same level as the `type` key. The `params` key is also an object, beneath which you must supply the key-value pairs as required by the `type`.
 
@@ -74,8 +74,8 @@ The `Content Tracking` schema is an example of an event tracking data feed.
 
 ### Web Analytics Starter Kit
 
-The `Web Analytics Starter Kit` allows you to generate synthetic data for the [Tinybird Web Analytics Starter Kit](https://github.com/tinybirdco/web-analytics-starter-kit).
+The `Web Analytics Starter Kit` allows you to generate mock data for the [Tinybird Web Analytics Starter Kit](https://github.com/tinybirdco/web-analytics-starter-kit).
 
 ### Log Analytics Starter Kit
 
-The `Log Analytics Starter Kit` allows you to generate synthetic data for the [Tinybird Log Analytics Starter Kit](https://github.com/tinybirdco/log-analytics-starter-kit).
+The `Log Analytics Starter Kit` allows you to generate mock data for the [Tinybird Log Analytics Starter Kit](https://github.com/tinybirdco/log-analytics-starter-kit).

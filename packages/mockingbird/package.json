@@ -20,7 +20,7 @@
   "homepage": "https://github.com/tinybirdco/mockingbird#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tinybirdco/mockingbird/packages/tinybird-generator"
+    "url": "https://github.com/tinybirdco/mockingbird/packages/mockingbird"
   },
   "scripts": {
     "build": "tsup",

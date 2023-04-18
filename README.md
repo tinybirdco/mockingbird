@@ -63,18 +63,18 @@ The repository has the following structure:
 │   ├── docs
 │   └── web
 └── packages
-    └── tinybird-generator
+    └── mockingbird
 ```
 
 ### Generator
 
-The core Mockingbird generator is under `./packages/tinybird-generator`. All new Data Types, Schemas and Destinations are added here.
+The core Mockingbird generator is under `./packages/mockingbird`. All new Data Types, Schemas and Destinations are added here.
 
 The generator is written in TypeScript & uses [Faker.js](https://fakerjs.dev/) under the hood to power much of the fake data generation. Custom Data Types are added on-top of Faker to supplement where needed.
 
 #### Adding new Data Types
 
-DataTypes are defined in [/packages/tinybird-generator/src/schemaTypes.ts](./packages/tinybird-generator/src/schemaTypes.ts).
+DataTypes are defined in [/packages/mockingbird/src/schemaTypes.ts](./packages/mockingbird/src/schemaTypes.ts).
 
 To add a new Data Type, add a new item to the `schemaTypes` object.
 
@@ -99,7 +99,7 @@ values: createSchemaValue(
 
 #### Adding mew preset Schemas
 
-Preset Schemas are defined in [/packages/tinybird-generator/src/presetSchemas.ts](./packages/tinybird-generator/src/presetSchemas.ts).
+Preset Schemas are defined in [/packages/mockingbird/src/presetSchemas.ts](./packages/mockingbird/src/presetSchemas.ts).
 
 To add a new Schema, add a new item to the `presetSchemas` object.
 

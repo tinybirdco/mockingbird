@@ -48,7 +48,7 @@ All types can be generated as arrays. Simply add a `count` key at the same level
 
 You can write your own custom schema, or use any of the preset schemas. 
 
-You can find the definitions of all preset Schemas [here](https://github.com/tinybirdco/mockingbird/blob/main/packages/tinybird-generator/src/presetSchemas.ts). 
+You can find the definitions of all preset Schemas [here](https://github.com/tinybirdco/mockingbird/blob/main/packages/mockingbird/src/presetSchemas.ts). 
 
 Contributions for more preset schemas are welcome!
 

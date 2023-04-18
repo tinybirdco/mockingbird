@@ -74,7 +74,7 @@ export interface RowGenerator<T> {
 }
 
 export interface SchemaGenerator {
-  generator: (params: unknown | unknown[]) => unknown | unknown[];
+  generator: (...params: unknown[]) => unknown | unknown[];
   params: unknown | unknown[];
   count: number;
 }

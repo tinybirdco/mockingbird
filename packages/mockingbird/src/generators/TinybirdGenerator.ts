@@ -58,14 +58,18 @@ export default class TinybirdGenerator extends BaseGenerator<
         const generator: Record<string, unknown | unknown[]> = (
           Object.entries(generatorSchema) as [string, SchemaGenerator][]
         ).reduce((acc, [key, value]) => {
+          const params = Array.isArray(value.params)
+            ? value.params
+            : [value.params];
+
           return {
             ...acc,
             [key]:
               (value.count ?? 1) === 1
-                ? value.generator(value.params)
+                ? value.generator(...params)
                 : new Array(value.count ?? 1)
-                  .fill(null)
-                  .map(() => value.generator(value.params)),
+                    .fill(null)
+                    .map(() => value.generator(...params)),
           };
         }, {});
 
@@ -75,14 +79,14 @@ export default class TinybirdGenerator extends BaseGenerator<
   }
 
   async sendData(data: TinybirdMessage[]): Promise<void> {
-    const params = { name: this.config.datasource, from: 'mockingbird' };
+    const params = { name: this.config.datasource, from: "mockingbird" };
     const endpointURL =
       this.config.endpoint in this.endpoints
         ? this.endpoints[this.config.endpoint as keyof typeof this.endpoints]
         : this.config.endpoint;
     const url = new URL(`${endpointURL}${this.events_path}`);
     Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v));
-
+    console.log(data);
     return fetch(url, {
       headers: {
         Authorization: `Bearer ${this.config.token}`,

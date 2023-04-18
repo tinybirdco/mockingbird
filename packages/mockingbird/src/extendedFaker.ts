@@ -57,11 +57,20 @@ const browserModule = Object.assign(
 
 const datatypeModule = Object.assign(
   {
-    int: () => extendedFaker.datatype.number(),
-    uint: () => extendedFaker.datatype.number({ min: 0 }),
-    intString: () => extendedFaker.datatype.number().toString(),
-    uintString: () => extendedFaker.datatype.number({ min: 0 }).toString(),
-    floatString: () => extendedFaker.datatype.float().toString(),
+    int: (params: { min?: number | undefined; max?: number | undefined }) =>
+      extendedFaker.datatype.number(params),
+    uint: (params: { max?: number | undefined }) =>
+      extendedFaker.datatype.number({ min: 0, max: params.max }),
+    intString: (params: {
+      min?: number | undefined;
+      max?: number | undefined;
+    }) => extendedFaker.datatype.number(params).toString(),
+    uintString: (params: { max?: number | undefined }) =>
+      extendedFaker.datatype.number({ min: 0, max: params.max }).toString(),
+    floatString: (params: {
+      min?: number | undefined;
+      max?: number | undefined;
+    }) => extendedFaker.datatype.float(params).toString(),
   },
   faker.datatype
 );

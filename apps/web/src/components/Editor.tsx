@@ -82,7 +82,7 @@ export default function Editor({ onSchemaChange, isSaved }: EditorProps) {
 
   const onTemplateChange = (newTemplate: PresetTemplate) => {
     setTemplate(newTemplate)
-    setContent({ json: presetSchemas[newTemplate] })
+    setContent({ json: presetSchemas[newTemplate] } as JSONContent)
     onSchemaChange({})
   }
 

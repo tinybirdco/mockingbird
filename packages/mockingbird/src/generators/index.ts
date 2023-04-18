@@ -1,4 +1,6 @@
-export { default as MockingbirdGenerator } from "./BaseGenerator";
+export type MockingbirdGenerator = InstanceType<
+  typeof import("./BaseGenerator").default
+>;
 export {
   default as TinybirdGenerator,
   TinybirdConfig,

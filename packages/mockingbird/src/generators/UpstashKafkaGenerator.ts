@@ -57,18 +57,14 @@ export default class UpstashKafkaGenerator extends BaseGenerator<
         const generator: Record<string, unknown | unknown[]> = (
           Object.entries(generatorSchema) as [string, SchemaGenerator][]
         ).reduce((acc, [key, value]) => {
-          const params = Array.isArray(value.params)
-            ? value.params
-            : [value.params];
-
           return {
             ...acc,
             [key]:
               (value.count ?? 1) === 1
-                ? value.generator(...params)
+                ? value.generator(...value.params)
                 : new Array(value.count ?? 1)
                     .fill(null)
-                    .map(() => value.generator(...params)),
+                    .map(() => value.generator(...value.params)),
           };
         }, {});
 

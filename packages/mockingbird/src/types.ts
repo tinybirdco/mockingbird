@@ -9,40 +9,59 @@ type ObjectPath<T extends object, D extends string = ""> = {
     | (T[K] extends object ? ObjectPath<T[K], "."> : "")}`;
 }[keyof T];
 
+type ObjectAtPath<
+  T,
+  Path extends string
+> = Path extends `${infer Key}.${infer Rest}`
+  ? Key extends keyof T
+    ? ObjectAtPath<T[Key], Rest>
+    : never
+  : Path extends keyof T
+  ? T[Path]
+  : never;
+
+export type FakerFunctions = Omit<
+  typeof extendedFaker,
+  "helpers" | "locales" | "fake" | "unique" | "mersenne" | "definitions"
+>;
+
+export type FakerFunctionParams<T> = T extends (...args: infer P) => any
+  ? P
+  : never;
+
 export type SchemaKey = Exclude<
-  ObjectPath<Omit<typeof extendedFaker, "helpers" | "locales" | "fake">>,
+  ObjectPath<FakerFunctions>,
   keyof typeof extendedFaker
 >;
 
-export const schemaSchema = z.record(
-  z.object({
-    type: z.string(),
-    params: z.any().optional(),
-    count: z.number().optional(),
-  })
-);
+export type SchemaValue<K extends SchemaKey = SchemaKey> =
+  K extends infer Key extends string
+    ? {
+        type: Key;
+        count?: number;
+      } & (FakerFunctionParams<ObjectAtPath<FakerFunctions, Key>> extends []
+        ? {}
+        : { params?: FakerFunctionParams<ObjectAtPath<FakerFunctions, Key>> })
+    : never;
 
-export type Schema = Record<
-  string,
-  {
-    type: SchemaKey;
-    params?: unknown;
-    count?: number;
-  }
->;
+export type Schema = Record<string, SchemaValue>;
 
 export function validateSchema(schema: Schema) {
   const errors = [] as string[];
 
-  for (const { type, params, count } of Object.values(schema)) {
+  for (const schemaItem of Object.values(schema)) {
+    const { type, count } = schemaItem;
+
     if (typeof count !== "undefined" && count < 1)
       errors.push(`${type}: Count must be greater than 0`);
 
-    if (params) {
+    if ("params" in schemaItem) {
       const generator = _get(extendedFaker, type);
 
       try {
-        generator(params);
+        // @ts-ignore
+        // @ts-nocheck
+        generator(schemaItem.params);
       } catch (e) {
         errors.push(
           `${type}: ${
@@ -57,6 +76,14 @@ export function validateSchema(schema: Schema) {
 
   return { valid: !errors.length, errors };
 }
+
+export const schemaSchema = z.record(
+  z.object({
+    type: z.string(),
+    params: z.any().optional(),
+    count: z.number().optional(),
+  })
+);
 
 export const baseConfigSchema = z.object({
   schema: schemaSchema.refine((schemaSchema) =>
@@ -75,6 +102,6 @@ export interface RowGenerator<T> {
 
 export interface SchemaGenerator {
   generator: (...params: unknown[]) => unknown | unknown[];
-  params: unknown | unknown[];
+  params: unknown[];
   count: number;
 }

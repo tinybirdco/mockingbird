@@ -99,6 +99,14 @@ const dateModule = Object.assign(
   faker.date
 );
 
+const imageModule = {
+  ...faker.image,
+  lorempicsum: () => "",
+  lorempixel: () => "",
+  placeholder: () => "",
+  unsplash: () => "",
+};
+
 const valuesModule = {
   pick: (params: { values: unknown[] }) =>
     params.values[Math.floor(Math.random() * params.values.length)],
@@ -113,6 +121,7 @@ const extendedFaker = {
   browser: browserModule,
   datatype: datatypeModule,
   date: dateModule,
+  image: imageModule,
   values: valuesModule,
 };
 

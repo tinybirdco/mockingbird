@@ -14,15 +14,12 @@ const presetSchemaNames = Object.keys(presetSchemas);
 const tinybirdConfigOptions = {
   "tb-datasource": {
     describe: "Tinybird datasource",
-    demandOption: true,
   },
   "tb-token": {
     describe: "Tinybird API token",
-    demandOption: true,
   },
   "tb-endpoint": {
     describe: "Tinybird API endpoint",
-    demandOption: true,
     choices: ["eu_gcp", "us_gcp", "custom"],
   },
 };
@@ -30,19 +27,15 @@ const tinybirdConfigOptions = {
 const upstashKafkaConfigOptions = {
   "uk-address": {
     describe: "Upstash Kafka address",
-    demandOption: true,
   },
   "uk-user": {
     describe: "Upstash Kafka user",
-    demandOption: true,
   },
   "uk-pass": {
     describe: "Upstash Kafka password",
-    demandOption: true,
   },
   "uk-topic": {
     describe: "Upstash Kafka topic",
-    demandOption: true,
   },
 };
 
@@ -78,34 +71,40 @@ const argv = yargs(hideBin(process.argv)).options({
   ...upstashKafkaConfigOptions,
 }).argv;
 
-const schema = argv.schema
-  ? JSON.parse(fs.readFileSync(argv.schema, "utf8"))
-  : presetSchemas[argv.template];
+async function main() {
+  const schema = argv.schema
+    ? JSON.parse(fs.readFileSync(argv.schema, "utf8"))
+    : presetSchemas[argv.template];
 
-let generator;
-if (argv.generator === "tinybird") {
-  generator = new TinybirdGenerator({
-    schema,
-    eps: argv.eps,
-    limit: argv.limit,
-    logs: argv.logs,
-    endpoint: ["eu_gcp", "us_gcp"].includes(argv.endpoint)
-      ? argv.endpoint
-      : process.env.TB_ENDPOINT,
-    datasource: argv.datasource,
-    token: argv.token,
-  });
-} else if (argv.generator === "upstash-kafka") {
-  generator = new UpstashKafkaGenerator({
-    schema,
-    eps: argv.eps,
-    limit: argv.limit,
-    logs: argv.logs,
-    address: argv.address,
-    user: argv.user,
-    pass: argv.pass,
-    topic: argv.topic,
-  });
+  let generator;
+  if (argv.generator === "tinybird") {
+    generator = new TinybirdGenerator({
+      schema,
+      eps: argv.eps,
+      limit: argv.limit,
+      logs: argv.logs,
+      endpoint: ["eu_gcp", "us_gcp"].includes(argv.endpoint)
+        ? argv.endpoint
+        : process.env.TB_ENDPOINT,
+      datasource: argv.datasource,
+      token: argv.token,
+    });
+  } else if (argv.generator === "upstash-kafka") {
+    generator = new UpstashKafkaGenerator({
+      schema,
+      eps: argv.eps,
+      limit: argv.limit,
+      logs: argv.logs,
+      address: argv.address,
+      user: argv.user,
+      pass: argv.pass,
+      topic: argv.topic,
+    });
+  }
+
+  await generator.generate();
 }
 
-generator.start();
+main()
+  .catch(console.error)
+  .finally(() => process.exit(0));

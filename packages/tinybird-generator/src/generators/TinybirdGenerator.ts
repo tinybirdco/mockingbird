@@ -1,13 +1,10 @@
 import fetch from "cross-fetch";
+import _get from "lodash.get";
 import { z } from "zod";
+
+import extendedFaker from "../extendedFaker";
+import { baseConfigSchema, RowGenerator, SchemaGenerator } from "../types";
 import BaseGenerator from "./BaseGenerator";
-import {
-  baseConfigSchema,
-  RowGenerator,
-  SchemaGenerator,
-  SchemaKey,
-} from "../types";
-import schemaTypes from "../schemaTypes";
 
 const tinybirdConfigSchema = baseConfigSchema.merge(
   z.object({
@@ -43,69 +40,6 @@ export default class TinybirdGenerator extends BaseGenerator<
     this.rowGenerator = this.createRowGenerator();
   }
 
-  mapType(type: SchemaKey): string {
-    switch (type) {
-      case "int":
-      case "range":
-        return "Int32";
-
-      case "uint":
-        return "UInt32";
-
-      case "float":
-      case "lat_or_lon_numeric":
-        return "Float32";
-
-      case "intString":
-      case "uintString":
-      case "floatString":
-      case "hex":
-      case "string":
-      case "first_name":
-      case "last_name":
-      case "full_name":
-      case "email":
-      case "word":
-      case "domain":
-      case "values":
-      case "values_weighted":
-      case "browser_name":
-      case "browser_engine_name":
-      case "city_name":
-      case "country_code_iso2":
-      case "country_code_iso3":
-      case "operating_system":
-      case "search_engine":
-      case "lat_or_lon_string":
-      case "http_method":
-      case "user_agent":
-      case "semver":
-        return "String";
-
-      case "datetime":
-      case "datetime_range":
-      case "datetime_lasthour":
-        return "DateTime";
-
-      case "timestamp":
-      case "timestamp_now":
-      case "timestamp_range":
-      case "timestamp_lasthour":
-        return "DateTime64(3)";
-
-      case "bool":
-        return "Boolean";
-
-      case "uuid":
-        return "UUID";
-
-      case "words":
-        return "Array(String)";
-      default:
-        return "String";
-    }
-  }
-
   createRowGenerator(): RowGenerator<TinybirdMessage> {
     return {
       generate: () => {
@@ -113,8 +47,9 @@ export default class TinybirdGenerator extends BaseGenerator<
           (acc, [key, value]) => ({
             ...acc,
             [key]: {
-              generator: schemaTypes[value.type].generator,
-              params: value.params ?? {},
+              generator: _get(extendedFaker, value.type),
+              params: value.params,
+              count: value.count ?? 1,
             },
           }),
           {}
@@ -164,7 +99,7 @@ export default class TinybirdGenerator extends BaseGenerator<
       })
       .then((res) => {
         if (this.config.logs) {
-          console.log(`Tinybird response: ${res}`);
+          console.log(`Tinybird response: ${JSON.stringify(res)}`);
         }
       })
       .catch(console.error);

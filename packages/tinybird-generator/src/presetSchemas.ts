@@ -3,16 +3,16 @@ import { Schema } from "./types";
 const presetSchemas: Record<string, Schema> = {
   Default: {
     some_int: {
-      type: "int",
+      type: "datatype.int",
     },
     some_values: {
-      type: "values",
+      type: "values.pick",
       params: {
         values: [123, 456],
       },
     },
     values_weighted: {
-      type: "values_weighted",
+      type: "values.pickWeighted",
       params: {
         values: [123, 456, 789],
         weights: [90, 7, 3],
@@ -21,10 +21,10 @@ const presetSchemas: Record<string, Schema> = {
   },
   "ACME Store": {
     datetime: {
-      type: "datetime",
+      type: "date.datetime",
     },
     article_id: {
-      type: "values",
+      type: "values.pick",
       params: {
         values: [
           709138001, 517762001, 675068002, 712216001, 507909003, 762846008,
@@ -37,50 +37,50 @@ const presetSchemas: Record<string, Schema> = {
       },
     },
     customer_id: {
-      type: "uuid",
+      type: "datatype.uuid",
     },
   },
   z_sales: {
     timestamp: {
-      type: "timestamp",
+      type: "date.timestamp",
     },
     store_id: {
-      type: "range",
+      type: "datatype.int",
       params: {
         min: 1,
         max: 6,
       },
     },
     browser: {
-      type: "values_weighted",
+      type: "values.pickWeighted",
       params: {
         values: ["Chrome", "Brave", "Firefox", "Safari"],
         weights: [65, 3, 8, 20],
       },
     },
     product_id: {
-      type: "range",
+      type: "datatype.int",
       params: {
         min: 3278123,
         max: 3378123,
       },
     },
     promo: {
-      type: "values_weighted",
+      type: "values.pickWeighted",
       params: {
         values: [0, 1],
         weights: [19, 1],
       },
     },
     sales: {
-      type: "values_weighted",
+      type: "values.pickWeighted",
       params: {
         values: [1, 2, 3, 4],
         weights: [50, 5, 2, 1],
       },
     },
     utm_source: {
-      type: "values_weighted",
+      type: "values.pickWeighted",
       params: {
         values: ["instagram", "newsletter", "tiktok", "search_engine"],
         weights: [65, 13, 18, 20],
@@ -89,13 +89,13 @@ const presetSchemas: Record<string, Schema> = {
   },
   "Stock Prices": {
     amount: {
-      type: "float",
+      type: "datatype.float",
     },
     date: {
-      type: "datetime",
+      type: "date.datetime",
     },
     stock_symbol: {
-      type: "values",
+      type: "values.pick",
       params: {
         values: [
           "ABF:XLON",
@@ -139,56 +139,56 @@ const presetSchemas: Record<string, Schema> = {
   },
   Flights: {
     timestamp: {
-      type: "timestamp",
+      type: "date.timestamp",
     },
     transaction_id: {
-      type: "uuid",
+      type: "datatype.uuid",
     },
     name: {
-      type: "full_name",
+      type: "name.fullName",
     },
     email: {
-      type: "email",
+      type: "internet.email",
     },
     age: {
-      type: "range",
+      type: "datatype.int",
       params: {
         min: 18,
         max: 99,
       },
     },
     passport_number: {
-      type: "range",
+      type: "datatype.int",
       params: {
         min: 3456789,
         max: 9876543,
       },
     },
     flight_from: {
-      type: "city_name",
+      type: "address.cityName",
     },
     flight_to: {
-      type: "city_name",
+      type: "address.cityName",
     },
     extra_bags: {
-      type: "values_weighted",
+      type: "values.pickWeighted",
       params: {
         values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
         weights: [45, 35, 10, 4, 2, 1, 1, 1, 1],
       },
     },
     priority_boarding: {
-      type: "bool",
+      type: "datatype.boolean",
     },
     meal_choice: {
-      type: "values_weighted",
+      type: "values.pickWeighted",
       params: {
         values: ["none", "vegan", "vegetarian", "halal", "kosher", "gluten"],
         weights: [60, 5, 10, 10, 10, 5],
       },
     },
     airline: {
-      type: "values_weighted",
+      type: "values.pickWeighted",
       params: {
         values: [
           "BrianAir",
@@ -205,24 +205,24 @@ const presetSchemas: Record<string, Schema> = {
   },
   "Content Tracking": {
     timestamp: {
-      type: "timestamp_range",
+      type: "date.timestampBetween",
       params: {
         start: "2022-07-18 23:59:59",
         end: "now",
       },
     },
     userId: {
-      type: "uuid",
+      type: "datatype.uuid",
     },
     contentId: {
-      type: "range",
+      type: "datatype.int",
       params: {
         min: 12345,
         max: 36923,
       },
     },
     eventType: {
-      type: "values_weighted",
+      type: "values.pickWeighted",
       params: {
         values: [
           "click",
@@ -238,7 +238,7 @@ const presetSchemas: Record<string, Schema> = {
       },
     },
     institutionID: {
-      type: "range",
+      type: "datatype.int",
       params: {
         min: 123,
         max: 369,
@@ -247,29 +247,29 @@ const presetSchemas: Record<string, Schema> = {
   },
   "Web Analytics Starter Kit": {
     timestamp: {
-      type: "timestamp_range",
+      type: "date.timestampBetween",
       params: {
         start: "2022-07-18 23:59:59",
         end: "now",
       },
     },
     session_id: {
-      type: "uuid",
+      type: "datatype.uuid",
     },
     action: {
-      type: "values",
+      type: "values.pick",
       params: {
         values: ["page_hit"],
       },
     },
     version: {
-      type: "values",
+      type: "values.pick",
       params: {
         values: ["1"],
       },
     },
     payload: {
-      type: "values",
+      type: "values.pick",
       params: {
         values: [
           '{ "user-agent":"Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29P) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.5112.79 Mobile Safari/537.36 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)", "locale":"en-US", "referrer":"https://www.kike.io", "pathname":"/blog-posts/data-market-whitebox-replaces-4-data-stack-tools-with-tinybird", "href":"https://www.tinybird.co/blog-posts/data-market-whitebox-replaces-4-data-stack-tools-with-tinybird"}',
@@ -290,106 +290,106 @@ const presetSchemas: Record<string, Schema> = {
   },
   "Log Analytics Starter Kit": {
     acceptcharset: {
-      type: "values",
+      type: "values.pick",
       params: {
         values: ["unknown"],
       },
     },
     acceptencoding: {
-      type: "values",
+      type: "values.pick",
       params: {
         values: ["deflate, gzip", "gzip, deflate, br", "gzip"],
       },
     },
     acceptlanguage: {
-      type: "values",
+      type: "values.pick",
       params: {
         values: ["en-GB,en-US;q=0.9,en;q=0.8", "unknown"],
       },
     },
     browsername: {
-      type: "browser_name",
+      type: "browser.browserName",
     },
     browserversion: {
-      type: "values",
+      type: "values.pick",
       params: {
         values: ["107.0", "107.0.0.0", "86.0.4240.80"],
       },
     },
     cachecontrol: {
-      type: "values",
+      type: "values.pick",
       params: {
         values: ["max-age=0", "unknown", "no-cache"],
       },
     },
     city: {
-      type: "city_name",
+      type: "address.cityName",
     },
     connection: {
-      type: "values",
+      type: "values.pick",
       params: {
         values: ["Keep-Alive"],
       },
     },
     contentlength: {
-      type: "values",
+      type: "values.pick",
       params: {
         values: ["unknown"],
       },
     },
     contenttype: {
-      type: "values",
+      type: "values.pick",
       params: {
         values: ["unknown"],
       },
     },
     country: {
-      type: "country_code_iso2",
+      type: "address.countryCodeISO2",
     },
     cpuarchitecture: {
-      type: "values",
+      type: "values.pick",
       params: {
         values: ["unknown", "amd64"],
       },
     },
     devicemodel: {
-      type: "values",
+      type: "values.pick",
       params: {
         values: ["unknown"],
       },
     },
     devicetype: {
-      type: "values",
+      type: "values.pick",
       params: {
         values: ["unknown"],
       },
     },
     devicevendor: {
-      type: "values",
+      type: "values.pick",
       params: {
         values: ["unknown"],
       },
     },
     enginename: {
-      type: "browser_engine_name",
+      type: "browser.browserEngineName",
     },
     engineversion: {
-      type: "values",
+      type: "values.pick",
       params: {
         values: ["107.0", "107.0.0.0", "86.0.4240.80"],
       },
     },
     event_ts: {
-      type: "timestamp",
+      type: "date.timestamp",
     },
     from: {
-      type: "values",
+      type: "values.pick",
       params: {
         values: ["unknown"],
       },
     },
     headers: {
-      type: "values",
+      type: "values.pick",
       params: {
         values: [
           "accept,accept-encoding,connection,host,user-agent,x-forwarded-for,x-forwarded-host,x-forwarded-proto,x-real-ip,x-vercel-edge-region,x-vercel-id,x-vercel-ip-city,x-vercel-ip-country,x-vercel-ip-country-region,x-vercel-ip-latitude,x-vercel-ip-longitude,x-vercel-ip-timezone,x-vercel-proxied-for",
@@ -399,13 +399,13 @@ const presetSchemas: Record<string, Schema> = {
       },
     },
     host: {
-      type: "values",
+      type: "values.pick",
       params: {
         values: ["https://log-analytics.tinybird.co"],
       },
     },
     ip_address: {
-      type: "values",
+      type: "values.pick",
       params: {
         values: [
           "131.193.63.35",
@@ -512,59 +512,57 @@ const presetSchemas: Record<string, Schema> = {
       },
     },
     isbot: {
-      type: "values",
+      type: "values.pick",
       params: {
         values: [0],
       },
     },
     latitude: {
-      type: "lat_or_lon_string",
+      type: "address.latitude",
     },
     log_level: {
-      type: "values_weighted",
+      type: "values.pickWeighted",
       params: {
         values: ["INFO", "WARN", "ERROR"],
         weights: [85, 12, 3],
       },
     },
     log_message: {
-      type: "words",
-      params: {
-        amount: 10,
-      },
+      type: "random.words",
+      params: 10,
     },
     longitude: {
-      type: "lat_or_lon_string",
+      type: "address.longitude",
     },
     method: {
-      type: "http_method",
+      type: "internet.httpMethod",
     },
     origin: {
-      type: "values",
+      type: "values.pick",
       params: {
         values: ["unknown"],
       },
     },
     osname: {
-      type: "operating_system",
+      type: "browser.osName",
     },
     osversion: {
-      type: "semver",
+      type: "system.semver",
     },
     protocol: {
-      type: "values",
+      type: "values.pick",
       params: {
         values: ["https"],
       },
     },
     referer: {
-      type: "search_engine",
+      type: "browser.searchEngineName",
     },
     region: {
-      type: "country_code_iso3",
+      type: "address.countryCodeISO3",
     },
     url: {
-      type: "values_weighted",
+      type: "values.pickWeighted",
       params: {
         values: [
           "https://log-analytics.tinybird.co/api/dummy/item",
@@ -578,16 +576,16 @@ const presetSchemas: Record<string, Schema> = {
       },
     },
     useragent: {
-      type: "user_agent",
+      type: "internet.userAgent",
     },
     via: {
-      type: "values",
+      type: "values.pick",
       params: {
         values: ["unknown"],
       },
     },
     xforwaredforip: {
-      type: "values",
+      type: "values.pick",
       params: {
         values: [
           "131.193.63.35",

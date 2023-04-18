@@ -1,3 +1,4 @@
+export { default as MockingbirdGenerator } from "./BaseGenerator";
 export {
   default as TinybirdGenerator,
   TinybirdConfig,

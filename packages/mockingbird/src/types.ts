@@ -1,4 +1,6 @@
+import _get from "lodash.get";
 import { z } from "zod";
+
 import extendedFaker from "./extendedFaker";
 
 type ObjectPath<T extends object, D extends string = ""> = {
@@ -29,8 +31,37 @@ export type Schema = Record<
   }
 >;
 
+export function validateSchema(schema: Schema) {
+  const errors = [] as string[];
+
+  for (const { type, params, count } of Object.values(schema)) {
+    if (typeof count !== "undefined" && count < 1)
+      errors.push(`${type}: Count must be greater than 0`);
+
+    if (params) {
+      const generator = _get(extendedFaker, type);
+
+      try {
+        generator(params);
+      } catch (e) {
+        errors.push(
+          `${type}: ${
+            e && typeof e === "object" && "toString" in e
+              ? e.toString()
+              : "Unknown error"
+          }`
+        );
+      }
+    }
+  }
+
+  return { valid: !errors.length, errors };
+}
+
 export const baseConfigSchema = z.object({
-  schema: schemaSchema,
+  schema: schemaSchema.refine((schemaSchema) =>
+    validateSchema(schemaSchema as Schema)
+  ),
   eps: z.number().optional().default(1),
   limit: z.number().optional().default(-1),
   logs: z.boolean().default(false).optional(),

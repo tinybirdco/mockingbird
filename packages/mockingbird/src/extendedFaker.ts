@@ -45,8 +45,6 @@ const mockingbirdModule = Object.assign(
       const browserEngineNames = ["Blink", "Gecko", "Trident"];
       return faker.helpers.arrayElement(browserEngineNames);
     },
-    int: (params: { min?: number | undefined; max?: number | undefined }) =>
-      faker.datatype.number(params),
     uint: (params: { max?: number | undefined }) =>
       faker.datatype.number({ min: 0, max: params.max }),
     intString: (params: {

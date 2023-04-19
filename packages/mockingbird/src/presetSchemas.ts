@@ -3,7 +3,7 @@ import { PresetSchemaName, Schema } from "./types";
 const presetSchemas: Record<PresetSchemaName, Schema> = {
   "Simple Example": {
     some_int: {
-      type: "mockingbird.int",
+      type: "datatype.number",
     },
     some_values: {
       type: "mockingbird.pick",
@@ -28,7 +28,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       type: "mockingbird.timestamp",
     },
     store_id: {
-      type: "mockingbird.int",
+      type: "datatype.number",
       params: [
         {
           min: 1,
@@ -46,7 +46,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       ],
     },
     product_id: {
-      type: "mockingbird.int",
+      type: "datatype.number",
       params: [
         {
           min: 3278123,
@@ -148,7 +148,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       type: "internet.email",
     },
     age: {
-      type: "mockingbird.int",
+      type: "datatype.number",
       params: [
         {
           min: 18,
@@ -157,7 +157,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       ],
     },
     passport_number: {
-      type: "mockingbird.int",
+      type: "datatype.number",
       params: [
         {
           min: 3456789,
@@ -224,7 +224,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       type: "datatype.uuid",
     },
     contentId: {
-      type: "mockingbird.int",
+      type: "datatype.number",
       params: [
         {
           min: 12345,
@@ -251,7 +251,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       ],
     },
     institutionID: {
-      type: "mockingbird.int",
+      type: "datatype.number",
       params: [
         {
           min: 123,

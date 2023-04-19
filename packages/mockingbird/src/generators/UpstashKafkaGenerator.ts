@@ -1,8 +1,10 @@
 import fetch from "cross-fetch";
+import _get from "lodash.get";
 import { z } from "zod";
+
+import extendedFaker from "../extendedFaker";
+import { baseConfigSchema, RowGenerator, SchemaGenerator } from "../types";
 import BaseGenerator from "./BaseGenerator";
-import { RowGenerator, SchemaGenerator, baseConfigSchema } from "../types";
-import schemaTypes from "../schemaTypes";
 
 const upstashKafkaConfigSchema = baseConfigSchema.merge(
   z.object({
@@ -44,8 +46,8 @@ export default class UpstashKafkaGenerator extends BaseGenerator<
           (acc, [key, value]) => ({
             ...acc,
             [key]: {
-              generator: schemaTypes[value.type].generator,
-              params: value.params ?? {},
+              generator: _get(extendedFaker, value.type),
+              params: value.params ?? [],
               count: value.count ?? 1,
             },
           }),
@@ -59,10 +61,10 @@ export default class UpstashKafkaGenerator extends BaseGenerator<
             ...acc,
             [key]:
               (value.count ?? 1) === 1
-                ? value.generator(value.params)
+                ? value.generator(...value.params)
                 : new Array(value.count ?? 1)
                     .fill(null)
-                    .map(() => value.generator(value.params)),
+                    .map(() => value.generator(...value.params)),
           };
         }, {});
 

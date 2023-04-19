@@ -21,7 +21,7 @@ Missing your favourite destination? Please [contribute a Destination](https://gi
 
 Mockingbird is written in TypeScript.
 
-[Faker.js](https://fakerjs.dev/) is used under the hood, but has been abstracted & extended. This means that not all Faker.js types are exposed (yet!) and there are additional types that Faker.js does not have.
+[Faker.js](https://fakerjs.dev/) is used under the hood to provide many of the mock Data Types. Faker.js is extended with additional custom Data Types.
 
 Mockingbird is a library, which can be used like any other package and [installed from npm](https://www.npmjs.com/package/@tinybirdco/mockingbird). 
 
@@ -38,4 +38,3 @@ Mockingbird is Free Open-Source Software, licensed under the Apache 2.0 license.
 Feel free to contribute a new Destination, or raise a GitHub issue to request one. 
 
 Vendors are welcome to contribute Destinations for their own tools!
-

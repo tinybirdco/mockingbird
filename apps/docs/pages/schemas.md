@@ -8,14 +8,19 @@ It's very simple, but it can be easier to understand with an example. This is a 
 
 ```json
 {
-  "my_int": {
-    "type": "int"
+  "some_int": {
+    "type": "mockingbird.int"
   },
-  "my_random_values": {
-    "type": "values",
-    "params": {
-        "values": [1,2,3]
-    }
+  "some_values": {
+    "type": "mockingbird.pick",
+    "params": [
+      {
+        "values": [
+          123,
+          456
+        ]
+      }
+    ]
   }
 }
 ```
@@ -26,8 +31,8 @@ The output of this schema would look like:
 
 ```json
 {
-    "my_int": 100,
-    "my_random_values": 2
+    "some_int": 100,
+    "some_values": 123
 }
 ```
 
@@ -37,8 +42,8 @@ All types can be generated as arrays. Simply add a `count` key at the same level
 
 ```json
 {
-  "my_int": {
-    "type": "int",
+  "some_int": {
+    "type": "mockingbird.int",
     "count": 3
   }
 }
@@ -48,25 +53,25 @@ All types can be generated as arrays. Simply add a `count` key at the same level
 
 You can write your own custom schema, or use any of the preset schemas. 
 
-You can find the definitions of all preset Schemas [here](https://github.com/tinybirdco/mockingbird/blob/main/packages/tinybird-generator/src/presetSchemas.ts). 
+You can find the definitions of all preset Schemas [here](https://github.com/tinybirdco/mockingbird/blob/main/packages/mockingbird/src/presetSchemas.ts). 
 
 Contributions for more preset schemas are welcome!
 
-### Default
+### Simple Example
 
-The `default` schema is a basic default schema to get you started.
+The `Simple Example` schema is a basic default schema to get you started.
 
-### z_sales
+### eCommerce Transactions
 
-The `z-sales` schema is an example of e-commerce style sales data.
+The `eCommerce Transactions` schema is an example of e-commerce style sales data.
 
 ### Stock Prices
 
 The `Stock Prices` schema is an example of a stock ticker data feed.
 
-### Flights
+### Flight Bookings
 
-The `Flights` schema is an example of a travel agent-style data feed.
+The `Flight Bookings` schema is an example of a travel agent-style data feed.
 
 ### Content Tracking
 

@@ -22,7 +22,7 @@ import {
   generate,
 } from "@tinybirdco/mockingbird";
 
-const schema = presetSchemas["Default"];
+const schema = presetSchemas["Simple Example"];
 
 initializeGenerator({
   schema,

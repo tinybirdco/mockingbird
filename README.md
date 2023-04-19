@@ -63,43 +63,41 @@ The repository has the following structure:
 │   ├── docs
 │   └── web
 └── packages
-    └── tinybird-generator
+    └── mockingbird
 ```
 
 ### Generator
 
-The core Mockingbird generator is under `./packages/tinybird-generator`. All new Data Types, Schemas and Destinations are added here.
+The core Mockingbird generator is under `./packages/mockingbird`. All new Data Types, Schemas and Destinations are added here.
 
 The generator is written in TypeScript & uses [Faker.js](https://fakerjs.dev/) under the hood to power much of the fake data generation. Custom Data Types are added on-top of Faker to supplement where needed.
 
 #### Adding new Data Types
 
-DataTypes are defined in [/packages/tinybird-generator/src/schemaTypes.ts](./packages/tinybird-generator/src/schemaTypes.ts).
+DataTypes are defined in [/packages/mockingbird/src/extendedFaker.ts](./packages/mockingbird/src/extendedFaker.ts).
 
-To add a new Data Type, add a new item to the `schemaTypes` object.
+To add a new Data Type, add a new item to the `mockingbirdModule` object.
 
-They key of the item will become the name of the Data Type. Ensure that you choose a name that does not clash with an existing Faker.js or custom type.
+They key of the item will become the name of the Data Type. Types added to this module are automatically added to the `mockingbird` namespace, meaning that they are referenced in schemas like `mockingbird.myTypeName`, this avoids clashes with Faker.js types.
 
-The value of the item must be the `createSchemaValue()` function. The `createSchemaValue` function has 1 required parameter, and 1 optional parameter. The first parameter must be a valid function, and this function is used to generate the fake data. The second (optional) parameter, is a [Zod validator](https://zod.dev/) for any parameters required by your new Data Type. This validator is only required if your generator function accepts incoming parameters, otherwise you can ignore it.
+The value of the item must be a function that returns the desired value. The function can have 1 optional parameter, which allows the function to accept incoming parameters.
 
 For example, a custom Data Type that takes no input params:
 
 ```javascript
-http_method: createSchemaValue(() => extendedFaker.internet.httpMethod())
+latitudeNumeric: () => parseFloat(faker.address.latitude()),
 ```
 
-A custom Data Type that accepts incoming parameters & has a validator:
+A custom Data Type that accepts incoming parameters:
 
 ```javascript
-values: createSchemaValue(
-    (params) => params.values[Math.floor(Math.random() * params.values.length)],
-    z.object({ values: z.array(z.any()) })
-),
+pick: (params: { values: unknown[] }) =>
+    params.values[Math.floor(Math.random() * params.values.length)],
 ```
 
 #### Adding mew preset Schemas
 
-Preset Schemas are defined in [/packages/tinybird-generator/src/presetSchemas.ts](./packages/tinybird-generator/src/presetSchemas.ts).
+Preset Schemas are defined in [/packages/mockingbird/src/presetSchemas.ts](./packages/mockingbird/src/presetSchemas.ts).
 
 To add a new Schema, add a new item to the `presetSchemas` object.
 
@@ -108,22 +106,26 @@ They key of the item will become the name of the Schema. Ensure that you choose 
 The value of the item is an object that defined the Schema, just as you would define it via the Web UI.
 
 ```javascript
-Default: {
+"Simple Example": {
     some_int: {
-        type: "int",
+        type: "mockingbird.int",
     },
     some_values: {
-        type: "values",
-        params: {
-        values: [123, 456],
-        },
+        type: "mockingbird.pick",
+        params: [
+            {
+                values: [123, 456],
+            },
+        ],
     },
     values_weighted: {
-        type: "values_weighted",
-        params: {
-        values: [123, 456, 789],
-        weights: [90, 7, 3],
-        },
+        type: "mockingbird.pickWeighted",
+        params: [
+            {
+                values: [123, 456, 789],
+                weights: [90, 7, 3],
+            },
+        ],
     },
 },
 ```

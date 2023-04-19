@@ -15,6 +15,8 @@ export default function UpstashKafkaSettings() {
           <input
             id="address"
             name="address"
+            required
+            type="url"
             defaultValue={address}
             className="input-base"
           />
@@ -27,6 +29,7 @@ export default function UpstashKafkaSettings() {
           <input
             id="user"
             name="user"
+            required
             defaultValue={user}
             className="input-base"
           />
@@ -39,6 +42,8 @@ export default function UpstashKafkaSettings() {
           <input
             id="pass"
             name="pass"
+            type="password"
+            required
             defaultValue={pass}
             className="input-base"
           />
@@ -51,6 +56,7 @@ export default function UpstashKafkaSettings() {
           <input
             id="topic"
             name="topic"
+            required
             defaultValue={topic}
             className="input-base"
           />

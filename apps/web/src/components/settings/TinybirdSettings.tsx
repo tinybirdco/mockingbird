@@ -71,6 +71,7 @@ export default function TinybirdSettings() {
             <input
               id="endpoint"
               name="endpoint"
+              required
               defaultValue={
                 defaultHost === HostType.Custom ? endpoint : undefined
               }
@@ -86,6 +87,7 @@ export default function TinybirdSettings() {
           <input
             id="datasource"
             name="datasource"
+            required
             defaultValue={datasource}
             className="input-base"
           />
@@ -98,6 +100,7 @@ export default function TinybirdSettings() {
           <input
             id="token"
             name="token"
+            required
             defaultValue={token}
             className="input-base"
           />

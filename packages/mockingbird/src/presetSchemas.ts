@@ -1,7 +1,7 @@
 import { PresetSchemaName, Schema } from "./types";
 
 const presetSchemas: Record<PresetSchemaName, Schema> = {
-  Default: {
+  "Simple Example": {
     some_int: {
       type: "datatype.int",
     },
@@ -23,30 +23,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       ],
     },
   },
-  "ACME Store": {
-    datetime: {
-      type: "date.datetime",
-    },
-    article_id: {
-      type: "values.pick",
-      params: [
-        {
-          values: [
-            709138001, 517762001, 675068002, 712216001, 507909003, 762846008,
-            469039019, 631878001, 697054003, 682511001, 618800001, 710056003,
-            507910001, 470985003, 697054014, 762846001, 762846007, 721435001,
-            734460001, 762846006, 581298005, 682509001, 502224001, 850917001,
-            622955001, 695632001, 349301001, 507909001, 859125001, 623115001,
-            622958003, 716672001,
-          ],
-        },
-      ],
-    },
-    customer_id: {
-      type: "datatype.uuid",
-    },
-  },
-  z_sales: {
+  "eCommerce Transactions": {
     timestamp: {
       type: "date.timestamp",
     },
@@ -157,7 +134,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       ],
     },
   },
-  Flights: {
+  "Flight Bookings": {
     timestamp: {
       type: "date.timestamp",
     },

@@ -47,11 +47,10 @@ export type SchemaValue<K extends SchemaKey = SchemaKey> =
 export type Schema = Record<string, SchemaValue>;
 
 export const PRESET_SCHEMA_NAMES = [
-  "Default",
-  "ACME Store",
-  "z_sales",
+  "Simple Example",
+  "eCommerce Transactions",
   "Stock Prices",
-  "Flights",
+  "Flight Bookings",
   "Content Tracking",
   "Web Analytics Starter Kit",
   "Log Analytics Starter Kit",

@@ -8,7 +8,13 @@ On top of faker.js types, Mockingbird also has some custom Data Types. These are
 
 Contributions to add new custom Data Types are welcome!
 
-## int
+## Mockingbird custom Data Types
+
+This section documents the **custom Data Types** that are added on top of Faker.js. For documentation about Faker.js types, please [see the Faker.js docs](https://fakerjs.dev/api/).
+
+Note that all Mockingbird custom Data Types have the prefix `mockingbird`, e.g. `mockingbird.osName`.
+
+### int
 
 Returns a number, simple wrapper for Faker.js [`number`](https://fakerjs.dev/api/datatype.html#number) type.
 
@@ -28,7 +34,7 @@ None
 }
 ```
 
-## intString
+### intString
 
 Same as [int](#int), with the result returned as a String.
 
@@ -48,7 +54,7 @@ None
 }
 ```
 
-## float
+### float
 
 Returns a number, simple wrapper for Faker.js [`float`](https://fakerjs.dev/api/datatype.html#float) type.
 
@@ -68,7 +74,7 @@ None
 }
 ```
 
-## floatString
+### floatString
 
 Same as [float](#float), with the result returned as a String.
 
@@ -88,7 +94,7 @@ None
 }
 ```
 
-## hex
+### hex
 
 Returns a hexidecimal string, simple wrapper for Faker.js [`hexadecimal`](https://fakerjs.dev/api/datatype.html#hexadecimal) type.
 
@@ -108,7 +114,7 @@ None
 }
 ```
 
-## string
+### string
 
 Returns a string, simple wrapper for Faker.js [`string`](https://fakerjs.dev/api/datatype.html#string) type.
 
@@ -128,7 +134,7 @@ None
 }
 ```
 
-## first_name
+### first_name
 
 Returns a first name string, simple wrapper for Faker.js [`firstname`](https://fakerjs.dev/api/name.html#firstname) type.
 
@@ -148,7 +154,7 @@ None
 }
 ```
 
-## last_name
+### last_name
 
 Returns a last name string, simple wrapper for Faker.js [`lastname`](https://fakerjs.dev/api/name.html#lastname) type.
 
@@ -168,7 +174,7 @@ None
 }
 ```
 
-## full_name
+### full_name
 
 Returns a full name string, simple wrapper for Faker.js [`fullname`](https://fakerjs.dev/api/name.html#fullname) type.
 
@@ -188,7 +194,7 @@ None
 }
 ```
 
-## email
+### email
 
 Returns an email string, simple wrapper for Faker.js [`email`](https://fakerjs.dev/api/internet.html#email) type.
 
@@ -208,7 +214,7 @@ None
 }
 ```
 
-## word
+### word
 
 Returns a word string, simple wrapper for Faker.js [`noun`](https://fakerjs.dev/api/word.html#noun) type.
 
@@ -228,7 +234,7 @@ None
 }
 ```
 
-## domain
+### domain
 
 Returns a domain string, simple wrapper for Faker.js [`domain`](https://fakerjs.dev/api/internet.html#domainname) type.
 
@@ -248,7 +254,7 @@ None
 }
 ```
 
-## values
+### values
 
 Takes an array of values, each loop of the generator picks a random item from the array. Values in the array can be any standard JSON types, e.g. numbers, strings, etc.
 
@@ -271,7 +277,7 @@ Takes an array of values, each loop of the generator picks a random item from th
 }
 ```
 
-## values_weighted
+### values_weighted
 
 Similar to [values](#values), but with a weighted random. An additional parameters allows you to set the weighted frequency of each item, giving you control over the random distribution.
 
@@ -296,7 +302,7 @@ Similar to [values](#values), but with a weighted random. An additional paramete
 }
 ```
 
-## datetime 
+### datetime 
 
 Uses the Faker.js [`recent`](https://fakerjs.dev/api/date.html#recent) type to generate a time in the recent past, formats it as an ISO Date Time string (using `toISOString()`) with precision up to *seconds*.
 
@@ -316,7 +322,7 @@ None
 }
 ```
 
-## datetime_range
+### datetime_range
 
 Uses the Faker.js [`between`](https://fakerjs.dev/api/date.html#between) type to generate a time between two boundaries, formats it as an ISO Date Time string (using `toISOString()`) with precision up to *seconds*.
 
@@ -341,7 +347,7 @@ Uses the Faker.js [`between`](https://fakerjs.dev/api/date.html#between) type to
 }
 ```
 
-## timestamp
+### timestamp
 
 Same as [datetime](#datetime) but with millisecond precision.
 
@@ -361,7 +367,7 @@ None
 }
 ```
 
-## timestamp_now 
+### timestamp_now 
 
 Same as [timestamp](#timestamp) but using `now()` to get the latest system time when generating the record.
 
@@ -381,7 +387,7 @@ None
 }
 ```
 
-## timestamp_range
+### timestamp_range
 
 Same as [datetime_range](#datetime_range) but with millisecond precision.
 
@@ -406,7 +412,7 @@ Same as [datetime_range](#datetime_range) but with millisecond precision.
 }
 ```
 
-## range
+### range
 
 Returns a number, simple wrapper for Faker.js [`number`](https://fakerjs.dev/api/datatype.html#number) type with the `min` and `max` parameters.
 
@@ -431,7 +437,7 @@ Returns a number, simple wrapper for Faker.js [`number`](https://fakerjs.dev/api
 }
 ```
 
-## bool
+### bool
 
 Returns a boolean, simple wrapper for Faker.js [`boolean`](https://fakerjs.dev/api/datatype.html#boolean) type.
 
@@ -451,7 +457,7 @@ None
 }
 ```
 
-## uuid
+### uuid
 
 Returns a uuid string, simple wrapper for Faker.js [`uuid`](https://fakerjs.dev/api/datatype.html#uuid) type.
 
@@ -471,7 +477,7 @@ None
 }
 ```
 
-## browser_name
+### browser_name
 
 A random browser name, from one of: "Chrome", "Firefox", "IE", "Opera".
 
@@ -491,7 +497,7 @@ None
 }
 ```
 
-## browser_engine_name
+### browser_engine_name
 
 A random browser engine name, from one of: "Blink", "Gecko", "Trident".
 
@@ -511,7 +517,7 @@ None
 }
 ```
 
-## city_name
+### city_name
 
 Returns a city name string, simple wrapper for Faker.js [`cityName`](https://fakerjs.dev/api/address.html#cityname) type.
 
@@ -531,7 +537,7 @@ None
 }
 ```
 
-## country_code_iso2
+### country_code_iso2
 
 Returns an ISO Alpha-2 country code string, simple wrapper for Faker.js [`countryCode`](https://fakerjs.dev/api/address.html#countrycode) type, with the `alpha-2` parameter.
 
@@ -551,7 +557,7 @@ None
 }
 ```
 
-## country_code_iso3
+### country_code_iso3
 
 Returns an ISO Alpha-3 country code string, simple wrapper for Faker.js [`countryCode`](https://fakerjs.dev/api/address.html#countrycode) type, with the `alpha-2` parameter.
 
@@ -571,7 +577,7 @@ None
 }
 ```
 
-## operating_system
+### operating_system
 
 A random operating system name, from one of: "Linux", "Windows", "Mac OS".
 
@@ -591,7 +597,7 @@ None
 }
 ```
 
-## search_engine
+### search_engine
 
 A random search engine name, from one of: "https://www.google.co.uk/", "https://www.bing.com/", "https://duckduckgo.com/", "https://yandex.com/", "https://yahoo.com".
 
@@ -611,7 +617,7 @@ None
 }
 ```
 
-## lat_or_lon_string
+### lat_or_lon_string
 
 Returns a random Latitude string, which can be used as either a Lat or Lon, simple wrapper for Faker.js [`latitude`](https://fakerjs.dev/api/address.html#latitude) type.
 
@@ -631,7 +637,7 @@ None
 }
 ```
 
-## lat_or_lon_int
+### lat_or_lon_int
 
 Returns a random Latitude, which can be used as either a Lat or Lon, simple wrapper for Faker.js [`latitude`](https://fakerjs.dev/api/address.html#latitude) type.
 
@@ -651,7 +657,7 @@ None
 }
 ```
 
-## words
+### words
 
 Returns a string of multiple words, simple wrapper for Faker.js [`words`](https://fakerjs.dev/api/random.html#words) type.
 
@@ -674,7 +680,7 @@ Returns a string of multiple words, simple wrapper for Faker.js [`words`](https:
 }
 ```
 
-## http_method
+### http_method
 
 Returns a random HTTP method, simple wrapper for Faker.js [`httpMethod`](https://fakerjs.dev/api/internet.html#httpmethod) type.
 
@@ -694,7 +700,7 @@ None
 }
 ```
 
-## user_agent
+### user_agent
 
 Returns a random User Agent string, simple wrapper for Faker.js [`userAgent`](https://fakerjs.dev/api/internet.html#useragent) type.
 
@@ -714,7 +720,7 @@ None
 }
 ```
 
-## semver
+### semver
 
 Returns a random semver string, simple wrapper for Faker.js [`semver`](https://fakerjs.dev/api/system.html#semver) type.
 

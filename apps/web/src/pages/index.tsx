@@ -64,7 +64,7 @@ export default function Home() {
         <title>Mockingbird</title>
         <meta name="description" content="Data generator" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/favicon.png" />
       </Head>
 
       <Layout>

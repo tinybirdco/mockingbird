@@ -19,9 +19,9 @@ Options:
   --help        Show help                                              [boolean]
   --version     Show version number                                    [boolean]
   --template    Template to use for populating
-        [choices: "Default", "ACME Store", "z_sales", "Stock Prices", "Flights",
+        [choices: "Simple Example", "ACME Store", "z_sales", "Stock Prices", "Flights",
    "Content Tracking", "Web Analytics Starter Kit", "Log Analytics Starter Kit"]
-                                                            [default: "Default"]
+                                                            [default: "Simple Example"]
   --schema      Path to schema file
   --datasource  Tinybird datasource                                   [required]
   --token       Tinybird API token                                    [required]

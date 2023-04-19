@@ -108,22 +108,26 @@ They key of the item will become the name of the Schema. Ensure that you choose 
 The value of the item is an object that defined the Schema, just as you would define it via the Web UI.
 
 ```javascript
-Default: {
+"Simple Example": {
     some_int: {
-        type: "int",
+        type: "mockingbird.int",
     },
     some_values: {
-        type: "values",
-        params: {
-        values: [123, 456],
-        },
+        type: "mockingbird.pick",
+        params: [
+            {
+                values: [123, 456],
+            },
+        ],
     },
     values_weighted: {
-        type: "values_weighted",
-        params: {
-        values: [123, 456, 789],
-        weights: [90, 7, 3],
-        },
+        type: "mockingbird.pickWeighted",
+        params: [
+            {
+                values: [123, 456, 789],
+                weights: [90, 7, 3],
+            },
+        ],
     },
 },
 ```

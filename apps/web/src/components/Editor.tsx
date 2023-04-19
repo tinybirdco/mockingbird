@@ -54,10 +54,10 @@ export default function Editor({ onSchemaChange, isSaved }: EditorProps) {
         setContent({ json })
       } catch (e) {
         console.error(e)
-        onTemplateChange('Default')
+        onTemplateChange('Simple Example')
       }
     } else {
-      onTemplateChange('Default')
+      onTemplateChange('Simple Example')
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.isReady])

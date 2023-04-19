@@ -1,8 +1,12 @@
 # Data Types
 
-You can find the definitions of all Data Types [here](https://github.com/tinybirdco/mockingbird/blob/main/packages/mockingbird/src/schemaTypes.ts). 
+Mockingbird provides a wide range of different Data Types for generating mock data. Most of these Data types come from [`faker.js`](https://fakerjs.dev).
 
-Please feel free to contribute new Data Types!
+All faker.js types are supported, and can be referenced in Mockingbird using the fully qualified name of the type, meaning both the module name and the type name, separated by a dot (.). For example, to use the faker.js type [`buildingNumber`](https://fakerjs.dev/api/address.html#buildingnumber) you should use `address.buildingNumber`.
+
+On top of faker.js types, Mockingbird also has some custom Data Types. These are types that aren't provided by faker.js but can be very useful. You can find the definitions of all the custom Data Types [here](https://github.com/tinybirdco/mockingbird/blob/main/packages/mockingbird/src/extendedFaker.ts). 
+
+Contributions to add new custom Data Types are welcome!
 
 ## int
 

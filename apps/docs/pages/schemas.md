@@ -8,14 +8,19 @@ It's very simple, but it can be easier to understand with an example. This is a 
 
 ```json
 {
-  "my_int": {
-    "type": "int"
+  "some_int": {
+    "type": "mockingbird.int"
   },
-  "my_random_values": {
-    "type": "values",
-    "params": {
-        "values": [1,2,3]
-    }
+  "some_values": {
+    "type": "mockingbird.pick",
+    "params": [
+      {
+        "values": [
+          123,
+          456
+        ]
+      }
+    ]
   }
 }
 ```
@@ -26,8 +31,8 @@ The output of this schema would look like:
 
 ```json
 {
-    "my_int": 100,
-    "my_random_values": 2
+    "some_int": 100,
+    "some_values": 123
 }
 ```
 
@@ -37,8 +42,8 @@ All types can be generated as arrays. Simply add a `count` key at the same level
 
 ```json
 {
-  "my_int": {
-    "type": "int",
+  "some_int": {
+    "type": "mockingbird.int",
     "count": 3
   }
 }

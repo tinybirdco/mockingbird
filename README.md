@@ -74,27 +74,25 @@ The generator is written in TypeScript & uses [Faker.js](https://fakerjs.dev/) u
 
 #### Adding new Data Types
 
-DataTypes are defined in [/packages/mockingbird/src/schemaTypes.ts](./packages/mockingbird/src/schemaTypes.ts).
+DataTypes are defined in [/packages/mockingbird/src/extendedFaker.ts](./packages/mockingbird/src/extendedFaker.ts).
 
-To add a new Data Type, add a new item to the `schemaTypes` object.
+To add a new Data Type, add a new item to the `mockingbirdModule` object.
 
-They key of the item will become the name of the Data Type. Ensure that you choose a name that does not clash with an existing Faker.js or custom type.
+They key of the item will become the name of the Data Type. Types added to this module are automatically added to the `mockingbird` namespace, meaning that they are referenced in schemas like `mockingbird.myTypeName`, this avoids clashes with Faker.js types.
 
-The value of the item must be the `createSchemaValue()` function. The `createSchemaValue` function has 1 required parameter, and 1 optional parameter. The first parameter must be a valid function, and this function is used to generate the fake data. The second (optional) parameter, is a [Zod validator](https://zod.dev/) for any parameters required by your new Data Type. This validator is only required if your generator function accepts incoming parameters, otherwise you can ignore it.
+The value of the item must be a function that returns the desired value. The function can have 1 optional parameter, which allows the function to accept incoming parameters.
 
 For example, a custom Data Type that takes no input params:
 
 ```javascript
-http_method: createSchemaValue(() => extendedFaker.internet.httpMethod())
+latitudeNumeric: () => parseFloat(faker.address.latitude()),
 ```
 
-A custom Data Type that accepts incoming parameters & has a validator:
+A custom Data Type that accepts incoming parameters:
 
 ```javascript
-values: createSchemaValue(
-    (params) => params.values[Math.floor(Math.random() * params.values.length)],
-    z.object({ values: z.array(z.any()) })
-),
+pick: (params: { values: unknown[] }) =>
+    params.values[Math.floor(Math.random() * params.values.length)],
 ```
 
 #### Adding mew preset Schemas

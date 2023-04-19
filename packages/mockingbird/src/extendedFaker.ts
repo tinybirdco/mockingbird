@@ -45,18 +45,6 @@ const mockingbirdModule = Object.assign(
       const browserEngineNames = ["Blink", "Gecko", "Trident"];
       return faker.helpers.arrayElement(browserEngineNames);
     },
-    uint: (params: { max?: number | undefined }) =>
-      faker.datatype.number({ min: 0, max: params.max }),
-    intString: (params: {
-      min?: number | undefined;
-      max?: number | undefined;
-    }) => faker.datatype.number(params).toString(),
-    uintString: (params: { max?: number | undefined }) =>
-      faker.datatype.number({ min: 0, max: params.max }).toString(),
-    floatString: (params: {
-      min?: number | undefined;
-      max?: number | undefined;
-    }) => faker.datatype.float(params).toString(),
     datetime: () => faker.date.recent().toISOString().slice(0, 19),
     datetimeBetween: (params: {
       start: string | number | Date;

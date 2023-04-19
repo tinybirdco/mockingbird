@@ -17,18 +17,12 @@ function weightedRandom(items: unknown[], weights: number[]) {
   return items[i];
 }
 
-const addressModule = Object.assign(
+const mockingbirdModule = Object.assign(
   {
     countryCodeISO2: () => faker.address.countryCode("alpha-2"),
     countryCodeISO3: () => faker.address.countryCode("alpha-3"),
     latitudeNumeric: () => parseFloat(faker.address.latitude()),
     longitudeNumeric: () => parseFloat(faker.address.longitude()),
-  },
-  faker.address
-);
-
-const browserModule = Object.assign(
-  {
     searchEngineName() {
       const searchEngines = [
         "https://www.google.co.uk/",
@@ -51,12 +45,6 @@ const browserModule = Object.assign(
       const browserEngineNames = ["Blink", "Gecko", "Trident"];
       return faker.helpers.arrayElement(browserEngineNames);
     },
-  },
-  {}
-);
-
-const datatypeModule = Object.assign(
-  {
     int: (params: { min?: number | undefined; max?: number | undefined }) =>
       faker.datatype.number(params),
     uint: (params: { max?: number | undefined }) =>
@@ -71,12 +59,6 @@ const datatypeModule = Object.assign(
       min?: number | undefined;
       max?: number | undefined;
     }) => faker.datatype.float(params).toString(),
-  },
-  faker.datatype
-);
-
-const dateModule = Object.assign(
-  {
     datetime: () => faker.date.recent().toISOString().slice(0, 19),
     datetimeBetween: (params: {
       start: string | number | Date;
@@ -95,34 +77,22 @@ const dateModule = Object.assign(
       end: string | number | Date;
     }) => faker.date.between(params.start, params.end).toISOString(),
     timestampLasthour: () => faker.date.recent(1 / 24).toISOString(),
+    lorempicsum: () => "",
+    lorempixel: () => "",
+    placeholder: () => "",
+    unsplash: () => "",
+    pick: (params: { values: unknown[] }) =>
+      params.values[Math.floor(Math.random() * params.values.length)],
+    pickWeighted: (params: { values: unknown[]; weights: number[] }) =>
+      weightedRandom(params.values, params.weights),
   },
-  faker.date
+  {}
 );
-
-const imageModule = {
-  ...faker.image,
-  lorempicsum: () => "",
-  lorempixel: () => "",
-  placeholder: () => "",
-  unsplash: () => "",
-};
-
-const valuesModule = {
-  pick: (params: { values: unknown[] }) =>
-    params.values[Math.floor(Math.random() * params.values.length)],
-  pickWeighted: (params: { values: unknown[]; weights: number[] }) =>
-    weightedRandom(params.values, params.weights),
-};
 
 const extendedFaker = {
   ...faker,
   helpers: { ...faker.helpers, weightedRandom },
-  address: addressModule,
-  browser: browserModule,
-  datatype: datatypeModule,
-  date: dateModule,
-  image: imageModule,
-  values: valuesModule,
+  mockingbird: mockingbirdModule,
 };
 
 export default extendedFaker;

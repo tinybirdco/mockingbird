@@ -3,10 +3,10 @@ import { PresetSchemaName, Schema } from "./types";
 const presetSchemas: Record<PresetSchemaName, Schema> = {
   "Simple Example": {
     some_int: {
-      type: "datatype.int",
+      type: "mockingbird.int",
     },
     some_values: {
-      type: "values.pick",
+      type: "mockingbird.pick",
       params: [
         {
           values: [123, 456],
@@ -14,7 +14,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       ],
     },
     values_weighted: {
-      type: "values.pickWeighted",
+      type: "mockingbird.pickWeighted",
       params: [
         {
           values: [123, 456, 789],
@@ -25,10 +25,10 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
   },
   "eCommerce Transactions": {
     timestamp: {
-      type: "date.timestamp",
+      type: "mockingbird.timestamp",
     },
     store_id: {
-      type: "datatype.int",
+      type: "mockingbird.int",
       params: [
         {
           min: 1,
@@ -37,7 +37,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       ],
     },
     browser: {
-      type: "values.pickWeighted",
+      type: "mockingbird.pickWeighted",
       params: [
         {
           values: ["Chrome", "Brave", "Firefox", "Safari"],
@@ -46,7 +46,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       ],
     },
     product_id: {
-      type: "datatype.int",
+      type: "mockingbird.int",
       params: [
         {
           min: 3278123,
@@ -55,7 +55,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       ],
     },
     promo: {
-      type: "values.pickWeighted",
+      type: "mockingbird.pickWeighted",
       params: [
         {
           values: [0, 1],
@@ -64,7 +64,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       ],
     },
     sales: {
-      type: "values.pickWeighted",
+      type: "mockingbird.pickWeighted",
       params: [
         {
           values: [1, 2, 3, 4],
@@ -73,7 +73,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       ],
     },
     utm_source: {
-      type: "values.pickWeighted",
+      type: "mockingbird.pickWeighted",
       params: [
         {
           values: ["instagram", "newsletter", "tiktok", "search_engine"],
@@ -87,10 +87,10 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       type: "datatype.float",
     },
     date: {
-      type: "date.datetime",
+      type: "mockingbird.datetime",
     },
     stock_symbol: {
-      type: "values.pick",
+      type: "mockingbird.pick",
       params: [
         {
           values: [
@@ -136,7 +136,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
   },
   "Flight Bookings": {
     timestamp: {
-      type: "date.timestamp",
+      type: "mockingbird.timestamp",
     },
     transaction_id: {
       type: "datatype.uuid",
@@ -148,7 +148,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       type: "internet.email",
     },
     age: {
-      type: "datatype.int",
+      type: "mockingbird.int",
       params: [
         {
           min: 18,
@@ -157,7 +157,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       ],
     },
     passport_number: {
-      type: "datatype.int",
+      type: "mockingbird.int",
       params: [
         {
           min: 3456789,
@@ -172,7 +172,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       type: "address.cityName",
     },
     extra_bags: {
-      type: "values.pickWeighted",
+      type: "mockingbird.pickWeighted",
       params: [
         {
           values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
@@ -184,7 +184,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       type: "datatype.boolean",
     },
     meal_choice: {
-      type: "values.pickWeighted",
+      type: "mockingbird.pickWeighted",
       params: [
         {
           values: ["none", "vegan", "vegetarian", "halal", "kosher", "gluten"],
@@ -193,7 +193,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       ],
     },
     airline: {
-      type: "values.pickWeighted",
+      type: "mockingbird.pickWeighted",
       params: [
         {
           values: [
@@ -212,7 +212,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
   },
   "Content Tracking": {
     timestamp: {
-      type: "date.timestampBetween",
+      type: "mockingbird.timestampBetween",
       params: [
         {
           start: "2022-07-18 23:59:59",
@@ -224,7 +224,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       type: "datatype.uuid",
     },
     contentId: {
-      type: "datatype.int",
+      type: "mockingbird.int",
       params: [
         {
           min: 12345,
@@ -233,7 +233,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       ],
     },
     eventType: {
-      type: "values.pickWeighted",
+      type: "mockingbird.pickWeighted",
       params: [
         {
           values: [
@@ -251,7 +251,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       ],
     },
     institutionID: {
-      type: "datatype.int",
+      type: "mockingbird.int",
       params: [
         {
           min: 123,
@@ -262,7 +262,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
   },
   "Web Analytics Starter Kit": {
     timestamp: {
-      type: "date.timestampBetween",
+      type: "mockingbird.timestampBetween",
       params: [
         {
           start: "2022-07-18 23:59:59",
@@ -274,7 +274,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       type: "datatype.uuid",
     },
     action: {
-      type: "values.pick",
+      type: "mockingbird.pick",
       params: [
         {
           values: ["page_hit"],
@@ -282,7 +282,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       ],
     },
     version: {
-      type: "values.pick",
+      type: "mockingbird.pick",
       params: [
         {
           values: ["1"],
@@ -290,7 +290,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       ],
     },
     payload: {
-      type: "values.pick",
+      type: "mockingbird.pick",
       params: [
         {
           values: [
@@ -313,7 +313,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
   },
   "Log Analytics Starter Kit": {
     acceptcharset: {
-      type: "values.pick",
+      type: "mockingbird.pick",
       params: [
         {
           values: ["unknown"],
@@ -321,7 +321,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       ],
     },
     acceptencoding: {
-      type: "values.pick",
+      type: "mockingbird.pick",
       params: [
         {
           values: ["deflate, gzip", "gzip, deflate, br", "gzip"],
@@ -329,7 +329,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       ],
     },
     acceptlanguage: {
-      type: "values.pick",
+      type: "mockingbird.pick",
       params: [
         {
           values: ["en-GB,en-US;q=0.9,en;q=0.8", "unknown"],
@@ -337,10 +337,10 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       ],
     },
     browsername: {
-      type: "browser.browserName",
+      type: "mockingbird.browserName",
     },
     browserversion: {
-      type: "values.pick",
+      type: "mockingbird.pick",
       params: [
         {
           values: ["107.0", "107.0.0.0", "86.0.4240.80"],
@@ -348,7 +348,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       ],
     },
     cachecontrol: {
-      type: "values.pick",
+      type: "mockingbird.pick",
       params: [
         {
           values: ["max-age=0", "unknown", "no-cache"],
@@ -359,7 +359,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       type: "address.cityName",
     },
     connection: {
-      type: "values.pick",
+      type: "mockingbird.pick",
       params: [
         {
           values: ["Keep-Alive"],
@@ -367,7 +367,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       ],
     },
     contentlength: {
-      type: "values.pick",
+      type: "mockingbird.pick",
       params: [
         {
           values: ["unknown"],
@@ -375,7 +375,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       ],
     },
     contenttype: {
-      type: "values.pick",
+      type: "mockingbird.pick",
       params: [
         {
           values: ["unknown"],
@@ -383,10 +383,10 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       ],
     },
     country: {
-      type: "address.countryCodeISO2",
+      type: "mockingbird.countryCodeISO2",
     },
     cpuarchitecture: {
-      type: "values.pick",
+      type: "mockingbird.pick",
       params: [
         {
           values: ["unknown", "amd64"],
@@ -394,7 +394,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       ],
     },
     devicemodel: {
-      type: "values.pick",
+      type: "mockingbird.pick",
       params: [
         {
           values: ["unknown"],
@@ -402,7 +402,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       ],
     },
     devicetype: {
-      type: "values.pick",
+      type: "mockingbird.pick",
       params: [
         {
           values: ["unknown"],
@@ -410,7 +410,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       ],
     },
     devicevendor: {
-      type: "values.pick",
+      type: "mockingbird.pick",
       params: [
         {
           values: ["unknown"],
@@ -418,10 +418,10 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       ],
     },
     enginename: {
-      type: "browser.browserEngineName",
+      type: "mockingbird.browserEngineName",
     },
     engineversion: {
-      type: "values.pick",
+      type: "mockingbird.pick",
       params: [
         {
           values: ["107.0", "107.0.0.0", "86.0.4240.80"],
@@ -429,10 +429,10 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       ],
     },
     event_ts: {
-      type: "date.timestamp",
+      type: "mockingbird.timestamp",
     },
     from: {
-      type: "values.pick",
+      type: "mockingbird.pick",
       params: [
         {
           values: ["unknown"],
@@ -440,7 +440,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       ],
     },
     headers: {
-      type: "values.pick",
+      type: "mockingbird.pick",
       params: [
         {
           values: [
@@ -452,7 +452,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       ],
     },
     host: {
-      type: "values.pick",
+      type: "mockingbird.pick",
       params: [
         {
           values: ["https://log-analytics.tinybird.co"],
@@ -460,7 +460,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       ],
     },
     ip_address: {
-      type: "values.pick",
+      type: "mockingbird.pick",
       params: [
         {
           values: [
@@ -569,7 +569,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       ],
     },
     isbot: {
-      type: "values.pick",
+      type: "mockingbird.pick",
       params: [
         {
           values: [0],
@@ -580,7 +580,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       type: "address.latitude",
     },
     log_level: {
-      type: "values.pickWeighted",
+      type: "mockingbird.pickWeighted",
       params: [
         {
           values: ["INFO", "WARN", "ERROR"],
@@ -599,7 +599,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       type: "internet.httpMethod",
     },
     origin: {
-      type: "values.pick",
+      type: "mockingbird.pick",
       params: [
         {
           values: ["unknown"],
@@ -607,13 +607,13 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       ],
     },
     osname: {
-      type: "browser.osName",
+      type: "mockingbird.osName",
     },
     osversion: {
       type: "system.semver",
     },
     protocol: {
-      type: "values.pick",
+      type: "mockingbird.pick",
       params: [
         {
           values: ["https"],
@@ -621,13 +621,13 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       ],
     },
     referer: {
-      type: "browser.searchEngineName",
+      type: "mockingbird.searchEngineName",
     },
     region: {
-      type: "address.countryCodeISO3",
+      type: "mockingbird.countryCodeISO3",
     },
     url: {
-      type: "values.pickWeighted",
+      type: "mockingbird.pickWeighted",
       params: [
         {
           values: [
@@ -646,7 +646,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       type: "internet.userAgent",
     },
     via: {
-      type: "values.pick",
+      type: "mockingbird.pick",
       params: [
         {
           values: ["unknown"],
@@ -654,7 +654,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       ],
     },
     xforwaredforip: {
-      type: "values.pick",
+      type: "mockingbird.pick",
       params: [
         {
           values: [

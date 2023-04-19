@@ -95,7 +95,7 @@ export default function ConnectStep({
       <div className="h-6" />
 
       <fieldset disabled={isGenerating}>
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-4 lg:grid-cols-2">
           {destinations.map(destination => (
             <DestinationButton
               key={destination.title}
@@ -116,8 +116,10 @@ export default function ConnectStep({
 
         <form onSubmit={onSubmit}>
           {destinationToSettings[selectedDestination.generator]}
+
           <div className="h-6" />
-          <div className="grid md:grid-cols-[auto_auto_auto] gap-6">
+
+          <div className="grid lg:grid-cols-[140px_288px_auto] gap-6">
             <div className="flex flex-col gap-1">
               <label htmlFor="eps" className="text-sm text-tb-text1">
                 Events Per Second
@@ -129,7 +131,7 @@ export default function ConnectStep({
                   'eps' in generatorConfig ? generatorConfig.eps : 1
                 }
                 type="number"
-                className="input-base md:w-[140px]"
+                className="input-base"
               />
             </div>
             <div className="flex flex-col gap-1">
@@ -139,19 +141,6 @@ export default function ConnectStep({
               <div className="flex items-center h-10 gap-2">
                 <input
                   type="radio"
-                  id="withLimitYes"
-                  name="withLimit"
-                  checked={withLimit}
-                  onChange={() => setWithLimit(true)}
-                />
-                <label htmlFor="withLimitYes" className="text-sm">
-                  Yes
-                </label>
-
-                <div className="w-4" />
-
-                <input
-                  type="radio"
                   id="withLimitNo"
                   name="withLimit"
                   checked={!withLimit}
@@ -159,6 +148,19 @@ export default function ConnectStep({
                 />
                 <label htmlFor="withLimitNo" className="text-sm">
                   No
+                </label>
+
+                <div className="w-4" />
+
+                <input
+                  type="radio"
+                  id="withLimitYes"
+                  name="withLimit"
+                  checked={withLimit}
+                  onChange={() => setWithLimit(true)}
+                />
+                <label htmlFor="withLimitYes" className="text-sm">
+                  Yes
                 </label>
 
                 {withLimit && (
@@ -172,7 +174,7 @@ export default function ConnectStep({
                         'limit' in generatorConfig ? generatorConfig.limit : -1
                       }
                       type="number"
-                      className="input-base md:w-[140px]"
+                      className="input-base lg:w-[140px]"
                     />
                   </>
                 )}

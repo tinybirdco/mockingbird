@@ -20,7 +20,7 @@ export default function Landing({ step, helpers }: LandingProps) {
 
       <div className="h-[120px]" />
 
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
         {steps.map((step, index) => (
           <div key={step.title} className="flex flex-col gap-4">
             <StepTitle stepNumber={index + 1} title={step.title} isActive />

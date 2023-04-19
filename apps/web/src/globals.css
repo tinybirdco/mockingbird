@@ -38,7 +38,7 @@ input[type='radio'] {
     box-shadow: 0px 1px 4px rgba(11, 19, 36, 0.1),
       inset 0px -0.888689px 0px rgba(0, 0, 0, 0.1);
     border-radius: 14.219px;
-    @apply p-4 md:p-9;
+    @apply p-4 lg:p-9;
   }
 
   .preview {

@@ -7,7 +7,7 @@ export default function UpstashKafkaSettings() {
 
   return (
     <>
-      <div className="grid md:grid-cols-[auto_auto_auto] gap-6">
+      <div className="grid lg:grid-cols-[140px_288px_auto] gap-6">
         <div className="flex flex-col gap-1">
           <label htmlFor="address" className="text-sm text-tb-text1">
             Upstash Address

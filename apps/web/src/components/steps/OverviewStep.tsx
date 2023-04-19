@@ -59,7 +59,7 @@ export default function OverviewStep({
 
   return (
     <div>
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <div className="p-10 bg-white rounded-lg">
           <p className="text-sm">Total Events Sent</p>
           <h2 className="font-semibold text-[64px] leading-[72px]">
@@ -74,7 +74,7 @@ export default function OverviewStep({
           </h2>
         </div>
 
-        <div className="flex flex-wrap gap-10 p-10 bg-white rounded-lg md:col-span-2">
+        <div className="flex flex-wrap gap-10 p-10 bg-white rounded-lg lg:col-span-2">
           {infoItems.map(item => (
             <div key={item.title} className="flex flex-col gap-1">
               <p className="text-sm">{item.title}</p>

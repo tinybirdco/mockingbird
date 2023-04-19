@@ -18,7 +18,7 @@ type RightColProps = {
 
 function LeftCol({ stepIndex }: LeftColProps) {
   return (
-    <div className="md:sticky flex flex-col md:col-span-3 gap-4 justify-between top-8 md:h-[80vh]">
+    <div className="lg:sticky flex flex-col lg:col-span-3 gap-4 justify-between top-8 lg:h-[80vh]">
       <div>
         <h2 className="text-[34px] leading-[41px] font-semibold -tracking-wide">
           Mockingbird.
@@ -58,14 +58,14 @@ function LeftCol({ stepIndex }: LeftColProps) {
 }
 
 function RightCol({ children }: RightColProps) {
-  return <div className="md:col-span-9">{children}</div>
+  return <div className="lg:col-span-9">{children}</div>
 }
 
 function Layout({ children }: LayoutProps) {
   return (
     <div className="bg-[center_-128px] bg-repeat-x bg-contain bg-landing-bg">
-      <div className="max-w-[1072px] mx-auto pt-8 pb-6 px-4 md:px-0 flex flex-col gap-16">
-        <div className="grid flex-1 grid-cols-1 gap-16 md:grid-cols-12">
+      <div className="max-w-[1072px] mx-auto pt-8 pb-6 px-4 xl:px-0 flex flex-col gap-16">
+        <div className="grid flex-1 grid-cols-1 gap-16 lg:grid-cols-12">
           {children}
         </div>
         <div className="flex items-center justify-between w-full">

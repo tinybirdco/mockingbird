@@ -26,7 +26,7 @@ export default function TinybirdSettings() {
 
   return (
     <>
-      <div className="px-8 py-3 rounded flex flex-col md:flex-row md:items-center justify-between bg-tb-bg2 font-semibold text-[13px] leading-6 text-tb-text3">
+      <div className="px-8 py-3 rounded flex flex-col lg:flex-row lg:items-center justify-between bg-tb-bg2 font-semibold text-[13px] leading-6 text-tb-text3">
         <p>
           Don&apos;t have a Tinybird account yet? Sign up for free. No credit
           card needed.
@@ -43,7 +43,7 @@ export default function TinybirdSettings() {
 
       <div className="h-6" />
 
-      <div className="grid md:grid-cols-[auto_auto_auto] gap-6">
+      <div className="grid lg:grid-cols-[140px_288px_auto] gap-6">
         <div className="flex flex-col gap-1">
           <label htmlFor="host" className="text-sm text-tb-text1">
             Host
@@ -51,7 +51,7 @@ export default function TinybirdSettings() {
           <select
             id="host"
             name="host"
-            className="input-base md:w-[140px]"
+            className="input-base"
             value={selectedHost}
             onChange={e => setSelectedHost(e.target.value as HostType)}
           >

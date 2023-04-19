@@ -83,7 +83,7 @@ export default function ConnectStep({
   }
 
   return (
-    <div className="px-10 pt-8 pb-10 bg-white rounded-lg">
+    <div id="connect-step" className="px-10 pt-8 pb-10 bg-white rounded-lg">
       <h3 className="text-lg font-semibold">Settings</h3>
 
       <div className="h-2" />

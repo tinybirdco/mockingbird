@@ -150,7 +150,7 @@ export default function BuildStep({
   }
 
   return (
-    <div className="px-10 pt-8 pb-10 bg-white rounded-lg">
+    <div id="build-step" className="px-10 pt-8 pb-10 bg-white rounded-lg">
       <h3 className="text-lg font-semibold">Schema Designer</h3>
 
       <div className="h-6" />

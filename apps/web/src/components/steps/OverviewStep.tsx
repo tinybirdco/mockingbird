@@ -58,7 +58,7 @@ export default function OverviewStep({
   ] as const
 
   return (
-    <div>
+    <div id="overview-step">
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <div className="p-10 bg-white rounded-lg">
           <p className="text-sm">Total Events Sent</p>

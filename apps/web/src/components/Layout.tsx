@@ -3,6 +3,7 @@ import { ReactNode } from 'react'
 import { steps } from '@/lib/constants'
 
 import StepTitle from './StepTitle'
+import useActiveStep from '@/lib/hooks/useActiveStep'
 
 type LayoutProps = {
   children: ReactNode
@@ -17,6 +18,8 @@ type RightColProps = {
 }
 
 function LeftCol({ stepIndex }: LeftColProps) {
+  const activeStep = useActiveStep()
+
   return (
     <div className="lg:sticky flex flex-col lg:col-span-3 gap-4 justify-between top-8 lg:h-[80vh]">
       <div>
@@ -32,14 +35,29 @@ function LeftCol({ stepIndex }: LeftColProps) {
             <div className="h-10" />
 
             <div className="flex flex-col gap-2">
-              {steps.map((step, index) => (
-                <StepTitle
-                  key={step.title}
-                  stepNumber={index + 1}
-                  title={step.title}
-                  isActive={index <= stepIndex}
-                />
-              ))}
+              {steps.map((step, index) => {
+                const stepContainer = document.getElementById(step.id)
+
+                return (
+                  <div
+                    key={step.title}
+                    onClick={() =>
+                      index < stepIndex
+                        ? stepContainer?.scrollIntoView({ behavior: 'smooth' })
+                        : undefined
+                    }
+                    className={
+                      index < stepIndex ? 'cursor-pointer' : 'cursor-default'
+                    }
+                  >
+                    <StepTitle
+                      stepNumber={index + 1}
+                      title={step.title}
+                      isActive={activeStep === index}
+                    />
+                  </div>
+                )
+              })}
             </div>
           </>
         )}

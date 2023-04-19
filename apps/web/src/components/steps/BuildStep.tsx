@@ -29,12 +29,10 @@ type BuildStepProps = {
   onSchemaChange: (schema: Schema) => void
   isSaved: boolean
   isGenerating: boolean
-  onGenerationStartClick: () => void
 }
 
 export default function BuildStep({
   step,
-  onGenerationStartClick,
   onSchemaChange,
   isSaved,
   isGenerating,
@@ -206,29 +204,26 @@ export default function BuildStep({
 
       <div className="h-6" />
 
-      <div className="flex justify-end gap-6">
-        <button
-          className={cx(
-            'py-[10px] px-[14px] flex items-center gap-4 bg-tb-primary rounded-[4px] shadow-[0px_1px_3px_rgba(11,19,36,0.1)] text-sm text-white tracking-[-0.01em] hover:scale-105',
-            isSaved && 'bg-opacity-40 cursor-not-allowed'
-          )}
-          disabled={isSaved}
-          onClick={onSchemaSave}
-        >
-          <span>{isSaved ? 'Saved' : 'Save'}</span>
-          {isSaved && <CheckmarkIcon />}
-        </button>
-        {step === 2 && (
+      <div className="flex justify-end">
+        {step === 2 ? (
           <button
             type="button"
-            className={cx(
-              'btn-base btn-primary',
-              !isSaved && 'bg-opacity-40 cursor-not-allowed'
-            )}
-            disabled={!isSaved}
-            onClick={onGenerationStartClick}
+            className="btn-base btn-primary"
+            onClick={onSchemaSave}
           >
             Start Generating! <ArrowDownIcon />
+          </button>
+        ) : (
+          <button
+            className={cx(
+              'py-[10px] px-[14px] flex items-center gap-4 bg-tb-primary rounded-[4px] shadow-[0px_1px_3px_rgba(11,19,36,0.1)] text-sm text-white tracking-[-0.01em] hover:scale-105',
+              isSaved && 'bg-opacity-40 cursor-not-allowed'
+            )}
+            disabled={isSaved}
+            onClick={onSchemaSave}
+          >
+            <span>{isSaved ? 'Saved' : 'Save'}</span>
+            {isSaved && <CheckmarkIcon />}
           </button>
         )}
       </div>

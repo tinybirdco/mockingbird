@@ -20,10 +20,12 @@ export default function Home() {
   const { startGenerating, stopGenerating, isGenerating, sentMessages } =
     useGeneratorWorker(schema, isSaved)
 
-  const onGenerationStartClick = () => {
-    startGenerating()
-    helpers.goToNextStep()
-  }
+  useEffect(() => {
+    if (isSaved && step === 2) {
+      startGenerating()
+      helpers.goToNextStep()
+    }
+  }, [isSaved, step, startGenerating, helpers])
 
   const onGenerationStopClick = () => {
     isGenerating ? stopGenerating() : startGenerating()
@@ -47,7 +49,6 @@ export default function Home() {
       onSchemaChange={setSchema}
       isSaved={isSaved}
       isGenerating={isGenerating}
-      onGenerationStartClick={onGenerationStartClick}
     />,
     <OverviewStep
       key="overview"

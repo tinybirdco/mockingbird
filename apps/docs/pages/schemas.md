@@ -52,21 +52,21 @@ You can find the definitions of all preset Schemas [here](https://github.com/tin
 
 Contributions for more preset schemas are welcome!
 
-### Default
+### Simple Example
 
-The `default` schema is a basic default schema to get you started.
+The `Simple Example` schema is a basic default schema to get you started.
 
-### z_sales
+### eCommerce Transactions
 
-The `z-sales` schema is an example of e-commerce style sales data.
+The `eCommerce Transactions` schema is an example of e-commerce style sales data.
 
 ### Stock Prices
 
 The `Stock Prices` schema is an example of a stock ticker data feed.
 
-### Flights
+### Flight Bookings
 
-The `Flights` schema is an example of a travel agent-style data feed.
+The `Flight Bookings` schema is an example of a travel agent-style data feed.
 
 ### Content Tracking
 

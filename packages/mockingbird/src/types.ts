@@ -61,7 +61,7 @@ export function validateSchema(schema: Schema) {
       try {
         // @ts-ignore
         // @ts-nocheck
-        generator(schemaItem.params);
+        generator(...schemaItem.params);
       } catch (e) {
         errors.push(
           `${type}: ${

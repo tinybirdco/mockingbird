@@ -48,7 +48,7 @@ export default class TinybirdGenerator extends BaseGenerator<
             ...acc,
             [key]: {
               generator: _get(extendedFaker, value.type),
-              params: value.params,
+              params: value.params ?? [],
               count: value.count ?? 1,
             },
           }),

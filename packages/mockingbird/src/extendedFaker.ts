@@ -19,10 +19,10 @@ function weightedRandom(items: unknown[], weights: number[]) {
 
 const addressModule = Object.assign(
   {
-    countryCodeISO2: () => extendedFaker.address.countryCode("alpha-2"),
-    countryCodeISO3: () => extendedFaker.address.countryCode("alpha-3"),
-    latitudeNumeric: () => parseFloat(extendedFaker.address.latitude()),
-    longitudeNumeric: () => parseFloat(extendedFaker.address.longitude()),
+    countryCodeISO2: () => faker.address.countryCode("alpha-2"),
+    countryCodeISO3: () => faker.address.countryCode("alpha-3"),
+    latitudeNumeric: () => parseFloat(faker.address.latitude()),
+    longitudeNumeric: () => parseFloat(faker.address.longitude()),
   },
   faker.address
 );
@@ -58,19 +58,19 @@ const browserModule = Object.assign(
 const datatypeModule = Object.assign(
   {
     int: (params: { min?: number | undefined; max?: number | undefined }) =>
-      extendedFaker.datatype.number(params),
+      faker.datatype.number(params),
     uint: (params: { max?: number | undefined }) =>
-      extendedFaker.datatype.number({ min: 0, max: params.max }),
+      faker.datatype.number({ min: 0, max: params.max }),
     intString: (params: {
       min?: number | undefined;
       max?: number | undefined;
-    }) => extendedFaker.datatype.number(params).toString(),
+    }) => faker.datatype.number(params).toString(),
     uintString: (params: { max?: number | undefined }) =>
-      extendedFaker.datatype.number({ min: 0, max: params.max }).toString(),
+      faker.datatype.number({ min: 0, max: params.max }).toString(),
     floatString: (params: {
       min?: number | undefined;
       max?: number | undefined;
-    }) => extendedFaker.datatype.float(params).toString(),
+    }) => faker.datatype.float(params).toString(),
   },
   faker.datatype
 );
@@ -111,7 +111,7 @@ const valuesModule = {
   pick: (params: { values: unknown[] }) =>
     params.values[Math.floor(Math.random() * params.values.length)],
   pickWeighted: (params: { values: unknown[]; weights: number[] }) =>
-    extendedFaker.helpers.weightedRandom(params.values, params.weights),
+    weightedRandom(params.values, params.weights),
 };
 
 const extendedFaker = {

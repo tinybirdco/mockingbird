@@ -1,7 +1,7 @@
 import { cx } from '@/lib/utils'
-import { HTMLAttributes, forwardRef } from 'react'
+import { ButtonHTMLAttributes, forwardRef } from 'react'
 
-type DestinationButtonProps = HTMLAttributes<HTMLButtonElement> & {
+type DestinationButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   isSelected: boolean
 }
 

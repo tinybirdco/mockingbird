@@ -54,7 +54,7 @@ export default function useGeneratorConfig():
       ),
       generator,
     })
-    router.push(`?${urlParams}`)
+    router.push(`?${urlParams}`, undefined, { scroll: false })
   }
 
   const generator = router.query.generator as string | undefined

@@ -1,6 +1,7 @@
 import Head from 'next/head'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
+import Layout from '@/components/Layout'
 import BuildStep from '@/components/steps/BuildStep'
 import ConnectStep from '@/components/steps/ConnectStep'
 import Landing from '@/components/steps/Landing'
@@ -11,6 +12,7 @@ import useStep from '@/lib/hooks/useStep'
 import { Schema } from '@tinybirdco/mockingbird'
 
 export default function Home() {
+  const endElRef = useRef<HTMLDivElement>(null)
   const [step, helpers] = useStep(0, steps.length)
   const [schema, setSchema] = useState<Schema>({})
   const isSaved = Object.keys(schema).length > 0
@@ -27,17 +29,29 @@ export default function Home() {
     isGenerating ? stopGenerating() : startGenerating()
   }
 
+  useEffect(() => {
+    endElRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [step])
+
   const stepToComponent = [
-    <Landing key="landing" helpers={helpers} />,
-    <ConnectStep key="connect" helpers={helpers} />,
+    <Landing key="landing" step={step} helpers={helpers} />,
+    <ConnectStep
+      key="connect"
+      step={step}
+      helpers={helpers}
+      isGenerating={isGenerating}
+    />,
     <BuildStep
       key="build"
+      step={step}
       onSchemaChange={setSchema}
       isSaved={isSaved}
+      isGenerating={isGenerating}
       onGenerationStartClick={onGenerationStartClick}
     />,
     <OverviewStep
       key="overview"
+      step={step}
       sentMessages={sentMessages}
       isGenerating={isGenerating}
       onGenerationStopClick={onGenerationStopClick}
@@ -53,7 +67,18 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      {stepToComponent[step]}
+      <Layout>
+        <Layout.LeftCol stepIndex={step} />
+        <Layout.RightCol>
+          <div className="flex flex-col gap-6">
+            {stepToComponent.map(
+              (component, index) => index <= step && component
+            )}
+          </div>
+
+          <div ref={endElRef} />
+        </Layout.RightCol>
+      </Layout>
     </>
   )
 }

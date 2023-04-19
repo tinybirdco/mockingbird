@@ -12,6 +12,10 @@ type LeftColProps = {
   stepIndex: number
 }
 
+type RightColProps = {
+  children: ReactNode
+}
+
 function LeftCol({ stepIndex }: LeftColProps) {
   return (
     <div className="md:sticky flex flex-col md:col-span-3 gap-4 justify-between top-8 md:h-[80vh]">
@@ -54,21 +58,25 @@ function LeftCol({ stepIndex }: LeftColProps) {
   )
 }
 
-function RightCol({ children }: LayoutProps) {
+function RightCol({ children }: RightColProps) {
   return <div className="md:col-span-9">{children}</div>
 }
 
 function Layout({ children }: LayoutProps) {
   return (
-    <div className="max-w-[1072px] mx-auto pt-8 pb-6 px-4 md:px-0 flex flex-col gap-16">
-      <div className="grid flex-1 grid-cols-1 gap-16 md:grid-cols-12">
-        {children}
-      </div>
-      <div className="flex items-center justify-between w-full">
-        <p className="text-xs text-tb-text1">
-          Copyright © 2023 Tinybird. All rights reserved
-        </p>
-        <p className="text-xs text-tb-text1">Terms of service | Legal notice</p>
+    <div className="bg-[center_-128px] bg-repeat-x bg-contain bg-landing-bg">
+      <div className="max-w-[1072px] mx-auto pt-8 pb-6 px-4 md:px-0 flex flex-col gap-16">
+        <div className="grid flex-1 grid-cols-1 gap-16 md:grid-cols-12">
+          {children}
+        </div>
+        <div className="flex items-center justify-between w-full">
+          <p className="text-xs text-tb-text1">
+            Copyright © 2023 Tinybird. All rights reserved
+          </p>
+          <p className="text-xs text-tb-text1">
+            Terms of service | Legal notice
+          </p>
+        </div>
       </div>
     </div>
   )

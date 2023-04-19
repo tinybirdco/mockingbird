@@ -6,17 +6,22 @@ import { Helpers } from '@/lib/hooks/useStep'
 
 import DestinationButton from '../DestinationButton'
 import { ArrowDownIcon } from '../Icons'
-import Layout from '../Layout'
 import TinybirdSettings from '../settings/TinybirdSettings'
 import UpstashKafkaSettings from '../settings/UpstashKafkaSettings'
 
 type ConnectStepProps = {
+  step: number
   helpers: Helpers
+  isGenerating: boolean
 }
 
 type Destination = (typeof destinations)[number]
 
-export default function ConnectStep({ helpers }: ConnectStepProps) {
+export default function ConnectStep({
+  step,
+  helpers,
+  isGenerating,
+}: ConnectStepProps) {
   const { onConfigChange, config: generatorConfig } = useGeneratorConfig()
   const [selectedDestination, setSelectedDestination] = useState<Destination>(
     destinations[0]
@@ -78,138 +83,128 @@ export default function ConnectStep({ helpers }: ConnectStepProps) {
   }
 
   return (
-    <Layout>
-      <Layout.LeftCol stepIndex={1} />
+    <div className="px-10 pt-8 pb-10 bg-white rounded-lg">
+      <h3 className="text-lg font-semibold">Settings</h3>
 
-      <Layout.RightCol>
-        <div className="px-10 pt-8 pb-10 bg-white rounded-lg">
-          <h3 className="text-lg font-semibold">Settings</h3>
+      <div className="h-2" />
 
-          <div className="h-2" />
+      <p className="text-sm">
+        Configure your project according to your destination data
+      </p>
 
-          <p className="text-sm">
-            Configure your project according to your destination data
-          </p>
+      <div className="h-6" />
 
+      <fieldset disabled={isGenerating}>
+        <div className="grid gap-4 md:grid-cols-2">
+          {destinations.map(destination => (
+            <DestinationButton
+              key={destination.title}
+              isSelected={
+                selectedDestination.generator === destination.generator
+              }
+              onClick={() => (
+                setErrors([]), setSelectedDestination(destination)
+              )}
+            >
+              <img src={destination.icon} alt={destination.title} />
+              {destination.title}
+            </DestinationButton>
+          ))}
+        </div>
+
+        <div className="h-6" />
+
+        <form onSubmit={onSubmit}>
+          {destinationToSettings[selectedDestination.generator]}
           <div className="h-6" />
-
-          <div className="grid gap-4 md:grid-cols-2">
-            {destinations.map(destination => (
-              <DestinationButton
-                key={destination.title}
-                isSelected={
-                  selectedDestination.generator === destination.generator
+          <div className="grid md:grid-cols-[auto_auto_auto] gap-6">
+            <div className="flex flex-col gap-1">
+              <label htmlFor="eps" className="text-sm text-tb-text1">
+                Events Per Second
+              </label>
+              <input
+                id="eps"
+                name="eps"
+                defaultValue={
+                  'eps' in generatorConfig ? generatorConfig.eps : 1
                 }
-                onClick={() => (
-                  setErrors([]), setSelectedDestination(destination)
-                )}
-              >
-                <img src={destination.icon} alt={destination.title} />
-                {destination.title}
-              </DestinationButton>
-            ))}
-          </div>
-
-          <div className="h-6" />
-
-          <form onSubmit={onSubmit}>
-            {destinationToSettings[selectedDestination.generator]}
-
-            <div className="h-6" />
-
-            <div className="grid md:grid-cols-[auto_auto_auto] gap-6">
-              <div className="flex flex-col gap-1">
-                <label htmlFor="eps" className="text-sm text-tb-text1">
-                  Events Per Second
-                </label>
+                type="number"
+                className="input-base md:w-[140px]"
+              />
+            </div>
+            <div className="flex flex-col gap-1">
+              <label htmlFor="limit" className="text-sm text-tb-text1">
+                Limit
+              </label>
+              <div className="flex items-center h-10 gap-2">
                 <input
-                  id="eps"
-                  name="eps"
-                  defaultValue={
-                    'eps' in generatorConfig ? generatorConfig.eps : 1
-                  }
-                  type="number"
-                  className="input-base md:w-[140px]"
+                  type="radio"
+                  id="withLimitYes"
+                  name="withLimit"
+                  checked={withLimit}
+                  onChange={() => setWithLimit(true)}
                 />
-              </div>
-              <div className="flex flex-col gap-1">
-                <label htmlFor="limit" className="text-sm text-tb-text1">
-                  Limit
+                <label htmlFor="withLimitYes" className="text-sm">
+                  Yes
                 </label>
-                <div className="flex items-center h-10 gap-2">
-                  <input
-                    type="radio"
-                    id="withLimitYes"
-                    name="withLimit"
-                    checked={withLimit}
-                    onChange={() => setWithLimit(true)}
-                  />
-                  <label htmlFor="withLimitYes" className="text-sm">
-                    Yes
-                  </label>
 
-                  <div className="w-4" />
+                <div className="w-4" />
 
-                  <input
-                    type="radio"
-                    id="withLimitNo"
-                    name="withLimit"
-                    checked={!withLimit}
-                    onChange={() => setWithLimit(false)}
-                  />
-                  <label htmlFor="withLimitNo" className="text-sm">
-                    No
-                  </label>
+                <input
+                  type="radio"
+                  id="withLimitNo"
+                  name="withLimit"
+                  checked={!withLimit}
+                  onChange={() => setWithLimit(false)}
+                />
+                <label htmlFor="withLimitNo" className="text-sm">
+                  No
+                </label>
 
-                  {withLimit && (
-                    <>
-                      <div className="w-4" />
+                {withLimit && (
+                  <>
+                    <div className="w-4" />
 
-                      <input
-                        id="limit"
-                        name="limit"
-                        defaultValue={
-                          'limit' in generatorConfig
-                            ? generatorConfig.limit
-                            : -1
-                        }
-                        type="number"
-                        className="input-base md:w-[140px]"
-                      />
-                    </>
-                  )}
-                </div>
+                    <input
+                      id="limit"
+                      name="limit"
+                      defaultValue={
+                        'limit' in generatorConfig ? generatorConfig.limit : -1
+                      }
+                      type="number"
+                      className="input-base md:w-[140px]"
+                    />
+                  </>
+                )}
               </div>
             </div>
-
-            <input
-              type="hidden"
-              name="generator"
-              value={selectedDestination.generator}
-            />
-
-            {errors.length > 0 && (
-              <>
-                <div className="h-6" />
-                {errors.map(error => (
-                  <div key={error} className="text-sm text-red-500">
-                    {error}
-                  </div>
-                ))}
-              </>
-            )}
-
-            <div className="h-6" />
-
+          </div>
+          <input
+            type="hidden"
+            name="generator"
+            value={selectedDestination.generator}
+          />
+          {errors.length > 0 && (
+            <>
+              <div className="h-6" />
+              {errors.map(error => (
+                <div key={error} className="text-sm text-red-500">
+                  {error}
+                </div>
+              ))}
+            </>
+          )}
+          <div className="h-6" />
+          {step === 1 && (
             <div className="flex justify-end">
               <button type="submit" className="btn-base btn-primary">
                 Continue
                 <ArrowDownIcon />
               </button>
             </div>
-          </form>
-        </div>
-      </Layout.RightCol>
-    </Layout>
+          )}
+        </form>
+      </fieldset>
+    </div>
   )
 }

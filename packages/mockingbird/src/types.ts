@@ -46,6 +46,18 @@ export type SchemaValue<K extends SchemaKey = SchemaKey> =
 
 export type Schema = Record<string, SchemaValue>;
 
+export const PRESET_SCHEMA_NAMES = [
+  "Default",
+  "ACME Store",
+  "z_sales",
+  "Stock Prices",
+  "Flights",
+  "Content Tracking",
+  "Web Analytics Starter Kit",
+  "Log Analytics Starter Kit",
+] as const;
+export type PresetSchemaName = (typeof PRESET_SCHEMA_NAMES)[number];
+
 export function validateSchema(schema: Schema) {
   const errors = [] as string[];
 

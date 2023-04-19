@@ -1,12 +1,14 @@
+import _isEqual from 'lodash.isequal'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { Content, JSONContent, TextContent } from 'vanilla-jsoneditor'
-import _isEqual from 'lodash.isequal'
+
 import { CheckmarkIcon } from '@/components/Icons'
 import { compressJSON, decompressJSON } from '@/lib/helpers'
 import { cx } from '@/lib/utils'
 import {
+  PRESET_SCHEMA_NAMES,
   presetSchemas,
   Schema,
   TinybirdGenerator,
@@ -18,9 +20,8 @@ const JSONEditor = dynamic(() => import('@/components/JSONEditor'), {
   ssr: false,
 })
 
-const TEMPLATE_OPTIONS = [...Object.keys(presetSchemas), 'Custom']
-
-type PresetTemplate = keyof typeof presetSchemas & string
+const TEMPLATE_OPTIONS = [...PRESET_SCHEMA_NAMES, 'Custom'] as const
+type PresetSchemaNameWithCustom = (typeof TEMPLATE_OPTIONS)[number]
 
 type EditorProps = {
   onSchemaChange: (schema: Schema) => void
@@ -30,7 +31,7 @@ type EditorProps = {
 export default function Editor({ onSchemaChange, isSaved }: EditorProps) {
   const router = useRouter()
   const [validationErrors, setValidationErrors] = useState<string[]>([])
-  const [template, setTemplate] = useState<PresetTemplate | 'Custom'>('Custom')
+  const [template, setTemplate] = useState<PresetSchemaNameWithCustom>('Custom')
   const [content, setContent] = useState<Content>({
     json: '',
   })
@@ -42,8 +43,11 @@ export default function Editor({ onSchemaChange, isSaved }: EditorProps) {
     const template = router.query.template as string | undefined
     const schema = router.query.schema as string | undefined
 
-    if (template && template in presetSchemas) {
-      onTemplateChange(template as PresetTemplate)
+    if (
+      template &&
+      TEMPLATE_OPTIONS.includes(template as PresetSchemaNameWithCustom)
+    ) {
+      onTemplateChange(template as PresetSchemaNameWithCustom)
     } else if (schema && schema !== 'Preset') {
       try {
         const json = JSON.parse(decompressJSON(schema))
@@ -80,9 +84,12 @@ export default function Editor({ onSchemaChange, isSaved }: EditorProps) {
     onSchemaChange({})
   }
 
-  const onTemplateChange = (newTemplate: PresetTemplate) => {
+  const onTemplateChange = (newTemplate: PresetSchemaNameWithCustom) => {
     setTemplate(newTemplate)
-    setContent({ json: presetSchemas[newTemplate] } as JSONContent)
+
+    if (newTemplate !== 'Custom')
+      setContent({ json: presetSchemas[newTemplate] } as JSONContent)
+
     onSchemaChange({})
   }
 
@@ -109,11 +116,11 @@ export default function Editor({ onSchemaChange, isSaved }: EditorProps) {
         setSampleCode(JSON.stringify(rowGenerator.generate(), null, 4))
 
         if (
-          template !== '' &&
+          template !== 'Custom' &&
           JSON.stringify(schema, null, 4) !==
             JSON.stringify(presetSchemas[template], null, 4)
         ) {
-          setTemplate('')
+          setTemplate('Custom')
         }
 
         const urlParams = new URLSearchParams({
@@ -140,7 +147,9 @@ export default function Editor({ onSchemaChange, isSaved }: EditorProps) {
           <select
             className="input-base"
             value={template}
-            onChange={e => onTemplateChange(e.target.value as PresetTemplate)}
+            onChange={e =>
+              onTemplateChange(e.target.value as PresetSchemaNameWithCustom)
+            }
           >
             {TEMPLATE_OPTIONS.map(presetSchemaName => (
               <option key={presetSchemaName} value={presetSchemaName}>

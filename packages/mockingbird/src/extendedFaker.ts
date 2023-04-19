@@ -63,10 +63,6 @@ const mockingbirdModule = Object.assign(
       end: string | number | Date;
     }) => faker.date.between(params.start, params.end).toISOString(),
     timestampLasthour: () => faker.date.recent(1 / 24).toISOString(),
-    lorempicsum: () => "",
-    lorempixel: () => "",
-    placeholder: () => "",
-    unsplash: () => "",
     pick: (params: { values: unknown[] }) =>
       params.values[Math.floor(Math.random() * params.values.length)],
     pickWeighted: (params: { values: unknown[]; weights: number[] }) =>

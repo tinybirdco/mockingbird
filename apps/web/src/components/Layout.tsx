@@ -47,11 +47,10 @@ function LeftCol({ stepIndex }: LeftColProps) {
 
       {stepIndex > 0 && (
         <h3 className="text-sm font-semibold leading-4 text-tb-text1 -tracking-wide max-w-[152px]">
-          <span className="italic font-bold font-ia-writer">Generate</span>{' '}
-          synthetic{' '}
-          <span className="italic font-bold font-ia-writer">data</span> streams
-          for your next data{' '}
-          <span className="italic font-bold font-ia-writer">project.</span>
+          <span className="font-bold font-ia-writer">Generate</span> mock{' '}
+          <span className="font-bold font-ia-writer">data</span> streams for
+          your next data{' '}
+          <span className="font-bold font-ia-writer">project.</span>
         </h3>
       )}
     </div>

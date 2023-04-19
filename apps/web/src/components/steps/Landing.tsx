@@ -13,10 +13,9 @@ export default function Landing({ step, helpers }: LandingProps) {
   return (
     <div>
       <h1 className="font-semibold text-[64px] leading-[68px] -tracking-wide">
-        <span className="italic font-bold font-ia-writer">Generate</span>{' '}
-        synthetic <span className="italic font-bold font-ia-writer">data</span>{' '}
-        streams for your next data{' '}
-        <span className="italic font-bold font-ia-writer">project.</span>
+        <span className="font-bold font-ia-writer">Generate</span> mock{' '}
+        <span className="font-bold font-ia-writer">data</span> streams for your
+        next data <span className="font-bold font-ia-writer">project.</span>
       </h1>
 
       <div className="h-[120px]" />

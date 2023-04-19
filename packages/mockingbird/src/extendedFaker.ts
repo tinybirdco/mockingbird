@@ -19,8 +19,6 @@ function weightedRandom(items: unknown[], weights: number[]) {
 
 const mockingbirdModule = Object.assign(
   {
-    countryCodeISO2: () => faker.address.countryCode("alpha-2"),
-    countryCodeISO3: () => faker.address.countryCode("alpha-3"),
     latitudeNumeric: () => parseFloat(faker.address.latitude()),
     longitudeNumeric: () => parseFloat(faker.address.longitude()),
     searchEngineName() {
@@ -45,24 +43,14 @@ const mockingbirdModule = Object.assign(
       const browserEngineNames = ["Blink", "Gecko", "Trident"];
       return faker.helpers.arrayElement(browserEngineNames);
     },
-    datetime: () => faker.date.recent().toISOString().slice(0, 19),
+    datetimeNow: () => new Date().toISOString().slice(0, 19),
+    datetimeRecent: () => faker.date.recent().toISOString().slice(0, 19),
     datetimeBetween: (params: {
       start: string | number | Date;
       end: string | number | Date;
     }) =>
       faker.date.between(params.start, params.end).toISOString().slice(0, 19),
-    datetimeLasthour: () =>
-      faker.date
-        .recent(1 / 24)
-        .toISOString()
-        .slice(0, 19),
-    timestamp: () => faker.date.recent().toISOString(),
-    timestampCurrent: () => new Date().toISOString(),
-    timestampBetween: (params: {
-      start: string | number | Date;
-      end: string | number | Date;
-    }) => faker.date.between(params.start, params.end).toISOString(),
-    timestampLasthour: () => faker.date.recent(1 / 24).toISOString(),
+    timestampNow: () => new Date().toISOString(),
     pick: (params: { values: unknown[] }) =>
       params.values[Math.floor(Math.random() * params.values.length)],
     pickWeighted: (params: { values: unknown[]; weights: number[] }) =>

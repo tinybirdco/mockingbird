@@ -25,7 +25,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
   },
   "eCommerce Transactions": {
     timestamp: {
-      type: "mockingbird.timestamp",
+      type: "mockingbird.timestampNow",
     },
     store_id: {
       type: "datatype.number",
@@ -87,7 +87,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       type: "datatype.float",
     },
     date: {
-      type: "mockingbird.datetime",
+      type: "mockingbird.datetimeNow",
     },
     stock_symbol: {
       type: "mockingbird.pick",
@@ -136,7 +136,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
   },
   "Flight Bookings": {
     timestamp: {
-      type: "mockingbird.timestamp",
+      type: "mockingbird.timestampNow",
     },
     transaction_id: {
       type: "datatype.uuid",
@@ -212,13 +212,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
   },
   "Content Tracking": {
     timestamp: {
-      type: "mockingbird.timestampBetween",
-      params: [
-        {
-          start: "2022-07-18 23:59:59",
-          end: "now",
-        },
-      ],
+      type: "mockingbird.timestampNow",
     },
     userId: {
       type: "datatype.uuid",
@@ -262,13 +256,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
   },
   "Web Analytics Starter Kit": {
     timestamp: {
-      type: "mockingbird.timestampBetween",
-      params: [
-        {
-          start: "2022-07-18 23:59:59",
-          end: "now",
-        },
-      ],
+      type: "mockingbird.timestampNow",
     },
     session_id: {
       type: "datatype.uuid",
@@ -383,7 +371,8 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       ],
     },
     country: {
-      type: "mockingbird.countryCodeISO2",
+      type: "address.countryCode",
+      params: ["alpha-2"]
     },
     cpuarchitecture: {
       type: "mockingbird.pick",
@@ -429,7 +418,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       ],
     },
     event_ts: {
-      type: "mockingbird.timestamp",
+      type: "mockingbird.timestampNow",
     },
     from: {
       type: "mockingbird.pick",
@@ -624,7 +613,8 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       type: "mockingbird.searchEngineName",
     },
     region: {
-      type: "mockingbird.countryCodeISO3",
+      type: "address.countryCode",
+      params: ["alpha-3"]
     },
     url: {
       type: "mockingbird.pickWeighted",

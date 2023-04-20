@@ -1,62 +1,34 @@
 import Head from 'next/head'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useReducer, useRef } from 'react'
 
 import Layout from '@/components/Layout'
 import BuildStep from '@/components/steps/BuildStep'
 import ConnectStep from '@/components/steps/ConnectStep'
 import Landing from '@/components/steps/Landing'
 import OverviewStep from '@/components/steps/OverviewStep'
-import { steps } from '@/lib/constants'
-import useGeneratorWorker from '@/lib/hooks/useGeneratorWorker'
-import useStep from '@/lib/hooks/useStep'
-import { Schema } from '@tinybirdco/mockingbird'
+import { initialState, reducer } from '@/lib/state'
 
 export default function Home() {
+  const [state, dispatch] = useReducer(reducer, initialState)
   const endElRef = useRef<HTMLDivElement>(null)
-  const [step, helpers] = useStep(0, steps.length)
-  const [schema, setSchema] = useState<Schema>({})
-  const isSaved = Object.keys(schema).length > 0
-
-  const { startGenerating, stopGenerating, isGenerating, sentMessages } =
-    useGeneratorWorker(schema, isSaved)
-
-  useEffect(() => {
-    if (isSaved && step === 2) {
-      startGenerating()
-      helpers.goToNextStep()
-    }
-  }, [isSaved, step, startGenerating, helpers])
-
-  const onGenerationStopClick = () => {
-    isGenerating ? stopGenerating() : startGenerating()
-  }
 
   useEffect(() => {
     endElRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [step])
+  }, [state.step])
 
   const stepToComponent = [
-    <Landing key="landing" step={step} helpers={helpers} />,
+    <Landing
+      key="landing"
+      state={state}
+      goToNextStep={() => dispatch({ type: 'goToNextStep', payload: null })}
+    />,
     <ConnectStep
       key="connect"
-      step={step}
-      helpers={helpers}
-      isGenerating={isGenerating}
+      state={state}
+      goToNextStep={() => dispatch({ type: 'goToNextStep', payload: null })}
     />,
-    <BuildStep
-      key="build"
-      step={step}
-      onSchemaChange={setSchema}
-      isSaved={isSaved}
-      isGenerating={isGenerating}
-    />,
-    <OverviewStep
-      key="overview"
-      step={step}
-      sentMessages={sentMessages}
-      isGenerating={isGenerating}
-      onGenerationStopClick={onGenerationStopClick}
-    />,
+    <BuildStep key="build" state={state} dispatch={dispatch} />,
+    <OverviewStep key="overview" state={state} dispatch={dispatch} />,
   ] as const
 
   return (
@@ -69,11 +41,11 @@ export default function Home() {
       </Head>
 
       <Layout>
-        <Layout.LeftCol stepIndex={step} />
+        <Layout.LeftCol stepIndex={state.step} />
         <Layout.RightCol>
           <div className="flex flex-col gap-6">
             {stepToComponent.map(
-              (component, index) => index <= step && component
+              (component, index) => index <= state.step && component
             )}
           </div>
 

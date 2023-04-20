@@ -2,7 +2,7 @@ import { FormEvent, ReactNode, useState } from 'react'
 
 import { destinations } from '@/lib/constants'
 import useGeneratorConfig from '@/lib/hooks/useGeneratorConfig'
-import { Helpers } from '@/lib/hooks/useStep'
+import { State } from '@/lib/state'
 
 import DestinationButton from '../DestinationButton'
 import { ArrowDownIcon } from '../Icons'
@@ -10,18 +10,13 @@ import TinybirdSettings from '../settings/TinybirdSettings'
 import UpstashKafkaSettings from '../settings/UpstashKafkaSettings'
 
 type ConnectStepProps = {
-  step: number
-  helpers: Helpers
-  isGenerating: boolean
+  state: State
+  goToNextStep: () => void
 }
 
 type Destination = (typeof destinations)[number]
 
-export default function ConnectStep({
-  step,
-  helpers,
-  isGenerating,
-}: ConnectStepProps) {
+export default function ConnectStep({ state, goToNextStep }: ConnectStepProps) {
   const { onConfigChange, config: generatorConfig } = useGeneratorConfig()
   const [selectedDestination, setSelectedDestination] = useState<Destination>(
     destinations[0]
@@ -63,7 +58,7 @@ export default function ConnectStep({
           limit,
         })
       }
-      helpers.goToNextStep()
+      goToNextStep()
     } catch (e) {
       const formatted = (e as any).format()
       console.error(formatted)
@@ -94,7 +89,7 @@ export default function ConnectStep({
 
       <div className="h-6" />
 
-      <fieldset disabled={isGenerating}>
+      <fieldset disabled={state.isGenerating}>
         <div className="grid gap-4 lg:grid-cols-2">
           {destinations.map(destination => (
             <DestinationButton
@@ -197,7 +192,7 @@ export default function ConnectStep({
             </>
           )}
           <div className="h-6" />
-          {step === 1 && (
+          {state.step === 1 && (
             <div className="flex justify-end">
               <button type="submit" className="btn-base btn-primary">
                 Continue

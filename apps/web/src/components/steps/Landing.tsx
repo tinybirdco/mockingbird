@@ -1,15 +1,15 @@
-import { Helpers } from '@/lib/hooks/useStep'
+import { State } from '@/lib/state'
 
 import { steps } from '../../lib/constants'
 import { ArrowDownIcon } from '../Icons'
 import StepTitle from '../StepTitle'
 
 type LandingProps = {
-  step: number
-  helpers: Helpers
+  state: State
+  goToNextStep: () => void
 }
 
-export default function Landing({ step, helpers }: LandingProps) {
+export default function Landing({ state, goToNextStep }: LandingProps) {
   return (
     <div>
       <h1 className="font-semibold text-[64px] leading-[68px] -tracking-wide">
@@ -30,11 +30,11 @@ export default function Landing({ step, helpers }: LandingProps) {
       </div>
       <div className="h-10" />
 
-      {step === 0 && (
+      {state.step === 0 && (
         <div className="flex justify-end">
           <button
             className="btn-base btn-primary"
-            onClick={() => helpers.goToNextStep()}
+            onClick={() => goToNextStep()}
           >
             Start generating data
             <ArrowDownIcon />

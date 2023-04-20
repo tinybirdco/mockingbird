@@ -8,13 +8,10 @@ export default function useActiveStep() {
 
   useEffect(() => {
     function onScroll() {
-      console.log(steps.length)
       for (let i = steps.length - 1; i >= 0; i--) {
         const stepContainer = document.getElementById(steps[i].id)
-        console.log(steps[i].id, stepContainer)
 
         if (stepContainer && isInViewport(stepContainer)) {
-          console.log('step', i)
           setActiveStep(i)
           break
         }

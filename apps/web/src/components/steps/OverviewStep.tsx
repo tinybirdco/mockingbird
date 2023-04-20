@@ -1,34 +1,25 @@
-import useGeneratorConfig from '@/lib/hooks/useGeneratorConfig'
+import { Dispatch } from 'react'
 
-import Layout from '../Layout'
+import useGeneratorConfig from '@/lib/hooks/useGeneratorConfig'
+import { Action, State } from '@/lib/state'
 
 type OverviewStepProps = {
-  step: number
-  sentMessages: {
-    total: number
-    session: number
-  }
-  isGenerating: boolean
-  onGenerationStopClick: () => void
+  state: State
+  dispatch: Dispatch<Action>
 }
 
-export default function OverviewStep({
-  step,
-  sentMessages,
-  isGenerating,
-  onGenerationStopClick,
-}: OverviewStepProps) {
-  const { generator, config: generatorConfig } = useGeneratorConfig()
+export default function OverviewStep({ state, dispatch }: OverviewStepProps) {
+  const { generator, config } = useGeneratorConfig()
   const infoItems = [
     ...(generator
       ? [
           {
             title: 'Events Per Seconds',
-            value: generatorConfig.eps,
+            value: config.eps,
           },
           {
             title: 'Limit',
-            value: generatorConfig.limit,
+            value: config.limit,
           },
         ]
       : []),
@@ -40,7 +31,7 @@ export default function OverviewStep({
           },
           {
             title: 'Data Source',
-            value: generatorConfig.datasource,
+            value: config.datasource,
           },
         ]
       : generator === 'UpstashKafka'
@@ -51,11 +42,31 @@ export default function OverviewStep({
           },
           {
             title: 'Topic',
-            value: generatorConfig.topic,
+            value: config.topic,
           },
         ]
       : []),
   ] as const
+
+  const onStartGenerationClick = () => {
+    dispatch({
+      type: 'startGenerating',
+      payload: {
+        generator,
+        config,
+        onMessage: ({ data }) =>
+          dispatch({
+            type: 'setSentMessages',
+            payload: data,
+          }),
+        onError: e => console.error(e),
+      },
+    })
+  }
+
+  const onStopGenerationClick = () => {
+    dispatch({ type: 'stopGenerating', payload: null })
+  }
 
   return (
     <div id="overview-step">
@@ -63,14 +74,14 @@ export default function OverviewStep({
         <div className="p-10 bg-white rounded-lg">
           <p className="text-sm">Total Events Sent</p>
           <h2 className="font-semibold text-[64px] leading-[72px]">
-            {sentMessages.total}
+            {state.sentMessages.total}
           </h2>
         </div>
 
         <div className="p-10 bg-white rounded-lg">
           <p className="text-sm">Sent this session</p>
           <h2 className="font-semibold text-[64px] leading-[72px]">
-            {sentMessages.session}
+            {state.sentMessages.session}
           </h2>
         </div>
 
@@ -91,9 +102,11 @@ export default function OverviewStep({
         <button
           type="button"
           className="btn-base btn-primary"
-          onClick={onGenerationStopClick}
+          onClick={
+            state.isGenerating ? onStopGenerationClick : onStartGenerationClick
+          }
         >
-          {isGenerating ? 'Stop' : 'Start'} Generating!
+          {state.isGenerating ? 'Stop' : 'Start'} Generating!
         </button>
       </div>
     </div>

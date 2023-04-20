@@ -1,3 +1,5 @@
+import { PRESET_SCHEMA_NAMES } from '@tinybirdco/mockingbird'
+
 export const steps = [
   {
     id: 'connect-step',
@@ -30,3 +32,6 @@ export const destinations = [
     icon: '/destinations/upstash-kafka.svg',
   },
 ] as const
+
+export const TEMPLATE_OPTIONS = [...PRESET_SCHEMA_NAMES, 'Custom'] as const
+export type PresetSchemaNameWithCustom = (typeof TEMPLATE_OPTIONS)[number]

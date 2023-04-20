@@ -1,4 +1,5 @@
 import Head from 'next/head'
+import Script from 'next/script'
 import { useEffect, useReducer, useRef } from 'react'
 
 import Layout from '@/components/Layout'
@@ -39,6 +40,15 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.png" />
       </Head>
+
+      {process.env.NODE_ENV === 'production' && (
+        <Script
+          defer
+          src="https://unpkg.com/@tinybirdco/flock.js"
+          data-domain="tinybird.co"
+          data-token={process.env.NEXT_PUBLIC_TINYBIRD_TRACKER_TOKEN}
+        />
+      )}
 
       <Layout>
         <Layout.LeftCol stepIndex={state.step} />

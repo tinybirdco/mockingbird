@@ -1,7 +1,7 @@
 {
   "name": "@tinybirdco/mockingbird-cli",
-  "description": "CLI for tinybird data generator",
-  "version": "1.0.0",
+  "description": "CLI for Mockingibrd",
+  "version": "1.1.0",
   "main": "index.js",
   "bin": "index.js",
   "scripts": {
@@ -9,6 +9,8 @@
   },
   "keywords": [
     "tinybird",
+    "upstash",
+    "kafka",
     "data",
     "generator",
     "cli"
@@ -23,7 +25,7 @@
     "url": "https://github.com/tinybirdco/mockingbird/apps/cli"
   },
   "dependencies": {
-    "@tinybirdco/mockingbird": "^1.0.2",
+    "@tinybirdco/mockingbird": "^1.1.0",
     "yargs": "^17.6.2"
   }
 }

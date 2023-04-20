@@ -1,10 +1,11 @@
-# Tinybird data generator
+# Mockingbird
 
 ## Features
 
+- All faker functions and custom functions
 - Type definitions
+- 2 destinations
 - 8 preset schemas
-- Custom schemas
 
 ## Installing
 

@@ -7,6 +7,10 @@
   --jse-main-border: 1px solid #d6d4df !important;
 }
 
+input[type='radio'] {
+  accent-color: theme('colors.tb-primary');
+}
+
 @layer base {
   html {
     font-family: 'Inter', sans-serif;
@@ -21,7 +25,11 @@
   }
 
   .btn-base {
-    @apply px-4 py-2;
+    @apply px-4 py-[10px] rounded-[4px] flex items-center gap-2;
+  }
+
+  .btn-primary {
+    @apply bg-tb-primary text-white hover:bg-tb-primary/80;
   }
 
   .card {
@@ -30,7 +38,7 @@
     box-shadow: 0px 1px 4px rgba(11, 19, 36, 0.1),
       inset 0px -0.888689px 0px rgba(0, 0, 0, 0.1);
     border-radius: 14.219px;
-    @apply p-4 md:p-9;
+    @apply p-4 lg:p-9;
   }
 
   .preview {

@@ -1,12 +1,20 @@
-import { TinybirdGenerator } from '@tinybirdco/mockingbird'
+import {
+  TinybirdGenerator,
+  UpstashKafkaGenerator,
+} from '@tinybirdco/mockingbird'
 
-let tbGenerator: TinybirdGenerator
+let generator: TinybirdGenerator | UpstashKafkaGenerator
 
 onmessage = async function (e) {
   if ('init' in e.data) {
-    if ('config' in e.data) tbGenerator = new TinybirdGenerator(e.data.config)
-    else console.error('No config supplied to worker')
-  } else if (tbGenerator) {
-    await tbGenerator.generate(data => self.postMessage(data.length))
+    if ('config' in e.data) {
+      if (e.data.generator === 'Tinybird') {
+        generator = new TinybirdGenerator(e.data.config)
+      } else if (e.data.generator === 'UpstashKafka') {
+        generator = new UpstashKafkaGenerator(e.data.config)
+      }
+    } else console.error('No config supplied to worker')
+  } else if (generator) {
+    await generator.generate(data => self.postMessage(data.length))
   }
 }

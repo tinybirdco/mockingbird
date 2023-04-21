@@ -95,7 +95,7 @@ pick: (params: { values: unknown[] }) =>
     params.values[Math.floor(Math.random() * params.values.length)],
 ```
 
-#### Adding mew preset Schemas
+#### Adding new preset Schemas
 
 Preset Schemas are defined in [/packages/mockingbird/src/presetSchemas.ts](./packages/mockingbird/src/presetSchemas.ts).
 

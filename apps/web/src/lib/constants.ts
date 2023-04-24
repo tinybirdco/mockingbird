@@ -32,6 +32,7 @@ export const destinations = [
     icon: '/destinations/upstash-kafka.svg',
   },
 ] as const
+export type Destination = (typeof destinations)[number]
 
 export const TEMPLATE_OPTIONS = [...PRESET_SCHEMA_NAMES, 'Custom'] as const
 export type PresetSchemaNameWithCustom = (typeof TEMPLATE_OPTIONS)[number]

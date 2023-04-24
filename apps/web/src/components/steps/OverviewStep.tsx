@@ -9,46 +9,11 @@ type OverviewStepProps = {
 }
 
 export default function OverviewStep({ state, dispatch }: OverviewStepProps) {
-  const { generator, config } = useGeneratorConfig()
-  const infoItems = [
-    ...(generator
-      ? [
-          {
-            title: 'Events Per Seconds',
-            value: config.eps,
-          },
-          {
-            title: 'Limit',
-            value: config.limit,
-          },
-        ]
-      : []),
-    ...(generator === 'Tinybird'
-      ? [
-          {
-            title: 'Destination',
-            value: 'Tinybird Events API',
-          },
-          {
-            title: 'Data Source',
-            value: config.datasource,
-          },
-        ]
-      : generator === 'UpstashKafka'
-      ? [
-          {
-            title: 'Destination',
-            value: 'Upstash Kafka',
-          },
-          {
-            title: 'Topic',
-            value: config.topic,
-          },
-        ]
-      : []),
-  ] as const
+  const { generator, config, overviewItems } = useGeneratorConfig()
 
   const onStartGenerationClick = () => {
+    if (!generator) return
+
     dispatch({
       type: 'startGenerating',
       payload: {
@@ -59,7 +24,7 @@ export default function OverviewStep({ state, dispatch }: OverviewStepProps) {
             type: 'setSentMessages',
             payload: data,
           }),
-        onError: e => console.error(e),
+        onError: console.error,
       },
     })
   }
@@ -86,7 +51,7 @@ export default function OverviewStep({ state, dispatch }: OverviewStepProps) {
         </div>
 
         <div className="flex flex-wrap gap-10 p-10 bg-white rounded-lg lg:col-span-2">
-          {infoItems.map(item => (
+          {overviewItems.map(item => (
             <div key={item.title} className="flex flex-col gap-1">
               <p className="text-sm">{item.title}</p>
 

@@ -15,6 +15,7 @@ export default function useGeneratorConfig():
           | Omit<TinybirdConfig, 'schema'>
           | Omit<UpstashKafkaConfig, 'schema'>
       ) => void
+      overviewItems: { title: string; value: string | number }[]
     } & (
       | {
           generator: 'Tinybird'
@@ -64,9 +65,27 @@ export default function useGeneratorConfig():
       token: (router.query.token as string | undefined) ?? '',
       datasource: (router.query.datasource as string | undefined) ?? '',
       eps: parseInt((router.query.eps as string | undefined) ?? '1'),
-      limit: -1,
+      limit: parseInt((router.query.limit as string | undefined) ?? '-1'),
     }
-    return { generator, onConfigChange, config }
+    const overviewItems = [
+      {
+        title: 'Events Per Seconds',
+        value: config.eps,
+      },
+      {
+        title: 'Limit',
+        value: config.limit,
+      },
+      {
+        title: 'Destination',
+        value: 'Tinybird Events API',
+      },
+      {
+        title: 'Data Source',
+        value: config.datasource,
+      },
+    ]
+    return { generator, onConfigChange, config, overviewItems }
   } else if (generator === 'UpstashKafka') {
     const config: Omit<UpstashKafkaConfig, 'schema'> = {
       address: (router.query.address as string | undefined) ?? '',
@@ -74,11 +93,28 @@ export default function useGeneratorConfig():
       pass: (router.query.pass as string | undefined) ?? '',
       topic: (router.query.topic as string | undefined) ?? '',
       eps: parseInt((router.query.eps as string | undefined) ?? '1'),
-      limit: -1,
+      limit: parseInt((router.query.limit as string | undefined) ?? '-1'),
     }
-
-    return { generator, onConfigChange, config }
+    const overviewItems = [
+      {
+        title: 'Events Per Seconds',
+        value: config.eps,
+      },
+      {
+        title: 'Limit',
+        value: config.limit,
+      },
+      {
+        title: 'Destination',
+        value: 'Upstash Kafka',
+      },
+      {
+        title: 'Topic',
+        value: config.topic,
+      },
+    ]
+    return { generator, onConfigChange, config, overviewItems }
   }
 
-  return { generator: null, onConfigChange, config: {} }
+  return { generator: null, onConfigChange, config: {}, overviewItems: [] }
 }

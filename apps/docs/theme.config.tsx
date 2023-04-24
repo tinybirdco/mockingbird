@@ -22,6 +22,7 @@ const config: DocsThemeConfig = {
   head: (
     <>
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="icon" href="/favicon.png" />
       <meta property="og:title" content="Mockingbird" />
       <meta property="og:description" content="Mockingbird Docs: the mock streaming data generator" />
     </>

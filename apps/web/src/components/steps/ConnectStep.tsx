@@ -21,7 +21,9 @@ export default function ConnectStep({ state, goToNextStep }: ConnectStepProps) {
   const [selectedDestination, setSelectedDestination] = useState<Destination>(
     destinations[0]
   )
-  const [withLimit, setWithLimit] = useState(false)
+  const [withLimit, setWithLimit] = useState(
+    'limit' in generatorConfig && generatorConfig.limit > 0
+  )
   const [errors, setErrors] = useState<string[]>([])
 
   const onSubmit = (e: FormEvent) => {
@@ -31,8 +33,8 @@ export default function ConnectStep({ state, goToNextStep }: ConnectStepProps) {
       new FormData(e.target as HTMLFormElement)
     ) as Record<string, string>
     const { generator } = formData
-    const eps = parseInt(formData.eps ?? 1)
-    const limit = parseInt(formData.limit ?? -1)
+    const eps = parseInt(formData.eps ?? '1')
+    const limit = parseInt(formData.limit ?? '-1')
 
     try {
       const { datasource, token } = formData
@@ -72,6 +74,11 @@ export default function ConnectStep({ state, goToNextStep }: ConnectStepProps) {
     }
   }
 
+  const onDestinationChange = (destination: Destination) => {
+    setErrors([])
+    setSelectedDestination(destination)
+  }
+
   const destinationToSettings: Record<Destination['generator'], ReactNode> = {
     Tinybird: <TinybirdSettings />,
     UpstashKafka: <UpstashKafkaSettings />,
@@ -97,9 +104,7 @@ export default function ConnectStep({ state, goToNextStep }: ConnectStepProps) {
               isSelected={
                 selectedDestination.generator === destination.generator
               }
-              onClick={() => (
-                setErrors([]), setSelectedDestination(destination)
-              )}
+              onClick={() => onDestinationChange(destination)}
             >
               <img
                 src={destination.icon}

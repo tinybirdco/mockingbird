@@ -1,7 +1,7 @@
 import _isEqual from 'lodash.isequal'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
-import { Dispatch, useEffect } from 'react'
+import { ChangeEvent, Dispatch, useEffect } from 'react'
 
 import { PresetSchemaNameWithCustom, TEMPLATE_OPTIONS } from '@/lib/constants'
 import useGeneratorConfig from '@/lib/hooks/useGeneratorConfig'
@@ -35,15 +35,23 @@ export default function BuildStep({ state, dispatch }: BuildStepProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.isReady])
 
-  const onStartGenerationClick = () => {
-    const newState = reducer(state, {
-      type: 'setSchema',
-      payload: null,
+  const onTemplateChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    dispatch({
+      type: 'setTemplate',
+      payload: e.target.value as PresetSchemaNameWithCustom,
     })
+  }
+
+  const onPreviewClick = () => {
+    dispatch({ type: 'setSchema', payload: null })
+  }
+
+  const onStartGenerationClick = () => {
+    if (!generator) return
+
     dispatch({
       type: 'setSchemaAndStartGenerating',
       payload: {
-        newState,
         generator,
         config,
         onMessage: ({ data }) =>
@@ -51,7 +59,7 @@ export default function BuildStep({ state, dispatch }: BuildStepProps) {
             type: 'setSentMessages',
             payload: data,
           }),
-        onError: e => console.error(e),
+        onError: console.error,
       },
     })
   }
@@ -68,12 +76,7 @@ export default function BuildStep({ state, dispatch }: BuildStepProps) {
         <select
           className="input-base"
           value={state.template}
-          onChange={e =>
-            dispatch({
-              type: 'setTemplate',
-              payload: e.target.value as PresetSchemaNameWithCustom,
-            })
-          }
+          onChange={onTemplateChange}
           disabled={state.isGenerating}
         >
           {TEMPLATE_OPTIONS.map(presetSchemaName => (
@@ -121,7 +124,7 @@ export default function BuildStep({ state, dispatch }: BuildStepProps) {
           className={cx(
             'py-[10px] px-[14px] flex items-center gap-4 bg-tb-primary rounded-[4px] shadow-[0px_1px_3px_rgba(11,19,36,0.1)] text-sm text-white tracking-[-0.01em] hover:scale-105'
           )}
-          onClick={() => dispatch({ type: 'setSchema', payload: null })}
+          onClick={onPreviewClick}
         >
           <span>Preview</span>
         </button>

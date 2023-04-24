@@ -30,6 +30,28 @@ function LeftCol({ stepIndex }: LeftColProps) {
           by tinybird
         </h6>
 
+        <div className="h-2" />
+
+        <div className="flex items-center gap-2 text-tb-text1">
+          <a
+            href="https://mockingbird.tinybird.co/docs"
+            rel="noopener noreferrer"
+            target="_blank"
+            className="flex text-sm cursor-pointer hover:text-tb-primary"
+          >
+            Docs
+          </a>
+          <span>|</span>
+          <a
+            href="https://github.com/tinybirdco/mockingbird"
+            rel="noopener noreferrer"
+            target="_blank"
+            className="flex text-sm cursor-pointer hover:text-tb-primary"
+          >
+            GitHub
+          </a>
+        </div>
+
         {stepIndex > 0 && (
           <>
             <div className="h-10" />
@@ -81,7 +103,7 @@ function RightCol({ children }: RightColProps) {
 
 function Layout({ children }: LayoutProps) {
   return (
-    <div className="bg-[center_-128px] bg-repeat-x bg-contain bg-landing-bg">
+    <div className="bg-[center_-32px] lg:bg-[center_-128px] bg-repeat-x bg-contain bg-landing-bg">
       <div className="max-w-[1072px] mx-auto pt-8 pb-6 px-4 xl:px-0 flex flex-col gap-16">
         <div className="grid flex-1 grid-cols-1 gap-16 lg:grid-cols-12">
           {children}
@@ -90,9 +112,9 @@ function Layout({ children }: LayoutProps) {
           <p className="text-xs text-tb-text1">
             Copyright © 2023 Tinybird. All rights reserved
           </p>
-          <p className="text-xs text-tb-text1">
+          {/* <p className="text-xs text-tb-text1">
             Terms of service | Legal notice
-          </p>
+          </p> */}
         </div>
       </div>
     </div>

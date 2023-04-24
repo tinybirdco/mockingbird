@@ -18,11 +18,7 @@ import {
   TEMPLATE_OPTIONS,
 } from './constants'
 import { compressJSON, decompressJSON } from './helpers'
-import useGeneratorConfig from './hooks/useGeneratorConfig'
 import { createWorker, startWorker, stopWorker } from './workerBuilder'
-
-const isJSONContent = (content: Content): content is JSONContent =>
-  'json' in content
 
 export type State = {
   step: number
@@ -65,15 +61,22 @@ export type Action =
     }
   | {
       type: 'setSchemaAndStartGenerating'
-      payload: Omit<ReturnType<typeof useGeneratorConfig>, 'onConfigChange'> & {
+      payload: {
+        generator: 'Tinybird' | 'UpstashKafka'
+        config:
+          | Omit<TinybirdConfig, 'schema'>
+          | Omit<UpstashKafkaConfig, 'schema'>
         onMessage: (message: MessageEvent<number>) => void
         onError: (error: ErrorEvent) => void
-        newState: State
       }
     }
   | {
       type: 'startGenerating'
-      payload: Omit<ReturnType<typeof useGeneratorConfig>, 'onConfigChange'> & {
+      payload: {
+        generator: 'Tinybird' | 'UpstashKafka'
+        config:
+          | Omit<TinybirdConfig, 'schema'>
+          | Omit<UpstashKafkaConfig, 'schema'>
         onMessage: (message: MessageEvent<number>) => void
         onError: (error: ErrorEvent) => void
       }
@@ -115,6 +118,7 @@ export function reducer(state: State, action: Action): State {
     case 'setEditorFromQuery': {
       if (
         action.payload.template &&
+        action.payload.template !== 'Custom' &&
         TEMPLATE_OPTIONS.includes(action.payload.template as PresetSchemaName)
       ) {
         return {
@@ -188,52 +192,10 @@ export function reducer(state: State, action: Action): State {
       }
     }
     case 'setSchema': {
-      let errors: string[] = []
-      let sampleCode = ''
-      let template = state.template
-      let schema: Schema = {}
-
-      try {
-        schema = (
-          isJSONContent(state.content)
-            ? (state.content as JSONContent).json
-            : JSON.parse((state.content as TextContent).text)
-        ) as Schema
-        const validation = validateSchema(schema!)
-        errors = validation.errors
-
-        if (schema && validation.valid) {
-          errors = []
-          const rowGenerator = new TinybirdGenerator({
-            schema,
-            datasource: '',
-            endpoint: '',
-            token: '',
-            eps: 1,
-            limit: -1,
-          }).createRowGenerator()
-          sampleCode = JSON.stringify(rowGenerator.generate(), null, 4)
-
-          if (
-            template !== 'Custom' &&
-            JSON.stringify(schema, null, 4) !==
-              JSON.stringify(presetSchemas[template], null, 4)
-          ) {
-            template = 'Custom'
-          }
-
-          const urlParams = new URLSearchParams({
-            ...router.query,
-            template,
-            schema: template === 'Custom' ? compressJSON(schema) : 'Preset',
-          })
-          router.push(`?${urlParams}`, undefined, { scroll: false })
-        }
-      } catch (e) {
-        console.error(e)
-        errors = [(e as Error).toString()]
-        sampleCode = 'Save to start generating'
-      }
+      const { schema, template, sampleCode, errors } = parseSchema(
+        state.template,
+        state.content
+      )
       return {
         ...state,
         schema,
@@ -243,38 +205,44 @@ export function reducer(state: State, action: Action): State {
       }
     }
     case 'setSchemaAndStartGenerating': {
-      if (state.worker) return state
-
-      const isSaved = Object.keys(action.payload.newState.schema).length > 0
-
       if (
-        !isSaved ||
+        state.worker ||
         !action.payload.generator ||
-        Object.keys(action.payload.config).length === 0
+        !('eps' in action.payload.config)
       )
-        return action.payload.newState
+        return state
+
+      const { schema, template, sampleCode, errors } = parseSchema(
+        state.template,
+        state.content
+      )
+
+      if (!Object.keys(schema).length) return state
 
       const createdWorker = createWorker(
         action.payload.generator,
         {
-          ...(action.payload.config as TinybirdConfig | UpstashKafkaConfig),
-          schema: action.payload.newState.schema,
+          ...action.payload.config,
+          schema,
         },
         action.payload.onMessage,
         action.payload.onError
       )
 
-      if (!createdWorker) return action.payload.newState
+      if (!createdWorker) return state
 
       startWorker(createdWorker)
 
       return {
-        ...action.payload.newState,
-        step: action.payload.newState.step + 1,
+        ...state,
+        schema,
+        template,
+        errors,
+        step: state.step + 1,
         worker: createdWorker,
         isGenerating: true,
         sentMessages: {
-          total: action.payload.newState.sentMessages.total,
+          total: 0,
           session: 0,
         },
       }
@@ -339,3 +307,63 @@ export function reducer(state: State, action: Action): State {
       return state
   }
 }
+
+const parseSchema = (
+  template: PresetSchemaNameWithCustom,
+  content: Content
+) => {
+  let errors: string[] = []
+  let sampleCode = ''
+  let schema: Schema = {}
+
+  try {
+    schema = (
+      isJSONContent(content)
+        ? (content as JSONContent).json
+        : JSON.parse((content as TextContent).text)
+    ) as Schema
+    const validation = validateSchema(schema!)
+    errors = validation.errors
+
+    if (schema && validation.valid) {
+      const rowGenerator = new TinybirdGenerator({
+        schema,
+        datasource: '',
+        endpoint: '',
+        token: '',
+        eps: 1,
+        limit: -1,
+      }).createRowGenerator()
+      sampleCode = JSON.stringify(rowGenerator.generate(), null, 4)
+
+      if (
+        template !== 'Custom' &&
+        JSON.stringify(schema, null, 4) !==
+          JSON.stringify(presetSchemas[template], null, 4)
+      ) {
+        template = 'Custom'
+      }
+
+      const urlParams = new URLSearchParams({
+        ...router.query,
+        template,
+        schema: template === 'Custom' ? compressJSON(schema) : 'Preset',
+      })
+      router.push(`?${urlParams}`, undefined, { scroll: false })
+    }
+  } catch (e) {
+    console.error(e)
+    errors = [(e as Error).toString()]
+    sampleCode = 'Save to start generating'
+  }
+
+  return {
+    schema,
+    template,
+    sampleCode,
+    errors,
+  }
+}
+
+const isJSONContent = (content: Content): content is JSONContent =>
+  'json' in content

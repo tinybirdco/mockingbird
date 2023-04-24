@@ -1,9 +1,10 @@
 import {
+  MockingbirdGenerator,
   TinybirdGenerator,
   UpstashKafkaGenerator,
 } from '@tinybirdco/mockingbird'
 
-let generator: TinybirdGenerator | UpstashKafkaGenerator
+let generator: MockingbirdGenerator
 
 onmessage = async function (e) {
   if ('init' in e.data) {
@@ -12,6 +13,8 @@ onmessage = async function (e) {
         generator = new TinybirdGenerator(e.data.config)
       } else if (e.data.generator === 'UpstashKafka') {
         generator = new UpstashKafkaGenerator(e.data.config)
+      } else {
+        console.error('Unknown generator: ', e.data.generator)
       }
     } else console.error('No config supplied to worker')
   } else if (generator) {

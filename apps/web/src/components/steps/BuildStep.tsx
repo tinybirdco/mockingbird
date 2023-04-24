@@ -122,11 +122,9 @@ export default function BuildStep({ state, dispatch }: BuildStepProps) {
             'py-[10px] px-[14px] flex items-center gap-4 bg-tb-primary rounded-[4px] shadow-[0px_1px_3px_rgba(11,19,36,0.1)] text-sm text-white tracking-[-0.01em] hover:scale-105',
             isSaved && 'bg-opacity-40 cursor-not-allowed'
           )}
-          disabled={isSaved}
           onClick={() => dispatch({ type: 'setSchema', payload: null })}
         >
-          <span>{isSaved ? 'Saved' : 'Save'}</span>
-          {isSaved && <CheckmarkIcon />}
+          <span>Preview</span>
         </button>
 
         {state.step === 2 && (

@@ -226,14 +226,19 @@ export default function ConnectStep({ state, dispatch }: ConnectStepProps) {
             </>
           )}
           <div className="h-6" />
-          {state.step === 1 && (
-            <div className="flex justify-end">
-              <button type="submit" className="btn-base btn-primary">
-                Continue
-                <ArrowDownIcon />
-              </button>
-            </div>
-          )}
+
+          <div className="flex justify-end">
+            <button type="submit" className="btn-base btn-primary">
+              {state.step === 1 ? (
+                <>
+                  Continue
+                  <ArrowDownIcon />
+                </>
+              ) : (
+                <>Save</>
+              )}
+            </button>
+          </div>
         </form>
       </fieldset>
     </div>

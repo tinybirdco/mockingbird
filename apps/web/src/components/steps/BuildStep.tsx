@@ -1,11 +1,9 @@
 import _isEqual from 'lodash.isequal'
 import dynamic from 'next/dynamic'
-import { useRouter } from 'next/router'
-import { ChangeEvent, Dispatch, useEffect } from 'react'
+import { ChangeEvent, Dispatch } from 'react'
 
 import { PresetSchemaNameWithCustom, TEMPLATE_OPTIONS } from '@/lib/constants'
-import useGeneratorConfig from '@/lib/hooks/useGeneratorConfig'
-import { Action, State, reducer } from '@/lib/state'
+import { Action, State } from '@/lib/state'
 import { cx } from '@/lib/utils'
 
 import { ArrowDownIcon, CheckmarkIcon } from '../Icons'
@@ -21,19 +19,7 @@ type BuildStepProps = {
 }
 
 export default function BuildStep({ state, dispatch }: BuildStepProps) {
-  const router = useRouter()
-  const { generator, config } = useGeneratorConfig()
   const isSaved = Object.keys(state.schema).length > 0
-
-  useEffect(() => {
-    if (!router.isReady) return
-
-    const template = router.query.template as string | undefined
-    const schema = router.query.schema as string | undefined
-    dispatch({ type: 'setEditorFromQuery', payload: { template, schema } })
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router.isReady])
 
   const onTemplateChange = (e: ChangeEvent<HTMLSelectElement>) => {
     dispatch({
@@ -47,13 +33,9 @@ export default function BuildStep({ state, dispatch }: BuildStepProps) {
   }
 
   const onStartGenerationClick = () => {
-    if (!generator) return
-
     dispatch({
       type: 'setSchemaAndStartGenerating',
       payload: {
-        generator,
-        config,
         onMessage: ({ data }) =>
           dispatch({
             type: 'setSentMessages',

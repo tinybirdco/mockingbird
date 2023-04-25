@@ -1,14 +1,15 @@
 import _isEqual from 'lodash.isequal'
 import router from 'next/router'
+import { ParsedUrlQuery } from 'querystring'
 import { Content, JSONContent, TextContent } from 'vanilla-jsoneditor'
 
 import {
-  PresetSchemaName,
   presetSchemas,
   Schema,
   TinybirdConfig,
   TinybirdGenerator,
   UpstashKafkaConfig,
+  UpstashKafkaGenerator,
   validateSchema,
 } from '@tinybirdco/mockingbird'
 
@@ -22,12 +23,17 @@ import { createWorker, startWorker, stopWorker } from './workerBuilder'
 
 export type State = {
   step: number
+  generator: 'Tinybird' | 'UpstashKafka' | null
+  config:
+    | Omit<TinybirdConfig, 'schema'>
+    | Omit<UpstashKafkaConfig, 'schema'>
+    | null
   schema: Schema
   template: PresetSchemaNameWithCustom
   content: Content
   sampleCode: string
   errors: string[]
-  worker: Worker | undefined
+  worker: Worker | null
   isGenerating: boolean
   sentMessages: {
     total: number
@@ -41,11 +47,20 @@ export type Action =
       payload: null
     }
   | {
-      type: 'setEditorFromQuery'
-      payload: {
-        template: string | undefined
-        schema: string | undefined
-      }
+      type: 'setStateFromURLQuery'
+      payload: ParsedUrlQuery
+    }
+  | {
+      type: 'setConfig'
+      payload:
+        | {
+            generator: 'Tinybird'
+            config: Omit<TinybirdConfig, 'schema'>
+          }
+        | {
+            generator: 'UpstashKafka'
+            config: Omit<UpstashKafkaConfig, 'schema'>
+          }
     }
   | {
       type: 'setTemplate'
@@ -62,10 +77,6 @@ export type Action =
   | {
       type: 'setSchemaAndStartGenerating'
       payload: {
-        generator: 'Tinybird' | 'UpstashKafka'
-        config:
-          | Omit<TinybirdConfig, 'schema'>
-          | Omit<UpstashKafkaConfig, 'schema'>
         onMessage: (message: MessageEvent<number>) => void
         onError: (error: ErrorEvent) => void
       }
@@ -73,10 +84,6 @@ export type Action =
   | {
       type: 'startGenerating'
       payload: {
-        generator: 'Tinybird' | 'UpstashKafka'
-        config:
-          | Omit<TinybirdConfig, 'schema'>
-          | Omit<UpstashKafkaConfig, 'schema'>
         onMessage: (message: MessageEvent<number>) => void
         onError: (error: ErrorEvent) => void
       }
@@ -92,12 +99,14 @@ export type Action =
 
 export const initialState: State = {
   step: 0,
+  generator: null,
+  config: null,
   schema: {},
   template: 'Custom',
   content: { json: '' },
   sampleCode: 'Click Preview to see what your data looks like',
   errors: [],
-  worker: undefined,
+  worker: null,
   isGenerating: false,
   sentMessages: {
     total: 0,
@@ -115,48 +124,54 @@ export function reducer(state: State, action: Action): State {
         step: state.step + 1,
       }
     }
-    case 'setEditorFromQuery': {
-      if (
-        action.payload.template &&
-        action.payload.template !== 'Custom' &&
-        TEMPLATE_OPTIONS.includes(action.payload.template as PresetSchemaName)
-      ) {
-        return {
-          ...state,
-          template: action.payload.template as PresetSchemaName,
-          content: {
-            json: presetSchemas[action.payload.template as PresetSchemaName],
-          } as JSONContent,
-        }
-      } else if (action.payload.schema && action.payload.schema !== 'Preset') {
-        try {
-          const json = JSON.parse(decompressJSON(action.payload.schema))
-
-          return {
-            ...state,
-            template: 'Custom',
-            content: { json },
-          }
-        } catch (e) {
-          console.error(e)
-          return {
-            ...state,
-            template: 'Simple Example',
-            content: {
-              json: presetSchemas['Simple Example'],
-            } as JSONContent,
-          }
-        }
-      }
+    case 'setStateFromURLQuery': {
+      const { template, content } = handleContentFromURL(router.query)
+      const { generator, config } = handleConfigFromURL(router.query)
 
       return {
         ...state,
-        template: 'Simple Example',
-        content: {
-          json: presetSchemas['Simple Example'],
-        } as JSONContent,
+        generator,
+        config,
+        template,
+        content,
       }
     }
+    case 'setConfig': {
+      if (action.payload.generator === 'Tinybird') {
+        new TinybirdGenerator({
+          ...action.payload.config,
+          schema: {},
+        } as TinybirdConfig)
+      } else if (action.payload.generator === 'UpstashKafka') {
+        new UpstashKafkaGenerator({
+          ...action.payload.config,
+          schema: {},
+        } as UpstashKafkaConfig)
+      }
+
+      const urlParams = new URLSearchParams({
+        ...Object.fromEntries(
+          Object.entries(router.query).map(([key, value]) => [
+            key,
+            value ? value.toString() : '',
+          ])
+        ),
+        ...Object.fromEntries(
+          Object.entries(action.payload.config).map(([key, value]) => [
+            key,
+            value.toString(),
+          ])
+        ),
+        generator: action.payload.generator,
+      })
+      router.push(`?${urlParams}`, undefined, { scroll: false })
+      return {
+        ...state,
+        generator: action.payload.generator,
+        config: action.payload.config,
+      }
+    }
+
     case 'setTemplate': {
       return {
         ...state,
@@ -205,12 +220,7 @@ export function reducer(state: State, action: Action): State {
       }
     }
     case 'setSchemaAndStartGenerating': {
-      if (
-        state.worker ||
-        !action.payload.generator ||
-        !('eps' in action.payload.config)
-      )
-        return state
+      if (state.worker || !state.generator || !state.config) return state
 
       const { schema, template, sampleCode, errors } = parseSchema(
         state.template,
@@ -220,9 +230,9 @@ export function reducer(state: State, action: Action): State {
       if (!Object.keys(schema).length) return state
 
       const createdWorker = createWorker(
-        action.payload.generator,
+        state.generator,
         {
-          ...action.payload.config,
+          ...(state.config as TinybirdConfig | UpstashKafkaConfig),
           schema,
         },
         action.payload.onMessage,
@@ -252,17 +262,12 @@ export function reducer(state: State, action: Action): State {
 
       const isSaved = Object.keys(state.schema).length > 0
 
-      if (
-        !isSaved ||
-        !action.payload.generator ||
-        Object.keys(action.payload.config).length === 0
-      )
-        return state
+      if (!isSaved || !state.generator || !state.config) return state
 
       const createdWorker = createWorker(
-        action.payload.generator,
+        state.generator,
         {
-          ...(action.payload.config as TinybirdConfig | UpstashKafkaConfig),
+          ...(state.config as TinybirdConfig | UpstashKafkaConfig),
           schema: state.schema,
         },
         action.payload.onMessage,
@@ -290,22 +295,109 @@ export function reducer(state: State, action: Action): State {
 
       return {
         ...state,
-        worker: undefined,
+        worker: null,
         isGenerating: false,
       }
     }
     case 'setSentMessages': {
+      const isDone =
+        state.config &&
+        state.config.limit !== -1 &&
+        state.sentMessages.session + action.payload >= state.config.limit
+
+      if (state.worker && isDone) stopWorker(state.worker)
+
       return {
         ...state,
         sentMessages: {
           total: state.sentMessages.total + action.payload,
           session: state.sentMessages.session + action.payload,
         },
+        worker: isDone ? null : state.worker,
+        isGenerating: !isDone,
       }
     }
     default:
       return state
   }
+}
+
+const handleContentFromURL = (
+  routerQuery: ParsedUrlQuery
+): {
+  template: PresetSchemaNameWithCustom
+  content: JSONContent
+} => {
+  const queryTemplate = routerQuery.template as
+    | PresetSchemaNameWithCustom
+    | undefined
+  const querySchema = routerQuery.schema as string | undefined
+
+  if (
+    queryTemplate &&
+    queryTemplate !== 'Custom' &&
+    TEMPLATE_OPTIONS.includes(queryTemplate)
+  ) {
+    return {
+      template: queryTemplate,
+      content: {
+        json: presetSchemas[queryTemplate],
+      } as JSONContent,
+    }
+  } else if (querySchema && querySchema !== 'Preset') {
+    try {
+      const json = JSON.parse(decompressJSON(querySchema))
+
+      return {
+        template: 'Custom',
+        content: { json },
+      }
+    } catch (e) {
+      console.error(e)
+      return {
+        template: 'Simple Example',
+        content: {
+          json: presetSchemas['Simple Example'],
+        } as JSONContent,
+      }
+    }
+  }
+
+  return {
+    template: 'Simple Example',
+    content: {
+      json: presetSchemas['Simple Example'],
+    } as JSONContent,
+  }
+}
+
+const handleConfigFromURL = (routerQuery: ParsedUrlQuery) => {
+  const generator = router.query.generator as
+    | 'Tinybird'
+    | 'UpstashKafka'
+    | undefined
+
+  if (generator === 'Tinybird') {
+    const config: Omit<TinybirdConfig, 'schema'> = {
+      endpoint: (router.query.endpoint as string | undefined) ?? '',
+      token: (router.query.token as string | undefined) ?? '',
+      datasource: (router.query.datasource as string | undefined) ?? '',
+      eps: parseInt((router.query.eps as string | undefined) ?? '1'),
+      limit: parseInt((router.query.limit as string | undefined) ?? '-1'),
+    }
+    return { generator, config }
+  } else if (generator === 'UpstashKafka') {
+    const config: Omit<UpstashKafkaConfig, 'schema'> = {
+      address: (router.query.address as string | undefined) ?? '',
+      user: (router.query.user as string | undefined) ?? '',
+      pass: (router.query.pass as string | undefined) ?? '',
+      topic: (router.query.topic as string | undefined) ?? '',
+      eps: parseInt((router.query.eps as string | undefined) ?? '1'),
+      limit: parseInt((router.query.limit as string | undefined) ?? '-1'),
+    }
+    return { generator, config }
+  }
+  return { generator: null, config: null }
 }
 
 const parseSchema = (

@@ -1,6 +1,5 @@
 import { Dispatch } from 'react'
 
-import useGeneratorConfig from '@/lib/hooks/useGeneratorConfig'
 import { Action, State } from '@/lib/state'
 
 type OverviewStepProps = {
@@ -9,16 +8,48 @@ type OverviewStepProps = {
 }
 
 export default function OverviewStep({ state, dispatch }: OverviewStepProps) {
-  const { generator, config, overviewItems } = useGeneratorConfig()
+  const overviewItems = [
+    ...(state.config
+      ? [
+          {
+            title: 'Events Per Seconds',
+            value: state.config.eps,
+          },
+          {
+            title: 'Limit',
+            value: state.config.limit,
+          },
+        ]
+      : []),
+    ...(state.config && 'datasource' in state.config
+      ? [
+          {
+            title: 'Destination',
+            value: 'Tinybird Events API',
+          },
+          {
+            title: 'Data Source',
+            value: state.config.datasource,
+          },
+        ]
+      : state.config && 'topic' in state.config
+      ? [
+          {
+            title: 'Destination',
+            value: 'Upstash Kafka',
+          },
+          {
+            title: 'Topic',
+            value: state.config.topic,
+          },
+        ]
+      : []),
+  ] as { title: string; value: string | number }[]
 
   const onStartGenerationClick = () => {
-    if (!generator) return
-
     dispatch({
       type: 'startGenerating',
       payload: {
-        generator,
-        config,
         onMessage: ({ data }) =>
           dispatch({
             type: 'setSentMessages',

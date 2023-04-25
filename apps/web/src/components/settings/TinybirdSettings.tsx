@@ -1,6 +1,5 @@
 import { useState } from 'react'
 
-import useGeneratorConfig from '@/lib/hooks/useGeneratorConfig'
 import { TinybirdConfig } from '@tinybirdco/mockingbird'
 
 enum HostType {
@@ -15,10 +14,13 @@ const ENDPOINT_OPTIONS = [
   { label: 'Custom', value: HostType.Custom },
 ] as const
 
-export default function TinybirdSettings() {
-  const { endpoint, token, datasource } = useGeneratorConfig()
-    .config as TinybirdConfig
+type TinybirdSettingsProps = {
+  config: TinybirdConfig
+}
 
+export default function TinybirdSettings({
+  config: { endpoint, token, datasource },
+}: TinybirdSettingsProps) {
   const defaultHost =
     ENDPOINT_OPTIONS.find(ep => ep.value === endpoint)?.value ?? HostType.EU_GCP
 

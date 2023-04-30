@@ -1,8 +1,11 @@
 import { useEffect, useRef } from 'react'
 import {
+  createAjvValidator,
   JSONEditor as VanillaJSONEditor,
   JSONEditorPropsOptional as VanillaJSONEditorPropsOptional,
 } from 'vanilla-jsoneditor'
+
+import mockingbirdSchema from '@tinybirdco/mockingbird/dist/schema.json'
 
 export default function JSONEditor(props: VanillaJSONEditorPropsOptional) {
   const refContainer = useRef<HTMLDivElement | null>(null)
@@ -13,7 +16,9 @@ export default function JSONEditor(props: VanillaJSONEditorPropsOptional) {
 
     refEditor.current = new VanillaJSONEditor({
       target: refContainer.current,
-      props: {},
+      props: {
+        validator: createAjvValidator({ schema: mockingbirdSchema }),
+      },
     })
 
     return () => {

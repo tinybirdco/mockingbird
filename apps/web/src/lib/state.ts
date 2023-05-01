@@ -7,6 +7,7 @@ import {
   presetSchemas,
   Schema,
   TinybirdConfig,
+  MockingbirdGenerator,
   TinybirdGenerator,
   UpstashKafkaConfig,
   UpstashKafkaGenerator,
@@ -418,15 +419,18 @@ const parseSchema = (
     errors = validation.errors
 
     if (schema && validation.valid) {
-      const rowGenerator = new TinybirdGenerator({
-        schema,
-        datasource: '',
-        endpoint: '',
-        token: '',
-        eps: 1,
-        limit: -1,
-      }).createRowGenerator()
-      sampleCode = JSON.stringify(rowGenerator.generate(), null, 4)
+      sampleCode = JSON.stringify(
+        new TinybirdGenerator({
+          schema,
+          datasource: '',
+          endpoint: '',
+          token: '',
+          eps: 1,
+          limit: -1,
+        }).generateRow(),
+        null,
+        4
+      )
 
       if (
         template !== 'Custom' &&

@@ -1,11 +1,9 @@
 import _isEqual from 'lodash.isequal'
 import dynamic from 'next/dynamic'
-import { useRouter } from 'next/router'
-import { Dispatch, useEffect } from 'react'
+import { ChangeEvent, Dispatch } from 'react'
 
 import { PresetSchemaNameWithCustom, TEMPLATE_OPTIONS } from '@/lib/constants'
-import useGeneratorConfig from '@/lib/hooks/useGeneratorConfig'
-import { Action, State, reducer } from '@/lib/state'
+import { Action, State } from '@/lib/state'
 import { cx } from '@/lib/utils'
 
 import { ArrowDownIcon, CheckmarkIcon } from '../Icons'
@@ -21,37 +19,29 @@ type BuildStepProps = {
 }
 
 export default function BuildStep({ state, dispatch }: BuildStepProps) {
-  const router = useRouter()
-  const { generator, config } = useGeneratorConfig()
   const isSaved = Object.keys(state.schema).length > 0
 
-  useEffect(() => {
-    if (!router.isReady) return
+  const onTemplateChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    dispatch({
+      type: 'setTemplate',
+      payload: e.target.value as PresetSchemaNameWithCustom,
+    })
+  }
 
-    const template = router.query.template as string | undefined
-    const schema = router.query.schema as string | undefined
-    dispatch({ type: 'setEditorFromQuery', payload: { template, schema } })
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router.isReady])
+  const onPreviewClick = () => {
+    dispatch({ type: 'setSchema', payload: null })
+  }
 
   const onStartGenerationClick = () => {
-    const newState = reducer(state, {
-      type: 'setSchema',
-      payload: null,
-    })
     dispatch({
       type: 'setSchemaAndStartGenerating',
       payload: {
-        newState,
-        generator,
-        config,
         onMessage: ({ data }) =>
           dispatch({
             type: 'setSentMessages',
             payload: data,
           }),
-        onError: e => console.error(e),
+        onError: console.error,
       },
     })
   }
@@ -68,12 +58,7 @@ export default function BuildStep({ state, dispatch }: BuildStepProps) {
         <select
           className="input-base"
           value={state.template}
-          onChange={e =>
-            dispatch({
-              type: 'setTemplate',
-              payload: e.target.value as PresetSchemaNameWithCustom,
-            })
-          }
+          onChange={onTemplateChange}
           disabled={state.isGenerating}
         >
           {TEMPLATE_OPTIONS.map(presetSchemaName => (
@@ -121,7 +106,7 @@ export default function BuildStep({ state, dispatch }: BuildStepProps) {
           className={cx(
             'py-[10px] px-[14px] flex items-center gap-4 bg-tb-primary rounded-[4px] shadow-[0px_1px_3px_rgba(11,19,36,0.1)] text-sm text-white tracking-[-0.01em] hover:scale-105'
           )}
-          onClick={() => dispatch({ type: 'setSchema', payload: null })}
+          onClick={onPreviewClick}
         >
           <span>Preview</span>
         </button>

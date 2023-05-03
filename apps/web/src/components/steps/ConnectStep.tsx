@@ -1,8 +1,8 @@
-import { FormEvent, ReactNode, useState } from 'react'
+import { Dispatch, FormEvent, ReactNode, useState } from 'react'
 
 import { destinations } from '@/lib/constants'
-import useGeneratorConfig from '@/lib/hooks/useGeneratorConfig'
-import { State } from '@/lib/state'
+import { Action, State } from '@/lib/state'
+import { TinybirdConfig, UpstashKafkaConfig } from '@tinybirdco/mockingbird'
 
 import DestinationButton from '../DestinationButton'
 import { ArrowDownIcon } from '../Icons'
@@ -11,17 +11,18 @@ import UpstashKafkaSettings from '../settings/UpstashKafkaSettings'
 
 type ConnectStepProps = {
   state: State
-  goToNextStep: () => void
+  dispatch: Dispatch<Action>
 }
 
 type Destination = (typeof destinations)[number]
 
-export default function ConnectStep({ state, goToNextStep }: ConnectStepProps) {
-  const { onConfigChange, config: generatorConfig } = useGeneratorConfig()
+export default function ConnectStep({ state, dispatch }: ConnectStepProps) {
   const [selectedDestination, setSelectedDestination] = useState<Destination>(
     destinations[0]
   )
-  const [withLimit, setWithLimit] = useState(false)
+  const [withLimit, setWithLimit] = useState(
+    Boolean(state.config && 'limit' in state.config && state.config.limit > 0)
+  )
   const [errors, setErrors] = useState<string[]>([])
 
   const onSubmit = (e: FormEvent) => {
@@ -31,34 +32,49 @@ export default function ConnectStep({ state, goToNextStep }: ConnectStepProps) {
       new FormData(e.target as HTMLFormElement)
     ) as Record<string, string>
     const { generator } = formData
-    const eps = parseInt(formData.eps ?? 1)
-    const limit = parseInt(formData.limit ?? -1)
+    const eps = parseInt(formData.eps ?? '1')
+    const limit = parseInt(formData.limit ?? '-1')
 
     try {
-      const { datasource, token } = formData
+      const { datasource, token } = formData as Record<string, string>
       const endpoint =
         formData.host === 'custom' ? formData.endpoint : formData.host
 
       if (generator === 'Tinybird') {
-        onConfigChange(generator, {
-          datasource,
-          endpoint,
-          token,
-          eps,
-          limit,
+        dispatch({
+          type: 'setConfig',
+          payload: {
+            generator: 'Tinybird',
+            config: {
+              datasource,
+              endpoint,
+              token,
+              eps,
+              limit,
+            },
+          },
         })
       } else if (generator === 'UpstashKafka') {
-        const { address, user, pass, topic } = formData
-        onConfigChange(generator, {
-          address,
-          user,
-          pass,
-          topic,
-          eps,
-          limit,
+        const { address, user, pass, topic } = formData as Record<
+          string,
+          string
+        >
+        dispatch({
+          type: 'setConfig',
+          payload: {
+            generator: 'UpstashKafka',
+            config: {
+              address,
+              user,
+              pass,
+              topic,
+              eps,
+              limit,
+            },
+          },
         })
       }
-      goToNextStep()
+      dispatch({ type: 'goToNextStep', payload: null })
     } catch (e) {
       const formatted = (e as any).format()
       console.error(formatted)
@@ -72,9 +88,22 @@ export default function ConnectStep({ state, goToNextStep }: ConnectStepProps) {
     }
   }
 
+  const onDestinationChange = (destination: Destination) => {
+    setErrors([])
+    setSelectedDestination(destination)
+  }
+
   const destinationToSettings: Record<Destination['generator'], ReactNode> = {
-    Tinybird: <TinybirdSettings />,
-    UpstashKafka: <UpstashKafkaSettings />,
+    Tinybird: (
+      <TinybirdSettings
+        config={(state.config ? state.config : {}) as TinybirdConfig}
+      />
+    ),
+    UpstashKafka: (
+      <UpstashKafkaSettings
+        config={(state.config ? state.config : {}) as UpstashKafkaConfig}
+      />
+    ),
   }
 
   return (
@@ -97,9 +126,7 @@ export default function ConnectStep({ state, goToNextStep }: ConnectStepProps) {
               isSelected={
                 selectedDestination.generator === destination.generator
               }
-              onClick={() => (
-                setErrors([]), setSelectedDestination(destination)
-              )}
+              onClick={() => onDestinationChange(destination)}
             >
               <img
                 src={destination.icon}
@@ -128,7 +155,7 @@ export default function ConnectStep({ state, goToNextStep }: ConnectStepProps) {
                 id="eps"
                 name="eps"
                 defaultValue={
-                  'eps' in generatorConfig ? generatorConfig.eps : 1
+                  state.config && 'eps' in state.config ? state.config.eps : 1
                 }
                 type="number"
                 className="input-base"
@@ -171,7 +198,9 @@ export default function ConnectStep({ state, goToNextStep }: ConnectStepProps) {
                       id="limit"
                       name="limit"
                       defaultValue={
-                        'limit' in generatorConfig ? generatorConfig.limit : -1
+                        state.config && 'limit' in state.config
+                          ? state.config.limit
+                          : -1
                       }
                       type="number"
                       className="input-base lg:w-[140px]"
@@ -197,14 +226,19 @@ export default function ConnectStep({ state, goToNextStep }: ConnectStepProps) {
             </>
           )}
           <div className="h-6" />
-          {state.step === 1 && (
-            <div className="flex justify-end">
-              <button type="submit" className="btn-base btn-primary">
-                Continue
-                <ArrowDownIcon />
-              </button>
-            </div>
-          )}
+
+          <div className="flex justify-end">
+            <button type="submit" className="btn-base btn-primary">
+              {state.step === 1 ? (
+                <>
+                  Continue
+                  <ArrowDownIcon />
+                </>
+              ) : (
+                <>Save</>
+              )}
+            </button>
+          </div>
         </form>
       </fieldset>
     </div>

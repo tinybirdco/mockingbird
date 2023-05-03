@@ -1,10 +1,12 @@
-import useGeneratorConfig from '@/lib/hooks/useGeneratorConfig'
 import { UpstashKafkaConfig } from '@tinybirdco/mockingbird'
 
-export default function UpstashKafkaSettings() {
-  const { address, user, pass, topic } = useGeneratorConfig()
-    .config as UpstashKafkaConfig
+type UpstashKafkaSettingsProps = {
+  config: UpstashKafkaConfig
+}
 
+export default function UpstashKafkaSettings({
+  config: { address, user, pass, topic },
+}: UpstashKafkaSettingsProps) {
   return (
     <>
       <div className="grid lg:grid-cols-[140px_288px_auto] gap-6">

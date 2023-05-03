@@ -1,4 +1,5 @@
 import Head from 'next/head'
+import { useRouter } from 'next/router'
 import Script from 'next/script'
 import { useEffect, useReducer, useRef } from 'react'
 
@@ -10,6 +11,7 @@ import OverviewStep from '@/components/steps/OverviewStep'
 import { initialState, reducer } from '@/lib/state'
 
 export default function Home() {
+  const router = useRouter()
   const [state, dispatch] = useReducer(reducer, initialState)
   const endElRef = useRef<HTMLDivElement>(null)
 
@@ -17,17 +19,19 @@ export default function Home() {
     endElRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [state.step])
 
+  useEffect(() => {
+    if (!router.isReady) return
+
+    dispatch({ type: 'setStateFromURLQuery', payload: router.query })
+  }, [router.isReady, router.query])
+
   const stepToComponent = [
     <Landing
       key="landing"
       state={state}
       goToNextStep={() => dispatch({ type: 'goToNextStep', payload: null })}
     />,
-    <ConnectStep
-      key="connect"
-      state={state}
-      goToNextStep={() => dispatch({ type: 'goToNextStep', payload: null })}
-    />,
+    <ConnectStep key="connect" state={state} dispatch={dispatch} />,
     <BuildStep key="build" state={state} dispatch={dispatch} />,
     <OverviewStep key="overview" state={state} dispatch={dispatch} />,
   ] as const

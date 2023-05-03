@@ -1,6 +1,5 @@
 import { Dispatch } from 'react'
 
-import useGeneratorConfig from '@/lib/hooks/useGeneratorConfig'
 import { Action, State } from '@/lib/state'
 
 type OverviewStepProps = {
@@ -9,21 +8,20 @@ type OverviewStepProps = {
 }
 
 export default function OverviewStep({ state, dispatch }: OverviewStepProps) {
-  const { generator, config } = useGeneratorConfig()
-  const infoItems = [
-    ...(generator
+  const overviewItems = [
+    ...(state.config
       ? [
           {
             title: 'Events Per Seconds',
-            value: config.eps,
+            value: state.config.eps,
           },
           {
             title: 'Limit',
-            value: config.limit,
+            value: state.config.limit,
           },
         ]
       : []),
-    ...(generator === 'Tinybird'
+    ...(state.config && 'datasource' in state.config
       ? [
           {
             title: 'Destination',
@@ -31,10 +29,10 @@ export default function OverviewStep({ state, dispatch }: OverviewStepProps) {
           },
           {
             title: 'Data Source',
-            value: config.datasource,
+            value: state.config.datasource,
           },
         ]
-      : generator === 'UpstashKafka'
+      : state.config && 'topic' in state.config
       ? [
           {
             title: 'Destination',
@@ -42,24 +40,22 @@ export default function OverviewStep({ state, dispatch }: OverviewStepProps) {
           },
           {
             title: 'Topic',
-            value: config.topic,
+            value: state.config.topic,
           },
         ]
       : []),
-  ] as const
+  ] as { title: string; value: string | number }[]
 
   const onStartGenerationClick = () => {
     dispatch({
       type: 'startGenerating',
       payload: {
-        generator,
-        config,
         onMessage: ({ data }) =>
           dispatch({
             type: 'setSentMessages',
             payload: data,
           }),
-        onError: e => console.error(e),
+        onError: console.error,
       },
     })
   }
@@ -86,7 +82,7 @@ export default function OverviewStep({ state, dispatch }: OverviewStepProps) {
         </div>
 
         <div className="flex flex-wrap gap-10 p-10 bg-white rounded-lg lg:col-span-2">
-          {infoItems.map(item => (
+          {overviewItems.map(item => (
             <div key={item.title} className="flex flex-col gap-1">
               <p className="text-sm">{item.title}</p>
 

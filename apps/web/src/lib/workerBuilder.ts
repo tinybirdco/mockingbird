@@ -9,7 +9,7 @@ export function createWorker(
   onMessage?: (message: MessageEvent<number>) => void,
   onError?: (e: ErrorEvent) => void
 ) {
-  if (!window.Worker) return undefined
+  if (!window.Worker) return null
 
   const worker = new Worker(new URL('./worker.ts', import.meta.url), {
     type: 'module',

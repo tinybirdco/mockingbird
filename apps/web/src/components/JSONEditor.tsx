@@ -5,7 +5,7 @@ import {
   JSONEditorPropsOptional as VanillaJSONEditorPropsOptional,
 } from 'vanilla-jsoneditor'
 
-import mockingbirdSchema from '@tinybirdco/mockingbird/dist/schema.json'
+import mockingbirdSchema from '@tinybirdco/mockingbird/dist/Schema.json'
 
 export default function JSONEditor(props: VanillaJSONEditorPropsOptional) {
   const refContainer = useRef<HTMLDivElement | null>(null)

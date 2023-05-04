@@ -1,5 +1,5 @@
 # Mockingbird
- 
+
 Mockingbird is a mock streaming data generator. 
 
 It is FOSS & available as a library, CLI or UI.
@@ -12,6 +12,9 @@ Mockingbird can send to any HTTP endpoint using Destinations.
 
 Current Destinations are:
 
+- [Ably](./destinations/ably.md)
+- [AWS SNS](./destinations/aws_sns.md)
+- [Confluent Cloud Kafka](./destinations/confluent_cloud_kafka.md)
 - [Tinybird](./destinations/tinybird.md)
 - [Upstash Kafka](./destinations/upstash_kafka.md)
 
@@ -23,7 +26,7 @@ Mockingbird is written in TypeScript.
 
 [Faker.js](https://fakerjs.dev/) is used under the hood to provide many of the mock Data Types. Faker.js is extended with additional custom Data Types.
 
-Mockingbird is a library, which can be used like any other package and [installed from npm](https://www.npmjs.com/package/@tinybirdco/mockingbird). 
+Mockingbird is a library, which can be used like any other package and [installed from npm](https://www.npmjs.com/package/@tinybirdco/mockingbird).
 
 As well as the library, there are standalone [CLI](https://www.npmjs.com/package/@tinybirdco/mockingbird-cli) and [UI](https://mockingbird.tinybird.co) applictions.
 

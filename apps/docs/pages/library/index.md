@@ -12,19 +12,19 @@ You can install it using `npm install @tinybirdco/mockingbird`
 
 It's simple to embed Mockingbird into an application.
 
-The most basic usage is to import the `generate` and `initializeGenerator` methods, and call them in turn.
+The most basic usage is to import one of the generators, initialize it and call `generate`.
 
 ```typescript
 import {
   presetSchemas,
-  initializeGenerator,
+  TinybirdGenerator,
   ALL_TINYBIRD_ENDPOINTS,
   generate,
 } from "@tinybirdco/mockingbird";
 
 const schema = presetSchemas["Simple Example"];
 
-initializeGenerator({
+const tbGenerator = new TinybirdGenerator({
   schema,
   endpoint: "eu_gcp",
   datasource: "test",
@@ -33,9 +33,7 @@ initializeGenerator({
   limit: -1,
 });
 
-generate()
+await tbGenerator.generate();
 ```
-
-You can see an example of this in the [code for the Mockingbird CLI](https://github.com/tinybirdco/mockingbird/blob/main/apps/cli/index.js).
 
 If you are embedding Mockingbird inside a web page in a user's browser, we **strongly recommend** to call the `generate()` method inside a [Web Worker](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers). The Mockingbird UI takes this approach, so you can [use this as a reference implementation](https://github.com/tinybirdco/mockingbird/tree/main/apps/web/src/lib).

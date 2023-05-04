@@ -8,9 +8,10 @@ The Upstash Kafka destination sends data encoded in JSON using the [REST Produce
 
 ## Configuration
 
-| Name   | Description | Example value |
-| :----- | :----: | ----: |
-| Topic | The name of the Kafka Topic to send data to | my_topic |
-| User | The username with WRITE permissions on the configured topic  |  fghtdgfvdjndfg794tjf |
-| Password | The password of the configured user  |  jkfngkjng389430thdf |
-| EPS | (Events Per Second) How many events per second to generate  |  1000 |
+| Name     |                         Description                         |        Example value |
+| :------- | :---------------------------------------------------------: | -------------------: |
+| Topic    |         The name of the Kafka Topic to send data to         |             my_topic |
+| User     | The username with WRITE permissions on the configured topic | fghtdgfvdjndfg794tjf |
+| Password |             The password of the configured user             |  jkfngkjng389430thdf |
+| EPS      | (Events Per Second) How many events per second to generate  |                 1000 |
+| Limit    |        Max number of rows to send (-1 for unlimited)        |                   -1 |

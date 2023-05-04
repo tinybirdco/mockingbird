@@ -144,7 +144,7 @@ Uses Faker.js [`date.between`](https://fakerjs.dev/api/date.html#between) to gen
 }
 ```
 
-### timestampNow 
+### timestampNow
 
 Take the current time and formats it into an ISO Date Time string (using `toISOString()`) with precision to *nanoseconds*.
 
@@ -203,7 +203,6 @@ None
     "type": "mockingbird.browserEngineName"
 }
 ```
-
 
 ### osName
 

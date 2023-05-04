@@ -25,7 +25,7 @@ It's very simple, but it can be easier to understand with an example. This is a 
 }
 ```
 
-The first object in our schema is `my_int`, which has the type [`int`](./data_types.md#int). The second object is `my_random_values`, which has the type [`values`](./data_types.md#values), and has additional parameters specified inside the `params` object.
+The first object in our schema is `some_int`, which has the type `int`. The second object is `some_values`, which has the type [`values`](./data_types.md#pick), and has additional parameters specified inside the `params` object.
 
 The output of this schema would look like:
 
@@ -51,9 +51,9 @@ All types can be generated as arrays. Simply add a `count` key at the same level
 
 ## Preset Schemas
 
-You can write your own custom schema, or use any of the preset schemas. 
+You can write your own custom schema, or use any of the preset schemas.
 
-You can find the definitions of all preset Schemas [here](https://github.com/tinybirdco/mockingbird/blob/main/packages/mockingbird/src/presetSchemas.ts). 
+You can find the definitions of all preset Schemas [here](https://github.com/tinybirdco/mockingbird/blob/main/packages/mockingbird/src/presetSchemas.ts).
 
 Contributions for more preset schemas are welcome!
 

@@ -4,7 +4,7 @@
 
 - All faker functions and custom functions
 - Type definitions
-- 2 destinations
+- 5 destinations - Ably, AWS SNS, Confluent Cloud Kafka, Tinybird and Upstash Kafka
 - 8 preset schemas
 
 ## Installing
@@ -14,8 +14,6 @@ $ npm install @tinybirdco/mockingbird
 ```
 
 ## Usage
-
-### Tinybird Generator
 
 ```js
 import { TinybirdGenerator } from "@tinybirdco/mockingbird";
@@ -33,25 +31,7 @@ const tbGenerator = new TinybirdGenerator({
 await tbGenerator.generate();
 ```
 
-### Upstash Kafka Generator
-
-```js
-const ukGenerator = new UpstashKafkaGenerator({
-  schema: z.object({}), // Javascript object containing valid generator schema
-  eps: z.number().optional().default(1), // Events per second
-  limit: z.number().optional().default(-1), // Event limit
-  logs: z.boolean().optional().default(false), // Enables logs
-  address: z.string().url(), // Upstash URL
-  user: z.string(), // Upstash user
-  pass: z.string(), // Upstash password
-  topic: z.string(), // Kafka topic to send data to
-});
-
-await tbGenerator.generate();
-
-```
-
-### Preset schemas
+## Preset schemas
 
 ```js
 import { presetSchemas } from "@tinybirdco/mockingbird";

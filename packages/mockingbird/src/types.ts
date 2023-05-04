@@ -107,12 +107,4 @@ export const baseConfigSchema = z.object({
 
 export type BaseConfig = z.infer<typeof baseConfigSchema>;
 
-export interface RowGenerator<T> {
-  generate: () => T;
-}
-
-export interface SchemaGenerator {
-  generator: (...params: unknown[]) => unknown | unknown[];
-  params: unknown[];
-  count: number;
-}
+export type Row = Record<string, unknown | unknown[]>;

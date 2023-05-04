@@ -102,6 +102,7 @@ export default function TinybirdSettings({
           <input
             id="token"
             name="token"
+            type="password"
             required
             defaultValue={token}
             className="input-base"

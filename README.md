@@ -41,12 +41,11 @@ npm install @tinybirdco/mockingbird-cli
 Here is an example of sending data to the Tinybird Events API:
 
 ```sh
-> mockingbird-cli \
-  --generator tinybird
-  --schema schema.txt \
-  --tb-datasource "my_data_source" \
-  --tb-token "e.Pdjdbfsbhksd...." \
-  --tb-endpoint eu_gcp \
+> mockingbird-cli tinybird
+  --schema schema.json \
+  --datasource "my_data_source" \
+  --token "e.Pdjdbfsbhksd...." \
+  --endpoint eu_gcp \
   --eps 50 \
   --limit 200
 ```
@@ -148,9 +147,9 @@ To run the Mockingbird UI locally, first install Node.js (developed using v18).
 
 Then, use these commands:
 
-```
+```bash
 git clone https://github.com/tinybirdco/mockingbird.git
-cd mockingbrid
+cd mockingbird
 npm install
 npm run dev
 ```

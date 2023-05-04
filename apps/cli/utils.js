@@ -8,11 +8,9 @@ const commonOptions = {
     describe: "Template to use for populating",
     default: presetSchemaNames[0],
     choices: presetSchemaNames,
-    conflicts: ["schema"],
   },
   schema: {
     describe: "Path to schema file",
-    conflicts: ["template"],
   },
   eps: {
     describe: "Events per second",

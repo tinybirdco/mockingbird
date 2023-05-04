@@ -31,6 +31,21 @@ export const destinations = [
     generator: 'UpstashKafka',
     icon: '/destinations/upstash-kafka.svg',
   },
+  {
+    title: 'Confluent Cloud',
+    generator: 'ConfluentCloud',
+    icon: '/destinations/confluent.svg',
+  },
+  {
+    title: 'Ably',
+    generator: 'Ably',
+    icon: '/destinations/ably.svg',
+  },
+  {
+    title: 'AWS SNS',
+    generator: 'AWSSNS',
+    icon: '/destinations/awssns.svg',
+  },
 ] as const
 export type Destination = (typeof destinations)[number]
 

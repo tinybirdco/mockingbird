@@ -2,12 +2,21 @@ import { Dispatch, FormEvent, ReactNode, useState } from 'react'
 
 import { destinations } from '@/lib/constants'
 import { Action, State } from '@/lib/state'
-import { TinybirdConfig, UpstashKafkaConfig } from '@tinybirdco/mockingbird'
+import {
+  AWSSNSConfig,
+  AblyConfig,
+  ConfluentCloudKafkaConfig,
+  TinybirdConfig,
+  UpstashKafkaConfig,
+} from '@tinybirdco/mockingbird'
 
 import DestinationButton from '../DestinationButton'
 import { ArrowDownIcon } from '../Icons'
 import TinybirdSettings from '../settings/TinybirdSettings'
 import UpstashKafkaSettings from '../settings/UpstashKafkaSettings'
+import AblySettings from '../settings/AblySettings'
+import ConfluentCloudKafkaSettings from '../settings/ConfluentCloudKafkaSettings'
+import AWSSNSSettings from '../settings/AWSSNSSettings'
 
 type ConnectStepProps = {
   state: State
@@ -73,6 +82,56 @@ export default function ConnectStep({ state, dispatch }: ConnectStepProps) {
             },
           },
         })
+      } else if (generator === 'Ably') {
+        const { apiKey, channelId } = formData as Record<string, string>
+        dispatch({
+          type: 'setConfig',
+          payload: {
+            generator: 'Ably',
+            config: {
+              apiKey,
+              channelId,
+              eps,
+              limit,
+            },
+          },
+        })
+      } else if (generator === 'AWSSNS') {
+        const { accessKeyId, secretAccessKey, topicArn } = formData as Record<
+          string,
+          string
+        >
+        dispatch({
+          type: 'setConfig',
+          payload: {
+            generator: 'AWSSNS',
+            config: {
+              accessKeyId,
+              secretAccessKey,
+              topicArn,
+              eps,
+              limit,
+            },
+          },
+        })
+      } else if (generator === 'ConfluentCloud') {
+        const { apiKey, apiSecret, restEndpoint, clusterId, topic } =
+          formData as Record<string, string>
+        dispatch({
+          type: 'setConfig',
+          payload: {
+            generator: 'ConfluentCloud',
+            config: {
+              apiKey,
+              apiSecret,
+              restEndpoint,
+              clusterId,
+              topic,
+              eps,
+              limit,
+            },
+          },
+        })
       }
       dispatch({ type: 'goToNextStep', payload: null })
     } catch (e) {
@@ -102,6 +161,19 @@ export default function ConnectStep({ state, dispatch }: ConnectStepProps) {
     UpstashKafka: (
       <UpstashKafkaSettings
         config={(state.config ? state.config : {}) as UpstashKafkaConfig}
+      />
+    ),
+    Ably: (
+      <AblySettings config={(state.config ? state.config : {}) as AblyConfig} />
+    ),
+    ConfluentCloud: (
+      <ConfluentCloudKafkaSettings
+        config={(state.config ? state.config : {}) as ConfluentCloudKafkaConfig}
+      />
+    ),
+    AWSSNS: (
+      <AWSSNSSettings
+        config={(state.config ? state.config : {}) as AWSSNSConfig}
       />
     ),
   }

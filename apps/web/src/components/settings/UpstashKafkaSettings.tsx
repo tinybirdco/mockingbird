@@ -12,7 +12,7 @@ export default function UpstashKafkaSettings({
       <div className="grid lg:grid-cols-[140px_288px_auto] gap-6">
         <div className="flex flex-col gap-1">
           <label htmlFor="address" className="text-sm text-tb-text1">
-            Upstash Address
+            REST URL
           </label>
           <input
             id="address"
@@ -26,7 +26,7 @@ export default function UpstashKafkaSettings({
 
         <div className="flex flex-col gap-1">
           <label htmlFor="user" className="text-sm text-tb-text1">
-            Upstash Username
+            REST Username
           </label>
           <input
             id="user"
@@ -39,7 +39,7 @@ export default function UpstashKafkaSettings({
 
         <div className="flex flex-col gap-1">
           <label htmlFor="pass" className="text-sm text-tb-text1">
-            Upstash Password
+            REST Password
           </label>
           <input
             id="pass"
@@ -53,7 +53,7 @@ export default function UpstashKafkaSettings({
 
         <div className="flex flex-col gap-1">
           <label htmlFor="topic" className="text-sm text-tb-text1">
-            Kafka Topic
+            Topic
           </label>
           <input
             id="topic"

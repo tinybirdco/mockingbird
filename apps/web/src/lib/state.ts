@@ -12,6 +12,12 @@ import {
   UpstashKafkaConfig,
   UpstashKafkaGenerator,
   validateSchema,
+  AblyConfig,
+  AWSSNSConfig,
+  ConfluentCloudKafkaConfig,
+  AblyGenerator,
+  ConfluentCloudKafkaGenerator,
+  AWSSNSGenerator
 } from '@tinybirdco/mockingbird'
 
 import {
@@ -24,11 +30,14 @@ import { createWorker, startWorker, stopWorker } from './workerBuilder'
 
 export type State = {
   step: number
-  generator: 'Tinybird' | 'UpstashKafka' | null
+  generator: 'Tinybird' | 'UpstashKafka' | 'Ably' | 'ConfluentCloudKafka' | 'AWSSNS' | null
   config:
-    | Omit<TinybirdConfig, 'schema'>
-    | Omit<UpstashKafkaConfig, 'schema'>
-    | null
+  | Omit<TinybirdConfig, 'schema'>
+  | Omit<UpstashKafkaConfig, 'schema'>
+  | Omit<AblyConfig, 'schema'>
+  | Omit<ConfluentCloudKafkaConfig, 'schema'>
+  | Omit<AWSSNSConfig, 'schema'>
+  | null
   schema: Schema
   template: PresetSchemaNameWithCustom
   content: Content
@@ -44,59 +53,71 @@ export type State = {
 
 export type Action =
   | {
-      type: 'goToNextStep'
-      payload: null
-    }
+    type: 'goToNextStep'
+    payload: null
+  }
   | {
-      type: 'setStateFromURLQuery'
-      payload: ParsedUrlQuery
-    }
+    type: 'setStateFromURLQuery'
+    payload: ParsedUrlQuery
+  }
   | {
-      type: 'setConfig'
-      payload:
-        | {
-            generator: 'Tinybird'
-            config: Omit<TinybirdConfig, 'schema'>
-          }
-        | {
-            generator: 'UpstashKafka'
-            config: Omit<UpstashKafkaConfig, 'schema'>
-          }
+    type: 'setConfig'
+    payload:
+    | {
+      generator: 'Tinybird'
+      config: Omit<TinybirdConfig, 'schema'>
     }
+    | {
+      generator: 'UpstashKafka'
+      config: Omit<UpstashKafkaConfig, 'schema'>
+    }
+    | {
+      generator: 'Ably'
+      config: Omit<AblyConfig, 'schema'>
+    }
+    | {
+      generator: 'ConfluentCloudKafka'
+      config: Omit<ConfluentCloudKafkaConfig, 'schema'>
+    }
+    | {
+      generator: 'AWSSNS'
+      config: Omit<AWSSNSConfig, 'schema'>
+    }
+  }
   | {
-      type: 'setTemplate'
-      payload: PresetSchemaNameWithCustom
-    }
+    type: 'setTemplate'
+    payload: PresetSchemaNameWithCustom
+  }
   | {
-      type: 'setContent'
-      payload: Content
-    }
+    type: 'setContent'
+    payload: Content
+  }
   | {
-      type: 'setSchema'
-      payload: null
-    }
+    type: 'setSchema'
+    payload: null
+  }
   | {
-      type: 'setSchemaAndStartGenerating'
-      payload: {
-        onMessage: (message: MessageEvent<number>) => void
-        onError: (error: ErrorEvent) => void
-      }
+    type: 'setSchemaAndStartGenerating'
+    payload: {
+      onMessage: (message: MessageEvent<number>) => void
+      onError: (error: ErrorEvent) => void
     }
+  }
   | {
-      type: 'startGenerating'
-      payload: {
-        onMessage: (message: MessageEvent<number>) => void
-        onError: (error: ErrorEvent) => void
-      }
+    type: 'startGenerating'
+    payload: {
+      onMessage: (message: MessageEvent<number>) => void
+      onError: (error: ErrorEvent) => void
     }
+  }
   | {
-      type: 'stopGenerating'
-      payload: null
-    }
+    type: 'stopGenerating'
+    payload: null
+  }
   | {
-      type: 'setSentMessages'
-      payload: number
-    }
+    type: 'setSentMessages'
+    payload: number
+  }
 
 export const initialState: State = {
   step: 0,
@@ -148,6 +169,21 @@ export function reducer(state: State, action: Action): State {
           ...action.payload.config,
           schema: {},
         } as UpstashKafkaConfig)
+      } else if (action.payload.generator === 'Ably') {
+        new AblyGenerator({
+          ...action.payload.config,
+          schema: {},
+        } as AblyConfig)
+      } else if (action.payload.generator === 'ConfluentCloudKafka') {
+        new ConfluentCloudKafkaGenerator({
+          ...action.payload.config,
+          schema: {},
+        } as ConfluentCloudKafkaConfig)
+      } else if (action.payload.generator === 'AWSSNS') {
+        new AWSSNSGenerator({
+          ...action.payload.config,
+          schema: {},
+        } as AWSSNSConfig)
       }
 
       const urlParams = new URLSearchParams({
@@ -233,7 +269,7 @@ export function reducer(state: State, action: Action): State {
       const createdWorker = createWorker(
         state.generator,
         {
-          ...(state.config as TinybirdConfig | UpstashKafkaConfig),
+          ...(state.config as TinybirdConfig | UpstashKafkaConfig | AblyConfig | ConfluentCloudKafkaConfig | AWSSNSConfig),
           schema,
         },
         action.payload.onMessage,
@@ -268,7 +304,7 @@ export function reducer(state: State, action: Action): State {
       const createdWorker = createWorker(
         state.generator,
         {
-          ...(state.config as TinybirdConfig | UpstashKafkaConfig),
+          ...(state.config as TinybirdConfig | UpstashKafkaConfig | AblyConfig | ConfluentCloudKafkaConfig | AWSSNSConfig),
           schema: state.schema,
         },
         action.payload.onMessage,
@@ -376,6 +412,9 @@ const handleConfigFromURL = (routerQuery: ParsedUrlQuery) => {
   const generator = router.query.generator as
     | 'Tinybird'
     | 'UpstashKafka'
+    | 'Ably'
+    | 'ConfluentCloudKafka'
+    | 'AWSSNS'
     | undefined
 
   if (generator === 'Tinybird') {
@@ -393,6 +432,35 @@ const handleConfigFromURL = (routerQuery: ParsedUrlQuery) => {
       user: (router.query.user as string | undefined) ?? '',
       pass: (router.query.pass as string | undefined) ?? '',
       topic: (router.query.topic as string | undefined) ?? '',
+      eps: parseInt((router.query.eps as string | undefined) ?? '1'),
+      limit: parseInt((router.query.limit as string | undefined) ?? '-1'),
+    }
+    return { generator, config }
+  } else if (generator === 'Ably') {
+    const config: Omit<AblyConfig, 'schema'> = {
+      apiKey: (router.query.address as string | undefined) ?? '',
+      channelId: (router.query.user as string | undefined) ?? '',
+      eps: parseInt((router.query.eps as string | undefined) ?? '1'),
+      limit: parseInt((router.query.limit as string | undefined) ?? '-1'),
+    }
+    return { generator, config }
+  } else if (generator === 'ConfluentCloudKafka') {
+    const config: Omit<ConfluentCloudKafkaConfig, 'schema'> = {
+      restEndpoint: (router.query.address as string | undefined) ?? '',
+      clusterId: (router.query.address as string | undefined) ?? '',
+      apiKey: (router.query.user as string | undefined) ?? '',
+      apiSecret: (router.query.pass as string | undefined) ?? '',
+      topic: (router.query.topic as string | undefined) ?? '',
+      eps: parseInt((router.query.eps as string | undefined) ?? '1'),
+      limit: parseInt((router.query.limit as string | undefined) ?? '-1'),
+    }
+    return { generator, config }
+  } else if (generator === 'AWSSNS') {
+    const config: Omit<AWSSNSConfig, 'schema'> = {
+      region: (router.query.address as string | undefined) ?? '',
+      accessKeyId: (router.query.user as string | undefined) ?? '',
+      secretAccessKey: (router.query.pass as string | undefined) ?? '',
+      topicArn: (router.query.topic as string | undefined) ?? '',
       eps: parseInt((router.query.eps as string | undefined) ?? '1'),
       limit: parseInt((router.query.limit as string | undefined) ?? '-1'),
     }
@@ -435,7 +503,7 @@ const parseSchema = (
       if (
         template !== 'Custom' &&
         JSON.stringify(schema, null, 4) !==
-          JSON.stringify(presetSchemas[template], null, 4)
+        JSON.stringify(presetSchemas[template], null, 4)
       ) {
         template = 'Custom'
       }

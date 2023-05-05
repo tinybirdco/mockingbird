@@ -33,7 +33,7 @@ export const destinations = [
   },
   {
     title: 'Confluent Cloud',
-    generator: 'ConfluentCloud',
+    generator: 'ConfluentCloudKafka',
     icon: '/destinations/confluent.svg',
   },
   {

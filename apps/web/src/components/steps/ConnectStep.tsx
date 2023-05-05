@@ -97,7 +97,7 @@ export default function ConnectStep({ state, dispatch }: ConnectStepProps) {
           },
         })
       } else if (generator === 'AWSSNS') {
-        const { accessKeyId, secretAccessKey, topicArn } = formData as Record<
+        const { accessKeyId, secretAccessKey, topicArn, region } = formData as Record<
           string,
           string
         >
@@ -109,18 +109,19 @@ export default function ConnectStep({ state, dispatch }: ConnectStepProps) {
               accessKeyId,
               secretAccessKey,
               topicArn,
+              region,
               eps,
               limit,
             },
           },
         })
-      } else if (generator === 'ConfluentCloud') {
+      } else if (generator === 'ConfluentCloudKafka') {
         const { apiKey, apiSecret, restEndpoint, clusterId, topic } =
           formData as Record<string, string>
         dispatch({
           type: 'setConfig',
           payload: {
-            generator: 'ConfluentCloud',
+            generator: 'ConfluentCloudKafka',
             config: {
               apiKey,
               apiSecret,
@@ -166,7 +167,7 @@ export default function ConnectStep({ state, dispatch }: ConnectStepProps) {
     Ably: (
       <AblySettings config={(state.config ? state.config : {}) as AblyConfig} />
     ),
-    ConfluentCloud: (
+    ConfluentCloudKafka: (
       <ConfluentCloudKafkaSettings
         config={(state.config ? state.config : {}) as ConfluentCloudKafkaConfig}
       />

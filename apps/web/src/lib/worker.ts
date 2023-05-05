@@ -1,4 +1,7 @@
 import {
+  AWSSNSGenerator,
+  AblyGenerator,
+  ConfluentCloudKafkaGenerator,
   MockingbirdGenerator,
   TinybirdGenerator,
   UpstashKafkaGenerator,
@@ -13,6 +16,12 @@ onmessage = async function (e) {
         generator = new TinybirdGenerator(e.data.config)
       } else if (e.data.generator === 'UpstashKafka') {
         generator = new UpstashKafkaGenerator(e.data.config)
+      } else if (e.data.generator === 'Ably') {
+        generator = new AblyGenerator(e.data.config)
+      } else if (e.data.generator === 'ConfluentCloudKafka') {
+        generator = new ConfluentCloudKafkaGenerator(e.data.config)
+      } else if (e.data.generator === 'AWSSNS') {
+        generator = new AWSSNSGenerator(e.data.config)
       } else {
         console.error('Unknown generator: ', e.data.generator)
       }

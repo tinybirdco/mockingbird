@@ -1,11 +1,14 @@
 import type {
   TinybirdConfig,
   UpstashKafkaConfig,
+  AblyConfig,
+  ConfluentCloudKafkaConfig,
+  AWSSNSConfig
 } from '@tinybirdco/mockingbird'
 
 export function createWorker(
-  generator: 'Tinybird' | 'UpstashKafka',
-  config: TinybirdConfig | UpstashKafkaConfig,
+  generator: 'Tinybird' | 'UpstashKafka' | 'Ably' | 'ConfluentCloudKafka' | 'AWSSNS',
+  config: TinybirdConfig | UpstashKafkaConfig | AblyConfig | ConfluentCloudKafkaConfig | AWSSNSConfig,
   onMessage?: (message: MessageEvent<number>) => void,
   onError?: (e: ErrorEvent) => void
 ) {

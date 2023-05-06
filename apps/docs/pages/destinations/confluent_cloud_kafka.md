@@ -1,10 +1,10 @@
 # Confluent Cloud Kafka
 
-[Confluent Cloud Kafka](https://www.confluent.io/) is cloud-native, complete, and fully managed Kafka service.
+[Confluent Cloud Kafka](https://www.confluent.io/) is a cloud-native, fully managed Kafka service.
 
 ## How it works
 
-The Confluent Cloud Kafka destination sends data to using [KAFKA API V3](https://docs.confluent.io/cloud/current/api.html#tag/Records-(v3)/operation/produceRecord).
+The Confluent Cloud Kafka destination sends data using the [Confluent Kafka Records API (v3)](https://docs.confluent.io/cloud/current/api.html#tag/Records-(v3)/operation/produceRecord).
 
 ## Configuration
 
@@ -13,7 +13,7 @@ The Confluent Cloud Kafka destination sends data to using [KAFKA API V3](https:/
 | REST endpoint |                        Endpoint URL                        | https://pkc-zpjg0.eu-central-1.aws.confluent.cloud:443 |
 | Cluster ID    |                      Kafka cluster ID                      |                                             p0s-f23... |
 | Topic         |                        Kafka Topic                         |                                                topic_1 |
-| API KEY       |                     Confluent API Key                      |                                              FXVLSF... |
+| API Key       |                     Confluent API Key                      |                                              FXVLSF... |
 | API Secret    |                    Confluent API Secret                    |                                             GxvPswX... |
 | Headers       |                      Optional headers                      |                                                     {} |
 | Key           |           Optional key to use for partitioning.            |                                                     {} |

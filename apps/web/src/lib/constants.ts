@@ -100,6 +100,11 @@ export const awsSnsConfigItems = [
     required: true,
   },
   {
+    id: 'topicArn',
+    label: 'Topic ARN',
+    required: true,
+  },
+  {
     id: 'accessKeyId',
     label: 'Access Key',
     required: true,

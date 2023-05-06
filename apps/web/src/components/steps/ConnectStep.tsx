@@ -1,22 +1,16 @@
-import { Dispatch, FormEvent, ReactNode, useState } from 'react'
+import { Dispatch, FormEvent, useState } from 'react'
 
-import { destinations } from '@/lib/constants'
-import { Action, State } from '@/lib/state'
 import {
-  AWSSNSConfig,
-  AblyConfig,
-  ConfluentCloudKafkaConfig,
-  TinybirdConfig,
-  UpstashKafkaConfig,
-} from '@tinybirdco/mockingbird'
+  destinations,
+  MockingbirdGeneratorName,
+  nameToConfigItems,
+} from '@/lib/constants'
+import { Action, State } from '@/lib/state'
 
 import DestinationButton from '../DestinationButton'
 import { ArrowDownIcon } from '../Icons'
+import BasicSettings from '../settings/BasicSettings'
 import TinybirdSettings from '../settings/TinybirdSettings'
-import UpstashKafkaSettings from '../settings/UpstashKafkaSettings'
-import AblySettings from '../settings/AblySettings'
-import ConfluentCloudKafkaSettings from '../settings/ConfluentCloudKafkaSettings'
-import AWSSNSSettings from '../settings/AWSSNSSettings'
 
 type ConnectStepProps = {
   state: State
@@ -40,12 +34,11 @@ export default function ConnectStep({ state, dispatch }: ConnectStepProps) {
     const formData = Object.fromEntries(
       new FormData(e.target as HTMLFormElement)
     ) as Record<string, string>
-    const { generator } = formData
+    const generator = formData.generator as MockingbirdGeneratorName
     const eps = parseInt(formData.eps ?? '1')
     const limit = parseInt(formData.limit ?? '-1')
 
     try {
-      const { datasource, token } = formData as Record<string, string>
       const endpoint =
         formData.host === 'custom' ? formData.endpoint : formData.host
 
@@ -53,84 +46,21 @@ export default function ConnectStep({ state, dispatch }: ConnectStepProps) {
         dispatch({
           type: 'setConfig',
           payload: {
-            generator: 'Tinybird',
+            generator,
             config: {
-              datasource,
+              ...formData,
               endpoint,
-              token,
               eps,
               limit,
             },
           },
         })
-      } else if (generator === 'UpstashKafka') {
-        const { address, user, pass, topic } = formData as Record<
-          string,
-          string
-        >
+      } else {
         dispatch({
           type: 'setConfig',
           payload: {
-            generator: 'UpstashKafka',
-            config: {
-              address,
-              user,
-              pass,
-              topic,
-              eps,
-              limit,
-            },
-          },
-        })
-      } else if (generator === 'Ably') {
-        const { apiKey, channelId } = formData as Record<string, string>
-        dispatch({
-          type: 'setConfig',
-          payload: {
-            generator: 'Ably',
-            config: {
-              apiKey,
-              channelId,
-              eps,
-              limit,
-            },
-          },
-        })
-      } else if (generator === 'AWSSNS') {
-        const { accessKeyId, secretAccessKey, topicArn, region } = formData as Record<
-          string,
-          string
-        >
-        dispatch({
-          type: 'setConfig',
-          payload: {
-            generator: 'AWSSNS',
-            config: {
-              accessKeyId,
-              secretAccessKey,
-              topicArn,
-              region,
-              eps,
-              limit,
-            },
-          },
-        })
-      } else if (generator === 'ConfluentCloudKafka') {
-        const { apiKey, apiSecret, restEndpoint, clusterId, topic } =
-          formData as Record<string, string>
-        dispatch({
-          type: 'setConfig',
-          payload: {
-            generator: 'ConfluentCloudKafka',
-            config: {
-              apiKey,
-              apiSecret,
-              restEndpoint,
-              clusterId,
-              topic,
-              eps,
-              limit,
-            },
+            generator,
+            config: { ...formData, eps, limit },
           },
         })
       }
@@ -151,32 +81,6 @@ export default function ConnectStep({ state, dispatch }: ConnectStepProps) {
   const onDestinationChange = (destination: Destination) => {
     setErrors([])
     setSelectedDestination(destination)
-  }
-
-  const destinationToSettings: Record<Destination['generator'], ReactNode> = {
-    Tinybird: (
-      <TinybirdSettings
-        config={(state.config ? state.config : {}) as TinybirdConfig}
-      />
-    ),
-    UpstashKafka: (
-      <UpstashKafkaSettings
-        config={(state.config ? state.config : {}) as UpstashKafkaConfig}
-      />
-    ),
-    Ably: (
-      <AblySettings config={(state.config ? state.config : {}) as AblyConfig} />
-    ),
-    ConfluentCloudKafka: (
-      <ConfluentCloudKafkaSettings
-        config={(state.config ? state.config : {}) as ConfluentCloudKafkaConfig}
-      />
-    ),
-    AWSSNS: (
-      <AWSSNSSettings
-        config={(state.config ? state.config : {}) as AWSSNSConfig}
-      />
-    ),
   }
 
   return (
@@ -215,7 +119,14 @@ export default function ConnectStep({ state, dispatch }: ConnectStepProps) {
         <div className="h-6" />
 
         <form onSubmit={onSubmit}>
-          {destinationToSettings[selectedDestination.generator]}
+          {selectedDestination.generator === 'Tinybird' ? (
+            <TinybirdSettings config={state.config} />
+          ) : (
+            <BasicSettings
+              config={state.config}
+              items={nameToConfigItems[selectedDestination.generator]}
+            />
+          )}
 
           <div className="h-6" />
 

@@ -6,7 +6,7 @@ import { PresetSchemaNameWithCustom, TEMPLATE_OPTIONS } from '@/lib/constants'
 import { Action, State } from '@/lib/state'
 import { cx } from '@/lib/utils'
 
-import { ArrowDownIcon, CheckmarkIcon } from '../Icons'
+import { ArrowDownIcon } from '../Icons'
 
 const JSONEditor = dynamic(() => import('@/components/JSONEditor'), {
   loading: () => <p>Loading...</p>,

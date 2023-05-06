@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { TinybirdConfig } from '@tinybirdco/mockingbird'
+import { MockingbirdConfig } from '@/lib/constants'
 
 enum HostType {
   EU_GCP = 'eu_gcp',
@@ -15,12 +15,14 @@ const ENDPOINT_OPTIONS = [
 ] as const
 
 type TinybirdSettingsProps = {
-  config: TinybirdConfig
+  config: MockingbirdConfig | null
 }
 
-export default function TinybirdSettings({
-  config: { endpoint, token, datasource },
-}: TinybirdSettingsProps) {
+export default function TinybirdSettings({ config }: TinybirdSettingsProps) {
+  const endpoint = config && 'endpoint' in config ? config.endpoint : undefined
+  const token = config && 'token' in config ? config.token : undefined
+  const datasource =
+    config && 'datasource' in config ? config.datasource : undefined
   const defaultHost =
     ENDPOINT_OPTIONS.find(ep => ep.value === endpoint)?.value ?? HostType.EU_GCP
 

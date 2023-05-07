@@ -1,11 +1,8 @@
-import type {
-  TinybirdConfig,
-  UpstashKafkaConfig,
-} from '@tinybirdco/mockingbird'
+import { MockingbirdGeneratorName, MockingbirdConfig } from './constants'
 
 export function createWorker(
-  generator: 'Tinybird' | 'UpstashKafka',
-  config: TinybirdConfig | UpstashKafkaConfig,
+  generator: MockingbirdGeneratorName,
+  config: MockingbirdConfig,
   onMessage?: (message: MessageEvent<number>) => void,
   onError?: (e: ErrorEvent) => void
 ) {

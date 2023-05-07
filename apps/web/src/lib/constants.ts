@@ -1,4 +1,14 @@
-import { PRESET_SCHEMA_NAMES } from '@tinybirdco/mockingbird'
+import {
+  AWSSNSConfig,
+  AWSSNSGenerator,
+  AblyConfig,
+  AblyGenerator,
+  PRESET_SCHEMA_NAMES,
+  TinybirdConfig,
+  TinybirdGenerator,
+  UpstashKafkaConfig,
+  UpstashKafkaGenerator,
+} from '@tinybirdco/mockingbird'
 
 export const steps = [
   {
@@ -31,8 +41,119 @@ export const destinations = [
     generator: 'UpstashKafka',
     icon: '/destinations/upstash-kafka.svg',
   },
+  {
+    title: 'Ably',
+    generator: 'Ably',
+    icon: '/destinations/ably.svg',
+  },
+  {
+    title: 'AWS SNS',
+    generator: 'AWSSNS',
+    icon: '/destinations/awssns.svg',
+  },
 ] as const
 export type Destination = (typeof destinations)[number]
+export type MockingbirdGeneratorName = Destination['generator']
 
 export const TEMPLATE_OPTIONS = [...PRESET_SCHEMA_NAMES, 'Custom'] as const
 export type PresetSchemaNameWithCustom = (typeof TEMPLATE_OPTIONS)[number]
+
+export const nameToGenerator = {
+  Ably: AblyGenerator,
+  AWSSNS: AWSSNSGenerator,
+  Tinybird: TinybirdGenerator,
+  UpstashKafka: UpstashKafkaGenerator,
+} as const
+
+export type MockingbirdConfig =
+  | AblyConfig
+  | AWSSNSConfig
+  | TinybirdConfig
+  | UpstashKafkaConfig
+
+export const ablyConfigItems = [
+  {
+    id: 'channelId',
+    label: 'Channel ID',
+    required: true,
+  },
+  {
+    id: 'apiKey',
+    label: 'API Key',
+    required: true,
+  },
+]
+
+export const awsSnsConfigItems = [
+  {
+    id: 'region',
+    label: 'Region',
+    required: true,
+  },
+  {
+    id: 'topicArn',
+    label: 'Topic ARN',
+    required: true,
+  },
+  {
+    id: 'accessKeyId',
+    label: 'Access Key',
+    required: true,
+  },
+  {
+    id: 'secretAccessKey',
+    label: 'Secret Key',
+    required: true,
+    type: 'password',
+  },
+]
+
+export const tinybirdConfigItems = [
+  {
+    id: 'endpoint',
+    label: 'Endpoint',
+  },
+  {
+    id: 'token',
+    label: 'Token',
+  },
+  {
+    id: 'datasource',
+    label: 'Datasource',
+  },
+]
+
+export const upstashKafkaConfigItems = [
+  {
+    id: 'address',
+    label: 'REST URL',
+    required: true,
+    type: 'url',
+  },
+  {
+    id: 'user',
+    label: 'REST Username',
+    required: true,
+  },
+  {
+    id: 'pass',
+    label: 'REST Password',
+    required: true,
+    type: 'password',
+  },
+  {
+    id: 'topic',
+    label: 'Topic',
+    required: true,
+  },
+]
+
+export const nameToConfigItems: Record<
+  MockingbirdGeneratorName,
+  Array<{ id: string; label: string }>
+> = {
+  Ably: ablyConfigItems,
+  AWSSNS: awsSnsConfigItems,
+  Tinybird: tinybirdConfigItems,
+  UpstashKafka: upstashKafkaConfigItems,
+}

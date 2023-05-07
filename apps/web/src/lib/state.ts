@@ -6,15 +6,15 @@ import { Content, JSONContent, TextContent } from 'vanilla-jsoneditor'
 import {
   presetSchemas,
   Schema,
-  TinybirdConfig,
-  MockingbirdGenerator,
   TinybirdGenerator,
-  UpstashKafkaConfig,
-  UpstashKafkaGenerator,
   validateSchema,
 } from '@tinybirdco/mockingbird'
 
 import {
+  MockingbirdConfig,
+  MockingbirdGeneratorName,
+  nameToConfigItems,
+  nameToGenerator,
   PresetSchemaNameWithCustom,
   steps,
   TEMPLATE_OPTIONS,
@@ -24,11 +24,8 @@ import { createWorker, startWorker, stopWorker } from './workerBuilder'
 
 export type State = {
   step: number
-  generator: 'Tinybird' | 'UpstashKafka' | null
-  config:
-    | Omit<TinybirdConfig, 'schema'>
-    | Omit<UpstashKafkaConfig, 'schema'>
-    | null
+  generator: MockingbirdGeneratorName | null
+  config: MockingbirdConfig | null
   schema: Schema
   template: PresetSchemaNameWithCustom
   content: Content
@@ -53,15 +50,10 @@ export type Action =
     }
   | {
       type: 'setConfig'
-      payload:
-        | {
-            generator: 'Tinybird'
-            config: Omit<TinybirdConfig, 'schema'>
-          }
-        | {
-            generator: 'UpstashKafka'
-            config: Omit<UpstashKafkaConfig, 'schema'>
-          }
+      payload: {
+        generator: MockingbirdGeneratorName
+        config: Record<string, any>
+      }
     }
   | {
       type: 'setTemplate'
@@ -138,17 +130,10 @@ export function reducer(state: State, action: Action): State {
       }
     }
     case 'setConfig': {
-      if (action.payload.generator === 'Tinybird') {
-        new TinybirdGenerator({
-          ...action.payload.config,
-          schema: {},
-        } as TinybirdConfig)
-      } else if (action.payload.generator === 'UpstashKafka') {
-        new UpstashKafkaGenerator({
-          ...action.payload.config,
-          schema: {},
-        } as UpstashKafkaConfig)
-      }
+      new nameToGenerator[action.payload.generator]({
+        ...action.payload.config,
+        schema: {} as Schema,
+      } as any)
 
       const urlParams = new URLSearchParams({
         ...Object.fromEntries(
@@ -169,7 +154,7 @@ export function reducer(state: State, action: Action): State {
       return {
         ...state,
         generator: action.payload.generator,
-        config: action.payload.config,
+        config: action.payload.config as MockingbirdConfig,
       }
     }
 
@@ -233,7 +218,7 @@ export function reducer(state: State, action: Action): State {
       const createdWorker = createWorker(
         state.generator,
         {
-          ...(state.config as TinybirdConfig | UpstashKafkaConfig),
+          ...(state.config as MockingbirdConfig),
           schema,
         },
         action.payload.onMessage,
@@ -268,7 +253,7 @@ export function reducer(state: State, action: Action): State {
       const createdWorker = createWorker(
         state.generator,
         {
-          ...(state.config as TinybirdConfig | UpstashKafkaConfig),
+          ...(state.config as MockingbirdConfig),
           schema: state.schema,
         },
         action.payload.onMessage,
@@ -374,31 +359,25 @@ const handleContentFromURL = (
 
 const handleConfigFromURL = (routerQuery: ParsedUrlQuery) => {
   const generator = router.query.generator as
-    | 'Tinybird'
-    | 'UpstashKafka'
+    | MockingbirdGeneratorName
     | undefined
 
-  if (generator === 'Tinybird') {
-    const config: Omit<TinybirdConfig, 'schema'> = {
-      endpoint: (router.query.endpoint as string | undefined) ?? '',
-      token: (router.query.token as string | undefined) ?? '',
-      datasource: (router.query.datasource as string | undefined) ?? '',
-      eps: parseInt((router.query.eps as string | undefined) ?? '1'),
-      limit: parseInt((router.query.limit as string | undefined) ?? '-1'),
-    }
-    return { generator, config }
-  } else if (generator === 'UpstashKafka') {
-    const config: Omit<UpstashKafkaConfig, 'schema'> = {
-      address: (router.query.address as string | undefined) ?? '',
-      user: (router.query.user as string | undefined) ?? '',
-      pass: (router.query.pass as string | undefined) ?? '',
-      topic: (router.query.topic as string | undefined) ?? '',
-      eps: parseInt((router.query.eps as string | undefined) ?? '1'),
-      limit: parseInt((router.query.limit as string | undefined) ?? '-1'),
-    }
-    return { generator, config }
-  }
-  return { generator: null, config: null }
+  if (!generator) return { generator: null, config: null }
+
+  const eps = parseInt((routerQuery.eps as string | undefined) ?? '1')
+  const limit = parseInt((routerQuery.limit as string | undefined) ?? '-1')
+
+  const config = nameToConfigItems[generator]
+    .map(({ id }) => id)
+    .reduce(
+      (acc, key) => ({
+        ...acc,
+        [key]: (router.query[key] as string | undefined) ?? '',
+      }),
+      { eps, limit, schema: {} }
+    ) as MockingbirdConfig
+
+  return { generator, config }
 }
 
 const parseSchema = (

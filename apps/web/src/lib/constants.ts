@@ -3,6 +3,8 @@ import {
   AWSSNSGenerator,
   AblyConfig,
   AblyGenerator,
+  ConfluentCloudKafkaConfig,
+  ConfluentCloudKafkaGenerator,
   PRESET_SCHEMA_NAMES,
   TinybirdConfig,
   TinybirdGenerator,
@@ -42,6 +44,11 @@ export const destinations = [
     icon: '/destinations/upstash-kafka.svg',
   },
   {
+    title: 'Confluent Cloud',
+    generator: 'ConfluentCloudKafka',
+    icon: '/destinations/confluent.svg',
+  },
+  {
     title: 'Ably',
     generator: 'Ably',
     icon: '/destinations/ably.svg',
@@ -61,6 +68,7 @@ export type PresetSchemaNameWithCustom = (typeof TEMPLATE_OPTIONS)[number]
 export const nameToGenerator = {
   Ably: AblyGenerator,
   AWSSNS: AWSSNSGenerator,
+  ConfluentCloudKafka: ConfluentCloudKafkaGenerator,
   Tinybird: TinybirdGenerator,
   UpstashKafka: UpstashKafkaGenerator,
 } as const
@@ -68,6 +76,7 @@ export const nameToGenerator = {
 export type MockingbirdConfig =
   | AblyConfig
   | AWSSNSConfig
+  | ConfluentCloudKafkaConfig
   | TinybirdConfig
   | UpstashKafkaConfig
 
@@ -103,6 +112,36 @@ export const awsSnsConfigItems = [
   {
     id: 'secretAccessKey',
     label: 'Secret Key',
+    required: true,
+    type: 'password',
+  },
+]
+
+export const confluentCloudKafkaConfigItems = [
+  {
+    id: 'restEndpoint',
+    label: 'REST Endpoint',
+    required: true,
+    type: 'url',
+  },
+  {
+    id: 'clusterId',
+    label: 'Cluster ID',
+    required: true,
+  },
+  {
+    id: 'topic',
+    label: 'Topic',
+    required: true,
+  },
+  {
+    id: 'apiKey',
+    label: 'API Key',
+    required: true,
+  },
+  {
+    id: 'apiSecret',
+    label: 'API Secret',
     required: true,
     type: 'password',
   },
@@ -154,6 +193,7 @@ export const nameToConfigItems: Record<
 > = {
   Ably: ablyConfigItems,
   AWSSNS: awsSnsConfigItems,
+  ConfluentCloudKafka: confluentCloudKafkaConfigItems,
   Tinybird: tinybirdConfigItems,
   UpstashKafka: upstashKafkaConfigItems,
 }

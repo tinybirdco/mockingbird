@@ -86,7 +86,7 @@ export default function TinybirdSettings({ config }: TinybirdSettingsProps) {
 
         <div className="flex flex-col gap-1">
           <label htmlFor="datasource" className="text-sm text-tb-text1">
-            Data source name
+            Data Source name
           </label>
           <input
             id="datasource"

@@ -110,6 +110,7 @@ export default function ConnectStep({ state, dispatch }: ConnectStepProps) {
                 alt={destination.title}
                 width="32"
                 height="32"
+                className="max-w-[32px] max-h-8"
               />
               {destination.title}
             </DestinationButton>

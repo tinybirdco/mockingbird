@@ -3,12 +3,20 @@ import { z } from "zod";
 
 import extendedFaker from "./extendedFaker";
 
+/**
+ * @description Generates all possible paths of an object
+ * @example extendedFaker -> "mockingbird.latitudeNumeric" | ...
+ */
 type ObjectPath<T extends object, D extends string = ""> = {
   [K in keyof T]: `${D}${Exclude<K, symbol>}${
     | ""
     | (T[K] extends object ? ObjectPath<T[K], "."> : "")}`;
 }[keyof T];
 
+/**
+ * @description Gets the type of value at certain path of an object
+ * @example "mockingbird.latitudeNumeric" => () => number
+ */
 type ObjectAtPath<
   T,
   Path extends string
@@ -20,30 +28,68 @@ type ObjectAtPath<
   ? T[Path]
   : never;
 
+/**
+ * @description All actual faker functions, excluding utils
+ */
 export type FakerFunctions = Omit<
   typeof extendedFaker,
   "helpers" | "locales" | "fake" | "unique" | "mersenne" | "definitions"
 >;
 
+/**
+ * @description Returns an array of parameters of a function
+ * () => number => []
+ */
 export type FakerFunctionParams<T> = T extends (...args: infer P) => any
   ? P
   : never;
 
+/**
+ * @description All possible paths (functions) of extendedFaker
+ */
 export type SchemaKey = Exclude<
   ObjectPath<FakerFunctions>,
   keyof typeof extendedFaker
 >;
 
-export type SchemaValue<K extends SchemaKey = SchemaKey> =
-  K extends infer Key extends string
-    ? {
-        type: Key;
-        count?: number;
-      } & (FakerFunctionParams<ObjectAtPath<FakerFunctions, Key>> extends []
-        ? {}
-        : { params?: FakerFunctionParams<ObjectAtPath<FakerFunctions, Key>> })
+/**
+ * @description All possible paths (functions) of extendedFaker that take parameters
+ */
+export type ParameterizedSchemaKey<K extends SchemaKey = SchemaKey> =
+  K extends SchemaKey
+    ? FakerFunctionParams<ObjectAtPath<FakerFunctions, K>> extends []
+      ? never
+      : K
     : never;
 
+/**
+ * @description All possible paths (functions) of extendedFaker that do not take parameters
+ */
+export type UnparameterizedSchemaKey = Exclude<
+  SchemaKey,
+  ParameterizedSchemaKey
+>;
+
+/**
+ * @description All possible values of a schema,
+ * if the key is does not take any parameters it gets reduced to UnparameterizedSchemaKey,
+ * else it will return the actual key and the parameters
+ */
+export type SchemaValue<K extends SchemaKey = SchemaKey> =
+  K extends UnparameterizedSchemaKey
+    ? {
+        type: UnparameterizedSchemaKey;
+        count?: number;
+      }
+    : {
+        type: K;
+        count?: number;
+        params?: FakerFunctionParams<ObjectAtPath<FakerFunctions, K>>;
+      };
+
+/**
+ * @description The schema object
+ */
 export type Schema = Record<string, SchemaValue>;
 
 export const PRESET_SCHEMA_NAMES = [

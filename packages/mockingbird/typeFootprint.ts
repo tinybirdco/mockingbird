@@ -268,7 +268,7 @@ function footprintOfType(params: {
       .join(" & ");
   }
 
-  return "BigInt";
+  return "any";
 }
 
 function properties(

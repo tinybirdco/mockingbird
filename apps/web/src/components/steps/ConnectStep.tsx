@@ -108,8 +108,7 @@ export default function ConnectStep({ state, dispatch }: ConnectStepProps) {
               <img
                 src={destination.icon}
                 alt={destination.title}
-                width="32"
-                height="32"
+                className="w-8 h-8 max-w-[32px] max-h-8"
               />
               {destination.title}
             </DestinationButton>

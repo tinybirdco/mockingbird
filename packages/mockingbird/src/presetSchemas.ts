@@ -372,7 +372,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
     },
     country: {
       type: "address.countryCode",
-      params: ["alpha-2"]
+      params: ["alpha-2"],
     },
     cpuarchitecture: {
       type: "mockingbird.pick",
@@ -614,7 +614,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
     },
     region: {
       type: "address.countryCode",
-      params: ["alpha-3"]
+      params: ["alpha-3"],
     },
     url: {
       type: "mockingbird.pickWeighted",

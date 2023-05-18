@@ -1,7 +1,8 @@
 import fs from "fs";
 import path from "path";
 import { defineConfig } from "tsup";
-import * as TJS from "typescript-json-schema";
+import * as TJS from "ts-json-schema-generator";
+import { type Config as TSJConfig } from "ts-json-schema-generator/dist/src/Config";
 
 import { typeFootprint } from "./typeFootprint";
 
@@ -16,18 +17,47 @@ export default defineConfig({
   minify: isProduction,
   clean: true,
   onSuccess: async () => {
-    const schemaFootprint = typeFootprint("./src/types.ts", "Schema");
+    const type = "Schema";
+
+    const schemaFootprint = typeFootprint("./src/types.ts", type);
 
     fs.writeFileSync(
-      path.join(__dirname, "dist", "Schema.ts"),
+      path.join(__dirname, "dist", `${type}.ts`),
       schemaFootprint
     );
 
-    const program = TJS.getProgramFromFiles([
-      path.join(__dirname, "dist", "Schema.ts"),
-    ]);
+    const config: TSJConfig = {
+      type,
+      path: path.join(__dirname, "dist", `${type}.ts`),
+      tsconfig: path.join(__dirname, "tsconfig.json"),
+      expose: "all",
+      topRef: false,
+    };
 
-    const schema = TJS.generateSchema(program, "Schema");
+    const schema = TJS.createGenerator(config).createSchema(type) as any;
+
+    // Replace anyOf with enum
+    const { anyOf } = schema.additionalProperties;
+    const unparametrizedTypes = anyOf[0];
+    unparametrizedTypes.properties.type.enum =
+      unparametrizedTypes.properties.type.anyOf.map((t: any) => t.const);
+    delete unparametrizedTypes.properties.type.anyOf;
+
+    const parametrizedTypes = anyOf.slice(1).map((p: any) => ({
+      ...p,
+      properties: {
+        ...p.properties,
+        type: {
+          type: "string",
+          enum: [p.properties.type.const],
+        },
+      },
+    }));
+
+    schema.additionalProperties.anyOf = [
+      unparametrizedTypes,
+      ...parametrizedTypes,
+    ];
 
     fs.writeFileSync(
       path.join(__dirname, "dist", "Schema.json"),

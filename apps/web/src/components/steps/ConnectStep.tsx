@@ -6,11 +6,12 @@ import {
   nameToConfigItems,
 } from '@/lib/constants'
 import { Action, State } from '@/lib/state'
+import { ArrowDownIcon } from '@tinybird/icons'
 
 import DestinationButton from '../DestinationButton'
-import { ArrowDownIcon } from '../Icons'
 import BasicSettings from '../settings/BasicSettings'
 import TinybirdSettings from '../settings/TinybirdSettings'
+import { Button, Input, Label, RadioGroup } from '@tinybird/ui'
 
 type ConnectStepProps = {
   state: State
@@ -130,54 +131,34 @@ export default function ConnectStep({ state, dispatch }: ConnectStepProps) {
           <div className="h-6" />
 
           <div className="grid lg:grid-cols-[140px_288px_auto] gap-6">
+            <Input
+              labelId="eps"
+              label="Events Per Second"
+              id="eps"
+              name="eps"
+              defaultValue={
+                state.config && 'eps' in state.config ? state.config.eps : 1
+              }
+              type="number"
+              variant="block"
+            />
+
             <div className="flex flex-col gap-1">
-              <label htmlFor="eps" className="text-sm text-tb-text1">
-                Events Per Second
-              </label>
-              <input
-                id="eps"
-                name="eps"
-                defaultValue={
-                  state.config && 'eps' in state.config ? state.config.eps : 1
-                }
-                type="number"
-                className="input-base"
-              />
-            </div>
-            <div className="flex flex-col gap-1">
-              <label htmlFor="limit" className="text-sm text-tb-text1">
-                Limit
-              </label>
+              <Label>With limit</Label>
               <div className="flex items-center h-10 gap-2">
-                <input
-                  type="radio"
-                  id="withLimitNo"
-                  name="withLimit"
-                  checked={!withLimit}
-                  onChange={() => setWithLimit(false)}
-                />
-                <label htmlFor="withLimitNo" className="text-sm">
-                  No
-                </label>
-
-                <div className="w-4" />
-
-                <input
-                  type="radio"
-                  id="withLimitYes"
-                  name="withLimit"
-                  checked={withLimit}
-                  onChange={() => setWithLimit(true)}
-                />
-                <label htmlFor="withLimitYes" className="text-sm">
-                  Yes
-                </label>
-
+                <RadioGroup
+                  value={String(withLimit)}
+                  direction="row"
+                  onChange={value => setWithLimit(value === 'true')}
+                >
+                  <RadioGroup.Button label="No" value="false" />
+                  <RadioGroup.Button label="Yes" value="true" />
+                </RadioGroup>
                 {withLimit && (
                   <>
                     <div className="w-4" />
 
-                    <input
+                    <Input
                       id="limit"
                       name="limit"
                       defaultValue={
@@ -186,7 +167,6 @@ export default function ConnectStep({ state, dispatch }: ConnectStepProps) {
                           : -1
                       }
                       type="number"
-                      className="input-base lg:w-[140px]"
                     />
                   </>
                 )}
@@ -211,16 +191,12 @@ export default function ConnectStep({ state, dispatch }: ConnectStepProps) {
           <div className="h-6" />
 
           <div className="flex justify-end">
-            <button type="submit" className="btn-base btn-primary">
-              {state.step === 1 ? (
-                <>
-                  Continue
-                  <ArrowDownIcon />
-                </>
-              ) : (
-                <>Save</>
-              )}
-            </button>
+            <Button
+              type="submit"
+              rightIcon={state.step === 1 ? <ArrowDownIcon /> : undefined}
+            >
+              {state.step === 1 ? 'Continue' : 'Save'}
+            </Button>
           </div>
         </form>
       </fieldset>

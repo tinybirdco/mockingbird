@@ -1,6 +1,7 @@
 import { useState } from 'react'
 
 import { MockingbirdConfig } from '@/lib/constants'
+import { Combobox, Input, Link } from '@tinybird/ui'
 
 enum HostType {
   EU_GCP = 'eu_gcp',
@@ -30,86 +31,71 @@ export default function TinybirdSettings({ config }: TinybirdSettingsProps) {
 
   return (
     <>
-      <div className="px-8 py-3 rounded flex flex-col lg:flex-row lg:items-center justify-between bg-tb-bg2 font-semibold text-[13px] leading-6 text-tb-text3">
+      <div className="px-8 py-3 rounded flex flex-col lg:flex-row lg:items-center justify-between bg-tb-background-05 font-semibold text-[13px] leading-6 text-tb-darkblue-01">
         <p>
           Don&apos;t have a Tinybird account yet? Sign up for free. No credit
           card needed.
         </p>
-        <a
+        <Link
+          as="externalLink"
           href="https://ui.tinybird.co/signup"
           rel="noopener noreferrer"
           target="_blank"
-          className="underline"
         >
           Sign up
-        </a>
+        </Link>
       </div>
 
       <div className="h-6" />
 
       <div className="grid lg:grid-cols-[140px_288px_auto] gap-6">
-        <div className="flex flex-col gap-1">
-          <label htmlFor="host" className="text-sm text-tb-text1">
-            Host
-          </label>
-          <select
-            id="host"
-            name="host"
-            className="input-base"
-            value={selectedHost}
-            onChange={e => setSelectedHost(e.target.value as HostType)}
-          >
-            {ENDPOINT_OPTIONS.map(({ label, value }) => (
-              <option key={value} value={value}>
-                {label}
-              </option>
-            ))}
-          </select>
-        </div>
+        <input type="hidden" name="host" value={selectedHost} />
+        <Combobox
+          labelId="host"
+          label="Host"
+          id="host"
+          value={selectedHost}
+          onChange={value => {
+            if (value) setSelectedHost(value)
+          }}
+          options={[...ENDPOINT_OPTIONS]}
+          variant="block"
+        />
 
         {selectedHost === HostType.Custom && (
-          <div className="flex flex-col gap-1">
-            <label htmlFor="endpoint" className="text-sm text-tb-text1">
-              Endpoint
-            </label>
-            <input
-              id="endpoint"
-              name="endpoint"
-              required
-              defaultValue={
-                defaultHost === HostType.Custom ? endpoint : undefined
-              }
-              className="input-base"
-            />
-          </div>
+          <Input
+            labelId="endpoint"
+            label="Endpoint"
+            id="endpoint"
+            name="endpoint"
+            required
+            defaultValue={
+              defaultHost === HostType.Custom ? endpoint : undefined
+            }
+            variant="block"
+          />
         )}
 
-        <div className="flex flex-col gap-1">
-          <label htmlFor="datasource" className="text-sm text-tb-text1">
-            Data Source name
-          </label>
-          <input
-            id="datasource"
-            name="datasource"
-            required
-            defaultValue={datasource}
-            className="input-base"
-          />
-        </div>
+        <Input
+          labelId="datasource"
+          label="Data Source name"
+          id="datasource"
+          name="datasource"
+          required
+          defaultValue={datasource}
+          variant="block"
+        />
 
-        <div className="flex flex-col gap-1">
-          <label htmlFor="token" className="text-sm text-tb-text1">
-            Data Source API Token
-          </label>
-          <input
-            id="token"
-            name="token"
-            type="password"
-            required
-            defaultValue={token}
-            className="input-base"
-          />
-        </div>
+        <Input
+          labelId="token"
+          label="Data Source API Token"
+          id="token"
+          name="token"
+          type="password"
+          required
+          defaultValue={token}
+          variant="block"
+        />
       </div>
     </>
   )

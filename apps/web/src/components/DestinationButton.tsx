@@ -21,7 +21,7 @@ const DestinationButton = forwardRef<HTMLButtonElement, DestinationButtonProps>(
           {...props}
           className={cx(
             'w-full h-full p-6 text-sm font-semibold flex items-center gap-4 rounded-md',
-            isSelected ? 'bg-white' : 'bg-tb-bg1'
+            isSelected ? 'bg-white' : 'bg-tb-neutral-04'
           )}
         >
           {props.children}

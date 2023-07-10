@@ -1,9 +1,10 @@
 import { ReactNode } from 'react'
 
 import { steps } from '@/lib/constants'
+import useActiveStep from '@/lib/hooks/useActiveStep'
+import { Link } from '@tinybird/ui'
 
 import StepTitle from './StepTitle'
-import useActiveStep from '@/lib/hooks/useActiveStep'
 
 type LayoutProps = {
   children: ReactNode
@@ -32,24 +33,24 @@ function LeftCol({ stepIndex }: LeftColProps) {
 
         <div className="h-2" />
 
-        <div className="flex items-center gap-2 text-tb-text1">
-          <a
+        <div className="flex items-center gap-2 text-tb-neutral-64">
+          <Link
+            as="externalLink"
             href="https://mockingbird.tinybird.co/docs"
             rel="noopener noreferrer"
             target="_blank"
-            className="flex text-sm cursor-pointer hover:text-tb-primary"
           >
             Docs
-          </a>
+          </Link>
           <span>|</span>
-          <a
+          <Link
+            as="externalLink"
             href="https://github.com/tinybirdco/mockingbird"
             rel="noopener noreferrer"
             target="_blank"
-            className="flex text-sm cursor-pointer hover:text-tb-primary"
           >
             GitHub
-          </a>
+          </Link>
         </div>
 
         {stepIndex > 0 && (
@@ -86,7 +87,7 @@ function LeftCol({ stepIndex }: LeftColProps) {
       </div>
 
       {stepIndex > 0 && (
-        <h3 className="text-sm font-semibold leading-4 text-tb-text1 -tracking-wide max-w-[152px]">
+        <h3 className="text-sm font-semibold leading-4 text-tb-neutral-64 -tracking-wide max-w-[152px]">
           <span className="font-bold font-ia-writer">Generate</span> mock{' '}
           <span className="font-bold font-ia-writer">data</span> streams for
           your next data{' '}
@@ -109,10 +110,10 @@ function Layout({ children }: LayoutProps) {
           {children}
         </div>
         <div className="flex items-center justify-between w-full">
-          <p className="text-xs text-tb-text1">
+          <p className="text-xs text-tb-neutral-64">
             Copyright © 2023 Tinybird. All rights reserved
           </p>
-          {/* <p className="text-xs text-tb-text1">
+          {/* <p className="text-xs text-tb-neutral-64">
             Terms of service | Legal notice
           </p> */}
         </div>

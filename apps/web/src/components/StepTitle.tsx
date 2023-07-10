@@ -15,15 +15,20 @@ export default function StepTitle({
     <div key={title} className="flex items-center gap-2">
       <div
         className={cx(
-          'flex w-4 h-4 rounded-full items-center justify-center  font-medium text-[11px] leading-4 tracking-[1px] uppercase ',
+          'flex w-4 h-4 rounded-full items-center justify-center font-medium text-[11px] leading-4 tracking-[1px] uppercase',
           isActive
-            ? 'bg-tb-primary text-white'
-            : 'border border-tb-text2 text-tb-text2'
+            ? 'bg-tb-primary'
+            : 'border border-solid border-tb-neutral-40 text-tb-neutral-40'
         )}
       >
         {stepNumber}
       </div>
-      <p className={cx('text-lg font-semibold', !isActive && 'text-tb-text2')}>
+      <p
+        className={cx(
+          'text-lg font-semibold',
+          !isActive && 'text-tb-neutral-40'
+        )}
+      >
         {title}
       </p>
     </div>

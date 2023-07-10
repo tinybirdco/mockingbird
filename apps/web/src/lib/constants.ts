@@ -1,8 +1,10 @@
+import { HTMLInputTypeAttribute } from 'react'
+
 import {
-  AWSSNSConfig,
-  AWSSNSGenerator,
   AblyConfig,
   AblyGenerator,
+  AWSSNSConfig,
+  AWSSNSGenerator,
   PRESET_SCHEMA_NAMES,
   TinybirdConfig,
   TinybirdGenerator,
@@ -82,7 +84,7 @@ export const ablyConfigItems = [
     label: 'API Key',
     required: true,
   },
-]
+] as const
 
 export const awsSnsConfigItems = [
   {
@@ -106,7 +108,7 @@ export const awsSnsConfigItems = [
     required: true,
     type: 'password',
   },
-]
+] as const
 
 export const tinybirdConfigItems = [
   {
@@ -121,7 +123,7 @@ export const tinybirdConfigItems = [
     id: 'datasource',
     label: 'Datasource',
   },
-]
+] as const
 
 export const upstashKafkaConfigItems = [
   {
@@ -146,11 +148,18 @@ export const upstashKafkaConfigItems = [
     label: 'Topic',
     required: true,
   },
-]
+] as const
+
+export type ConfigItem = {
+  id: string
+  label: string
+  required?: boolean
+  type?: HTMLInputTypeAttribute
+}
 
 export const nameToConfigItems: Record<
   MockingbirdGeneratorName,
-  Array<{ id: string; label: string }>
+  ReadonlyArray<ConfigItem>
 > = {
   Ably: ablyConfigItems,
   AWSSNS: awsSnsConfigItems,

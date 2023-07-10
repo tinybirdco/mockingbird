@@ -1,7 +1,8 @@
 import { State } from '@/lib/state'
+import { ArrowDownIcon } from '@tinybird/icons'
+import { Button } from '@tinybird/ui'
 
 import { steps } from '../../lib/constants'
-import { ArrowDownIcon } from '../Icons'
 import StepTitle from '../StepTitle'
 
 type LandingProps = {
@@ -32,13 +33,9 @@ export default function Landing({ state, goToNextStep }: LandingProps) {
 
       {state.step === 0 && (
         <div className="flex justify-end">
-          <button
-            className="btn-base btn-primary"
-            onClick={() => goToNextStep()}
-          >
+          <Button rightIcon={<ArrowDownIcon />} onClick={goToNextStep}>
             Start generating data
-            <ArrowDownIcon />
-          </button>
+          </Button>
         </div>
       )}
     </div>

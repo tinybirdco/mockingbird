@@ -1,6 +1,7 @@
 import { Dispatch } from 'react'
 
 import { Action, State } from '@/lib/state'
+import { Button } from '@tinybird/ui'
 
 type OverviewStepProps = {
   state: State
@@ -85,7 +86,6 @@ export default function OverviewStep({ state, dispatch }: OverviewStepProps) {
           {overviewItems.map(item => (
             <div key={item.title} className="flex flex-col gap-1">
               <p className="text-sm">{item.title}</p>
-
               <p className="text-lg font-semibold">{item.value}</p>
             </div>
           ))}
@@ -95,15 +95,14 @@ export default function OverviewStep({ state, dispatch }: OverviewStepProps) {
       <div className="h-9" />
 
       <div className="flex justify-end">
-        <button
+        <Button
           type="button"
-          className="btn-base btn-primary"
           onClick={
             state.isGenerating ? onStopGenerationClick : onStartGenerationClick
           }
         >
           {state.isGenerating ? 'Stop' : 'Start'} Generating!
-        </button>
+        </Button>
       </div>
     </div>
   )

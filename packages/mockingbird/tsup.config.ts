@@ -1,8 +1,8 @@
 import fs from "fs";
 import path from "path";
-import { defineConfig } from "tsup";
 import * as TJS from "ts-json-schema-generator";
 import { type Config as TSJConfig } from "ts-json-schema-generator/dist/src/Config";
+import { defineConfig } from "tsup";
 
 import { typeFootprint } from "./typeFootprint";
 
@@ -38,10 +38,14 @@ export default defineConfig({
 
     // Replace anyOf with enum
     const { anyOf } = schema.additionalProperties;
-    const unparametrizedTypes = anyOf[0];
-    unparametrizedTypes.properties.type.enum =
-      unparametrizedTypes.properties.type.anyOf.map((t: any) => t.const);
-    delete unparametrizedTypes.properties.type.anyOf;
+    const unparametrizedTypes = schema.additionalProperties.anyOf.find(
+      (t: any) => Array.isArray(t.properties.type.anyOf)
+    );
+    if (unparametrizedTypes) {
+      unparametrizedTypes.properties.type.enum =
+        unparametrizedTypes.properties.type.anyOf.map((t: any) => t.const);
+      delete unparametrizedTypes.properties.type.anyOf;
+    }
 
     const parametrizedTypes = anyOf.slice(1).map((p: any) => ({
       ...p,

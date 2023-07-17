@@ -6,6 +6,8 @@ import { BaseConfig, Row } from "../types";
 export default abstract class BaseGenerator<C extends BaseConfig> {
   abstract readonly config: C;
 
+  private state: Record<string, unknown> = {};
+
   abstract sendData(data: Row[]): Promise<void>;
 
   log(level: "info" | "error", message: string) {
@@ -27,7 +29,7 @@ export default abstract class BaseGenerator<C extends BaseConfig> {
 
         const generatedValues = new Array(count)
           .fill(null)
-          .map(() => generator(...params));
+          .map(() => generator(...params, this.state));
 
         return {
           ...acc,

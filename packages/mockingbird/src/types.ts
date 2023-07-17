@@ -33,7 +33,7 @@ type ObjectAtPath<
  */
 export type FakerFunctions = Omit<
   typeof extendedFaker,
-  "helpers" | "locales" | "fake" | "unique" | "mersenne" | "definitions"
+  "helpers" | "locales" | "definitions"
 >;
 
 /**

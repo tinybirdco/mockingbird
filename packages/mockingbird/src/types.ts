@@ -41,7 +41,9 @@ export type FakerFunctions = Omit<
  * () => number => []
  */
 export type FakerFunctionParams<T> = T extends (...args: infer P) => any
-  ? P
+  ? P extends [...args: infer P, options: { state: Record<string, unknown> }]
+    ? P
+    : P
   : never;
 
 /**

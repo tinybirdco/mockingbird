@@ -29,7 +29,7 @@ export default abstract class BaseGenerator<C extends BaseConfig> {
 
         const generatedValues = new Array(count)
           .fill(null)
-          .map(() => generator(...params, this.state));
+          .map(() => generator(...params, { state: this.state }));
 
         return {
           ...acc,

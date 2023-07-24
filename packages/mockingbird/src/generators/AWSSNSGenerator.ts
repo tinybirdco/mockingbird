@@ -1,8 +1,8 @@
-import { SNSClient, PublishCommand } from "@aws-sdk/client-sns";
+import { PublishCommand, SNSClient } from "@aws-sdk/client-sns";
 import { z } from "zod";
 
-import { baseConfigSchema, Row } from "../types";
-import BaseGenerator from "./BaseGenerator";
+import { Row } from "../types";
+import BaseGenerator, { baseConfigSchema } from "./BaseGenerator";
 
 const awsSNSConfigSchema = baseConfigSchema.merge(
   z.object({
@@ -18,14 +18,10 @@ const awsSNSConfigSchema = baseConfigSchema.merge(
 export type AWSSNSConfig = z.infer<typeof awsSNSConfigSchema>;
 
 export default class AWSSNSGenerator extends BaseGenerator<AWSSNSConfig> {
-  readonly config: AWSSNSConfig;
-
   readonly client: SNSClient;
 
   constructor(config: AWSSNSConfig) {
-    super();
-
-    this.config = awsSNSConfigSchema.parse(config);
+    super(awsSNSConfigSchema.parse(config));
 
     this.client = new SNSClient({
       ...this.config.snsOptions,

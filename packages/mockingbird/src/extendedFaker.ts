@@ -78,8 +78,11 @@ const mockingbirdModule = {
   timestampNow: () => new Date().toISOString(),
   pickType: (
     params: { type: keyof typeof faker.datatype; length: number },
-    { state }: { state: Record<string, unknown> }
+    opts: { state: Record<string, unknown> } | undefined
   ) => {
+    if (!opts) return;
+    const state = opts.state;
+
     const key = `sequentialArray.${JSON.stringify({
       type: params.type,
       length: params.length,
@@ -105,13 +108,29 @@ const mockingbirdModule = {
   pickWeighted: (params: { values: unknown[]; weights: number[] }) =>
     helpersModule.weightedRandom(params.values, params.weights),
   sequentialArray: (
-    params: { values: unknown[] },
-    { state }: { state: Record<string, unknown> }
+    params: { values: unknown[]; iterations?: number },
+    opts: { state: Record<string, unknown> } | undefined
   ) => {
-    const key = `sequentialArray.${JSON.stringify(params.values)}`;
-    const index = Number(state[key] || 0);
-    const value = params.values[index % params.values.length];
-    state[key] = index + 1;
+    if (!opts) return;
+    const state = opts.state;
+
+    const indexKey = `sequentialArray.${JSON.stringify(params.values)}.index`,
+      iterationKey = `sequentialArray.${JSON.stringify(
+        params.values
+      )}.iteration`;
+    let currentIndex = Number(state[indexKey] ?? 0),
+      currentIteration = Number(state[iterationKey] ?? 0);
+
+    if (currentIteration >= (params.iterations ?? 1)) {
+      currentIndex = (currentIndex + 1) % params.values.length;
+      currentIteration = 0;
+    }
+
+    const value = params.values[currentIndex];
+
+    state[indexKey] = currentIndex;
+    state[iterationKey] = currentIteration + 1;
+
     return value;
   },
 };

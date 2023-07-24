@@ -1,8 +1,8 @@
 import fetch from "cross-fetch";
 import { z } from "zod";
 
-import { Row, baseConfigSchema } from "../types";
-import BaseGenerator from "./BaseGenerator";
+import { Row } from "../types";
+import BaseGenerator, { baseConfigSchema } from "./BaseGenerator";
 
 const upstashKafkaConfigSchema = baseConfigSchema.merge(
   z.object({
@@ -16,14 +16,11 @@ const upstashKafkaConfigSchema = baseConfigSchema.merge(
 export type UpstashKafkaConfig = z.infer<typeof upstashKafkaConfigSchema>;
 
 export default class UpstashKafkaGenerator extends BaseGenerator<UpstashKafkaConfig> {
-  readonly config: UpstashKafkaConfig;
-
   readonly auth: string;
 
   constructor(config: UpstashKafkaConfig) {
-    super();
+    super(upstashKafkaConfigSchema.parse(config));
 
-    this.config = upstashKafkaConfigSchema.parse(config);
     this.auth = Buffer.from(`${this.config.user}:${this.config.pass}`).toString(
       "base64"
     );

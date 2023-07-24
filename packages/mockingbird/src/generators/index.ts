@@ -3,6 +3,7 @@ export type MockingbirdGenerator = InstanceType<
 >;
 export { AWSSNSConfig, default as AWSSNSGenerator } from "./AWSSNSGenerator";
 export { AblyConfig, default as AblyGenerator } from "./AblyGenerator";
+export { BaseConfig, default as BaseGenerator } from "./BaseGenerator";
 export {
   ConfluentCloudKafkaConfig,
   default as ConfluentCloudKafkaGenerator,

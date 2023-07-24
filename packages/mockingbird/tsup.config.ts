@@ -55,6 +55,30 @@ export default defineConfig({
           type: "string",
           enum: [p.properties.type.const],
         },
+        // Removes state from params
+        params: p.properties.params
+          ? {
+              ...p.properties.params,
+              items:
+                Array.isArray(p.properties.params.items) &&
+                p.properties.params.items
+                  ?.at(-1)
+                  ?.anyOf?.at(-1)
+                  ?.required?.at(0) === "state"
+                  ? p.properties.params.items.slice(0, -1)
+                  : p.properties.params.items,
+              minItems:
+                Array.isArray(p.properties.params.items) &&
+                p.properties.params.items
+                  ? p.properties.params.minItems - 1
+                  : undefined,
+              maxItems:
+                Array.isArray(p.properties.params.items) &&
+                p.properties.params.items
+                  ? p.properties.params.maxItems - 1
+                  : undefined,
+            }
+          : undefined,
       },
     }));
 

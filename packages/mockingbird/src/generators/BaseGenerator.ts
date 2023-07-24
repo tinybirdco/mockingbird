@@ -1,14 +1,40 @@
 import _get from "lodash.get";
 
+import { z } from "zod";
 import extendedFaker from "../extendedFaker";
-import { BaseConfig, Row } from "../types";
+import { Row, Schema, validateSchema } from "../types";
 
-export default abstract class BaseGenerator<C extends BaseConfig> {
-  abstract readonly config: C;
+export const schemaSchema = z.record(
+  z.object({
+    type: z.string(),
+    params: z.any().optional(),
+    count: z.number().optional(),
+  })
+);
+
+export const baseConfigSchema = z.object({
+  schema: schemaSchema.refine((schemaSchema) =>
+    validateSchema(schemaSchema as Schema)
+  ),
+  eps: z.number().optional().default(1),
+  limit: z.number().optional().default(-1),
+  logs: z.boolean().default(false).optional(),
+});
+
+export type BaseConfig = z.infer<typeof baseConfigSchema>;
+
+export default class BaseGenerator<C extends BaseConfig> {
+  readonly config: C;
 
   private state: Record<string, unknown> = {};
 
-  abstract sendData(data: Row[]): Promise<void>;
+  constructor(config: C) {
+    this.config = config;
+  }
+
+  sendData(data: Row[]): Promise<void> {
+    return Promise.resolve();
+  }
 
   log(level: "info" | "error", message: string) {
     if (!this.config.logs) return;

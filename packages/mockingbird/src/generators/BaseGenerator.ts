@@ -29,7 +29,7 @@ export default class BaseGenerator<C extends BaseConfig> {
   private state: Record<string, unknown> = {};
 
   constructor(config: C) {
-    this.config = config;
+    this.config = baseConfigSchema.parse(config) as C;
   }
 
   sendData(data: Row[]): Promise<void> {
@@ -88,6 +88,7 @@ export default class BaseGenerator<C extends BaseConfig> {
 
     while (true) {
       rows.push(this.generateRow());
+
       if (rows.length >= batchSize) {
         const data = rows.splice(0, batchSize);
 

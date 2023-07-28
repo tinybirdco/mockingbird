@@ -32,8 +32,8 @@ export default class BaseGenerator<C extends BaseConfig> {
     this.config = baseConfigSchema.parse(config) as C;
   }
 
-  sendData(data: Row[]): Promise<void> {
-    return Promise.resolve();
+  async sendData(data: Row[]): Promise<void> {
+    return;
   }
 
   log(level: "info" | "error", message: string) {
@@ -81,7 +81,7 @@ export default class BaseGenerator<C extends BaseConfig> {
       delayPerBatch = minDelayPerBatch;
     }
 
-    const rows = [];
+    const rows: Row[] = [];
 
     let limit = this.config.limit,
       sentRows = 0;

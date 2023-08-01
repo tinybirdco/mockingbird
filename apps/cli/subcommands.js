@@ -2,6 +2,7 @@ import {
   AblyGenerator,
   AWSSNSGenerator,
   ConfluentCloudKafkaGenerator,
+  RabbitMQGenerator,
   TinybirdGenerator,
   UpstashKafkaGenerator,
 } from "@tinybirdco/mockingbird";
@@ -91,6 +92,38 @@ export const subcommands = [
       }),
       (argv) => ({
         key: argv.key ? JSON.parse(argv.key) : undefined,
+      }),
+    ],
+  },
+  {
+    name: "rabbitmq",
+    generator: RabbitMQGenerator,
+    options: {
+      endpoint: {
+        describe: "RabbitMQ endpoint",
+        demandOption: true,
+      },
+      queue: {
+        describe: "RabbitMQ queue",
+        demandOption: true,
+      },
+      assertQueueOptions: {
+        describe: "RabbitMQ assertQueue options JSON string",
+      },
+      publishOptions: {
+        describe: "RabbitMQ publish options JSON string",
+      },
+    },
+    middlewares: [
+      (argv) => ({
+        assertQueueOptions: argv.assertQueueOptions
+          ? JSON.parse(argv.assertQueueOptions)
+          : undefined,
+      }),
+      (argv) => ({
+        publishOptions: argv.publishOptions
+          ? JSON.parse(argv.publishOptions)
+          : undefined,
       }),
     ],
   },

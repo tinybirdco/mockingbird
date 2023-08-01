@@ -1,17 +1,21 @@
 export type MockingbirdGenerator = InstanceType<
   typeof import("./BaseGenerator").default
 >;
-export { default as AblyGenerator, AblyConfig } from "./AblyGenerator";
-export { default as AWSSNSGenerator, AWSSNSConfig } from "./AWSSNSGenerator";
+export { AWSSNSConfig, default as AWSSNSGenerator } from "./AWSSNSGenerator";
+export { AblyConfig, default as AblyGenerator } from "./AblyGenerator";
 export {
-  default as ConfluentCloudKafkaGenerator,
   ConfluentCloudKafkaConfig,
+  default as ConfluentCloudKafkaGenerator,
 } from "./ConfluentCloudKafkaGenerator";
 export {
-  default as TinybirdGenerator,
+  RabbitMQConfig,
+  default as RabbitMQGenerator,
+} from "./RabbitMQGenerator";
+export {
   TinybirdConfig,
+  default as TinybirdGenerator,
 } from "./TinybirdGenerator";
 export {
-  default as UpstashKafkaGenerator,
   UpstashKafkaConfig,
+  default as UpstashKafkaGenerator,
 } from "./UpstashKafkaGenerator";

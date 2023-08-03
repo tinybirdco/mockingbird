@@ -44,9 +44,9 @@ export default function ConnectStep({ state, dispatch }: ConnectStepProps) {
 
       if (generator === 'Tinybird') {
         dispatch({
-          type: 'setConfig',
+          type: 'SET_CONFIG',
           payload: {
-            generator,
+            generatorName: generator,
             config: {
               ...formData,
               endpoint,
@@ -57,14 +57,14 @@ export default function ConnectStep({ state, dispatch }: ConnectStepProps) {
         })
       } else {
         dispatch({
-          type: 'setConfig',
+          type: 'SET_CONFIG',
           payload: {
-            generator,
+            generatorName: generator,
             config: { ...formData, eps, limit },
           },
         })
       }
-      dispatch({ type: 'goToNextStep', payload: null })
+      dispatch({ type: 'INCREMENT_STEP', payload: null })
     } catch (e) {
       const formatted = (e as any).format()
       console.error(formatted)
@@ -95,7 +95,7 @@ export default function ConnectStep({ state, dispatch }: ConnectStepProps) {
 
       <div className="h-6" />
 
-      <fieldset disabled={state.isGenerating}>
+      <fieldset disabled={!!state.worker}>
         <div className="grid gap-4 lg:grid-cols-2">
           {destinations.map(destination => (
             <DestinationButton

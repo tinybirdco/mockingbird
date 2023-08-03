@@ -22,14 +22,14 @@ export default function Home() {
   useEffect(() => {
     if (!router.isReady) return
 
-    dispatch({ type: 'setStateFromURLQuery', payload: router.query })
+    dispatch({ type: 'SET_FROM_QUERY', payload: router.query })
   }, [router.isReady, router.query])
 
   const stepToComponent = [
     <Landing
       key="landing"
       state={state}
-      goToNextStep={() => dispatch({ type: 'goToNextStep', payload: null })}
+      goToNextStep={() => dispatch({ type: 'INCREMENT_STEP', payload: null })}
     />,
     <ConnectStep key="connect" state={state} dispatch={dispatch} />,
     <BuildStep key="build" state={state} dispatch={dispatch} />,

@@ -1,7 +1,7 @@
 {
   "name": "@tinybirdco/mockingbird-cli",
   "description": "CLI for Mockingibrd",
-  "version": "1.1.2",
+  "version": "1.1.4",
   "main": "index.js",
   "bin": "index.js",
   "scripts": {

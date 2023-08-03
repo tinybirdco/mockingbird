@@ -125,6 +125,7 @@ export function reducer(state: State, action: Action): State {
         config,
         template,
         content,
+        step: generatorName && config ? 2 : 0,
       }
     }
     case 'SET_CONFIG': {

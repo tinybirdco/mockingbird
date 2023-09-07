@@ -2,20 +2,12 @@ import { faker } from "@faker-js/faker";
 
 const helpersModule = {
   weightedRandom(items: unknown[], weights: number[]) {
-    let i;
-    let localWeights = [...weights];
-
-    for (i = 0; i < localWeights.length; i++) {
-      localWeights[i] += localWeights[i - 1] || 0;
-    }
-
-    let random = Math.random() * localWeights[localWeights.length - 1];
-
-    for (i = 0; i < localWeights.length; i++) {
-      if (localWeights[i] > random) break;
-    }
-
-    return items[i];
+    return faker.helpers.weightedArrayElement(
+      new Array(items.length).fill(null).map((_, i) => ({
+        weight: weights[i],
+        value: items[i],
+      }))
+    );
   },
   normalDistribution(min: number = 0, max: number = 1, skew: number = 1) {
     const boxMullerRandom = (min: number, max: number, skew: number) => {

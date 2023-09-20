@@ -1,8 +1,8 @@
 import fetch from "cross-fetch";
 import { z } from "zod";
 
-import { baseConfigSchema, Row } from "../types";
-import BaseGenerator from "./BaseGenerator";
+import { Row } from "../types";
+import BaseGenerator, { baseConfigSchema } from "./BaseGenerator";
 
 const tinybirdConfigSchema = baseConfigSchema.merge(
   z.object({
@@ -15,8 +15,6 @@ const tinybirdConfigSchema = baseConfigSchema.merge(
 export type TinybirdConfig = z.infer<typeof tinybirdConfigSchema>;
 
 export default class TinybirdGenerator extends BaseGenerator<TinybirdConfig> {
-  readonly config: TinybirdConfig;
-
   readonly endpoints = {
     eu_gcp: "https://api.tinybird.co",
     us_gcp: "https://api.us-east.tinybird.co",
@@ -25,9 +23,7 @@ export default class TinybirdGenerator extends BaseGenerator<TinybirdConfig> {
   readonly events_path = "/v0/events" as const;
 
   constructor(config: TinybirdConfig) {
-    super();
-
-    this.config = tinybirdConfigSchema.parse(config);
+    super(tinybirdConfigSchema.parse(config));
   }
 
   async sendData(rows: Row[]): Promise<void> {

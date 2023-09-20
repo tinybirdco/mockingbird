@@ -48,11 +48,11 @@ export default function OverviewStep({ state, dispatch }: OverviewStepProps) {
 
   const onStartGenerationClick = () => {
     dispatch({
-      type: 'startGenerating',
+      type: 'START_GENERATION',
       payload: {
         onMessage: ({ data }) =>
           dispatch({
-            type: 'setSentMessages',
+            type: 'SET_SENT',
             payload: data,
           }),
         onError: console.error,
@@ -61,7 +61,7 @@ export default function OverviewStep({ state, dispatch }: OverviewStepProps) {
   }
 
   const onStopGenerationClick = () => {
-    dispatch({ type: 'stopGenerating', payload: null })
+    dispatch({ type: 'STOP_GENERATION', payload: null })
   }
 
   return (
@@ -99,10 +99,10 @@ export default function OverviewStep({ state, dispatch }: OverviewStepProps) {
           type="button"
           className="btn-base btn-primary"
           onClick={
-            state.isGenerating ? onStopGenerationClick : onStartGenerationClick
+            !!state.worker ? onStopGenerationClick : onStartGenerationClick
           }
         >
-          {state.isGenerating ? 'Stop' : 'Start'} Generating!
+          {!!state.worker ? 'Stop' : 'Start'} Generating!
         </button>
       </div>
     </div>

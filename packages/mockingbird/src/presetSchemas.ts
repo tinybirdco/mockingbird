@@ -3,7 +3,7 @@ import { PresetSchemaName, Schema } from "./types";
 const presetSchemas: Record<PresetSchemaName, Schema> = {
   "Simple Example": {
     some_int: {
-      type: "datatype.number",
+      type: "number.int",
     },
     some_values: {
       type: "mockingbird.pick",
@@ -28,7 +28,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       type: "mockingbird.timestampNow",
     },
     store_id: {
-      type: "datatype.number",
+      type: "number.int",
       params: [
         {
           min: 1,
@@ -46,7 +46,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       ],
     },
     product_id: {
-      type: "datatype.number",
+      type: "number.int",
       params: [
         {
           min: 3278123,
@@ -84,7 +84,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
   },
   "Stock Prices": {
     amount: {
-      type: "datatype.float",
+      type: "number.float",
     },
     date: {
       type: "mockingbird.datetimeNow",
@@ -139,16 +139,16 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       type: "mockingbird.timestampNow",
     },
     transaction_id: {
-      type: "datatype.uuid",
+      type: "string.uuid",
     },
     name: {
-      type: "name.fullName",
+      type: "person.fullName",
     },
     email: {
       type: "internet.email",
     },
     age: {
-      type: "datatype.number",
+      type: "number.int",
       params: [
         {
           min: 18,
@@ -157,7 +157,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       ],
     },
     passport_number: {
-      type: "datatype.number",
+      type: "number.int",
       params: [
         {
           min: 3456789,
@@ -166,10 +166,10 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       ],
     },
     flight_from: {
-      type: "address.cityName",
+      type: "location.cityName",
     },
     flight_to: {
-      type: "address.cityName",
+      type: "location.cityName",
     },
     extra_bags: {
       type: "mockingbird.pickWeighted",
@@ -215,10 +215,10 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       type: "mockingbird.timestampNow",
     },
     userId: {
-      type: "datatype.uuid",
+      type: "string.uuid",
     },
     contentId: {
-      type: "datatype.number",
+      type: "number.int",
       params: [
         {
           min: 12345,
@@ -245,7 +245,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       ],
     },
     institutionID: {
-      type: "datatype.number",
+      type: "number.int",
       params: [
         {
           min: 123,
@@ -259,7 +259,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       type: "mockingbird.timestampNow",
     },
     session_id: {
-      type: "datatype.uuid",
+      type: "string.uuid",
     },
     action: {
       type: "mockingbird.pick",
@@ -344,7 +344,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       ],
     },
     city: {
-      type: "address.cityName",
+      type: "location.cityName",
     },
     connection: {
       type: "mockingbird.pick",
@@ -371,7 +371,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       ],
     },
     country: {
-      type: "address.countryCode",
+      type: "location.countryCode",
       params: ["alpha-2"],
     },
     cpuarchitecture: {
@@ -566,7 +566,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       ],
     },
     latitude: {
-      type: "address.latitude",
+      type: "location.latitude",
     },
     log_level: {
       type: "mockingbird.pickWeighted",
@@ -582,7 +582,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       params: [10],
     },
     longitude: {
-      type: "address.longitude",
+      type: "location.longitude",
     },
     method: {
       type: "internet.httpMethod",
@@ -613,7 +613,7 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
       type: "mockingbird.searchEngineName",
     },
     region: {
-      type: "address.countryCode",
+      type: "location.countryCode",
       params: ["alpha-3"],
     },
     url: {

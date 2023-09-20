@@ -1,6 +1,7 @@
 import {
   AblyGenerator,
   AWSSNSGenerator,
+  BaseGenerator,
   ConfluentCloudKafkaGenerator,
   RabbitMQGenerator,
   TinybirdGenerator,
@@ -54,6 +55,11 @@ export const subcommands = [
         snsOptions: argv.snsOptions ? JSON.parse(argv.snsOptions) : undefined,
       }),
     ],
+  },
+  {
+    name: "base",
+    generator: BaseGenerator,
+    options: {},
   },
   {
     name: "confluent-cloud-kafka",

@@ -1,5 +1,5 @@
-import fs from "fs";
 import { presetSchemas } from "@tinybirdco/mockingbird";
+import fs from "fs";
 
 export const presetSchemaNames = Object.keys(presetSchemas);
 
@@ -35,7 +35,8 @@ export const createCommand = ({
   name,
   true,
   (yargs) => yargs.options({ ...commonOptions, ...options }),
-  (config) => new generator(config).generate(),
+  (config) =>
+    new generator(config).generate(name === "base" ? console.log : undefined),
   [parseSchemaMiddleware, ...middlewares],
 ];
 

@@ -1,12 +1,40 @@
 import _get from "lodash.get";
 
+import { z } from "zod";
 import extendedFaker from "../extendedFaker";
-import { BaseConfig, Row } from "../types";
+import { Row, Schema, validateSchema } from "../types";
 
-export default abstract class BaseGenerator<C extends BaseConfig> {
-  abstract readonly config: C;
+export const schemaSchema = z.record(
+  z.object({
+    type: z.string(),
+    params: z.any().optional(),
+    count: z.number().optional(),
+  })
+);
 
-  abstract sendData(data: Row[]): Promise<void>;
+export const baseConfigSchema = z.object({
+  schema: schemaSchema.refine((schemaSchema) =>
+    validateSchema(schemaSchema as Schema)
+  ),
+  eps: z.number().optional().default(1),
+  limit: z.number().optional().default(-1),
+  logs: z.boolean().default(false).optional(),
+});
+
+export type BaseConfig = z.infer<typeof baseConfigSchema>;
+
+export default class BaseGenerator<C extends BaseConfig> {
+  readonly config: C;
+
+  private state: Record<string, unknown> = {};
+
+  constructor(config: C) {
+    this.config = baseConfigSchema.parse(config) as C;
+  }
+
+  async sendData(data: Row[]): Promise<void> {
+    return;
+  }
 
   log(level: "info" | "error", message: string) {
     if (!this.config.logs) return;
@@ -27,7 +55,7 @@ export default abstract class BaseGenerator<C extends BaseConfig> {
 
         const generatedValues = new Array(count)
           .fill(null)
-          .map(() => generator(...params));
+          .map(() => generator(...params, { state: this.state }));
 
         return {
           ...acc,
@@ -53,13 +81,14 @@ export default abstract class BaseGenerator<C extends BaseConfig> {
       delayPerBatch = minDelayPerBatch;
     }
 
-    const rows = [];
+    const rows: Row[] = [];
 
     let limit = this.config.limit,
       sentRows = 0;
 
     while (true) {
       rows.push(this.generateRow());
+
       if (rows.length >= batchSize) {
         const data = rows.splice(0, batchSize);
 

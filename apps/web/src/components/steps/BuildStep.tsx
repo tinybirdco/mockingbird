@@ -1,4 +1,3 @@
-import _isEqual from 'lodash.isequal'
 import dynamic from 'next/dynamic'
 import { ChangeEvent, Dispatch } from 'react'
 
@@ -19,26 +18,24 @@ type BuildStepProps = {
 }
 
 export default function BuildStep({ state, dispatch }: BuildStepProps) {
-  const isSaved = Object.keys(state.schema).length > 0
-
   const onTemplateChange = (e: ChangeEvent<HTMLSelectElement>) => {
     dispatch({
-      type: 'setTemplate',
+      type: 'SET_TEMPLATE',
       payload: e.target.value as PresetSchemaNameWithCustom,
     })
   }
 
   const onPreviewClick = () => {
-    dispatch({ type: 'setSchema', payload: null })
+    dispatch({ type: 'SET_SCHEMA', payload: null })
   }
 
   const onStartGenerationClick = () => {
     dispatch({
-      type: 'setSchemaAndStartGenerating',
+      type: 'SAVE_AND_GENERATE',
       payload: {
         onMessage: ({ data }) =>
           dispatch({
-            type: 'setSentMessages',
+            type: 'SET_SENT',
             payload: data,
           }),
         onError: console.error,
@@ -59,7 +56,7 @@ export default function BuildStep({ state, dispatch }: BuildStepProps) {
           className="input-base"
           value={state.template}
           onChange={onTemplateChange}
-          disabled={state.isGenerating}
+          disabled={!!state.worker}
         >
           {TEMPLATE_OPTIONS.map(presetSchemaName => (
             <option key={presetSchemaName} value={presetSchemaName}>
@@ -72,9 +69,11 @@ export default function BuildStep({ state, dispatch }: BuildStepProps) {
       <div className="h-4" />
 
       <JSONEditor
-        readOnly={state.isGenerating}
+        readOnly={!!state.worker}
         content={state.content}
-        onChange={content => dispatch({ type: 'setContent', payload: content })}
+        onChange={content =>
+          dispatch({ type: 'SET_CONTENT', payload: content })
+        }
         statusBar={false}
         onRenderMenu={(items, _context) =>
           items.filter(item => ('text' in item ? item.text !== 'table' : true))

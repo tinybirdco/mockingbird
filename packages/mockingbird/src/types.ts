@@ -1,5 +1,4 @@
 import _get from "lodash.get";
-import { z } from "zod";
 
 import extendedFaker from "./extendedFaker";
 
@@ -33,7 +32,7 @@ type ObjectAtPath<
  */
 export type FakerFunctions = Omit<
   typeof extendedFaker,
-  "helpers" | "locales" | "fake" | "unique" | "mersenne" | "definitions"
+  "helpers" | "locales" | "definitions"
 >;
 
 /**
@@ -41,7 +40,9 @@ export type FakerFunctions = Omit<
  * () => number => []
  */
 export type FakerFunctionParams<T> = T extends (...args: infer P) => any
-  ? P
+  ? P extends [...args: infer P, options: { state: Record<string, unknown> }]
+    ? P
+    : P
   : never;
 
 /**
@@ -133,24 +134,5 @@ export function validateSchema(schema: Schema) {
 
   return { valid: !errors.length, errors };
 }
-
-export const schemaSchema = z.record(
-  z.object({
-    type: z.string(),
-    params: z.any().optional(),
-    count: z.number().optional(),
-  })
-);
-
-export const baseConfigSchema = z.object({
-  schema: schemaSchema.refine((schemaSchema) =>
-    validateSchema(schemaSchema as Schema)
-  ),
-  eps: z.number().optional().default(1),
-  limit: z.number().optional().default(-1),
-  logs: z.boolean().default(false).optional(),
-});
-
-export type BaseConfig = z.infer<typeof baseConfigSchema>;
 
 export type Row = Record<string, unknown | unknown[]>;

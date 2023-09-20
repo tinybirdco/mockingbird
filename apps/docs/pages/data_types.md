@@ -77,6 +77,20 @@ Similar to [values](#values), but with a weighted random. An additional paramete
 }
 ```
 
+### pickType
+
+Generates an a array of a given type and then pops value on each generation.
+
+**Parameters**
+
+- type: a string, the type to generate, any of the faker's Datatype module types, e.g `array`, `bigInt`, `boolean`, `datetime`, `float`, `hexadecimal`, `json`, `number`, `string`, `uuid`.
+
+- length: a number, the length of the array to generate
+
+**Returns**
+
+`123`
+
 ### datetimeNow 
 
 Take the current times and formats it into an ISO Date Time string (using `toISOString()`) with precision up to *seconds*.
@@ -243,3 +257,16 @@ None
     "type": "mockingbird.searchEngineName"
 }
 ```
+
+### sequentialArray
+
+Picks a value from an array sequentially, looping back to the start of the array when the end is reached.
+
+**Parameters**
+
+- values: an array of values
+- iterations: number of iterations to return current value for
+
+**Returns**
+
+`"state1"`

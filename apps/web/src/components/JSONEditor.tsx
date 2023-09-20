@@ -1,13 +1,12 @@
 import Ajv from 'ajv'
-import { parsePath } from 'immutable-json-patch'
+import { JSONValue, parsePath } from 'immutable-json-patch'
 import _uniqBy from 'lodash.uniqby'
 import { useEffect, useRef } from 'react'
 import {
-  JSONEditor as VanillaJSONEditor,
-  JSONEditorPropsOptional as VanillaJSONEditorPropsOptional,
-  JSONValue,
   ValidationError,
   ValidationSeverity,
+  JSONEditor as VanillaJSONEditor,
+  JSONEditorPropsOptional as VanillaJSONEditorPropsOptional,
 } from 'vanilla-jsoneditor'
 
 import mockingbirdSchema from '@tinybirdco/mockingbird/dist/Schema.json'

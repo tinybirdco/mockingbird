@@ -4,9 +4,9 @@ import { ParsedUrlQuery } from 'querystring'
 import { Content, JSONContent, TextContent } from 'vanilla-jsoneditor'
 
 import {
+  BaseGenerator,
   presetSchemas,
   Schema,
-  TinybirdGenerator,
   validateSchema,
 } from '@tinybirdco/mockingbird'
 
@@ -24,7 +24,7 @@ import { createWorker, startWorker, stopWorker } from './workerBuilder'
 
 export type State = {
   step: number
-  generator: MockingbirdGeneratorName | null
+  generatorName: MockingbirdGeneratorName | null
   config: MockingbirdConfig | null
   schema: Schema
   template: PresetSchemaNameWithCustom
@@ -32,7 +32,6 @@ export type State = {
   sampleCode: string
   errors: string[]
   worker: Worker | null
-  isGenerating: boolean
   sentMessages: {
     total: number
     session: number
@@ -41,58 +40,58 @@ export type State = {
 
 export type Action =
   | {
-      type: 'goToNextStep'
+      type: 'INCREMENT_STEP'
       payload: null
     }
   | {
-      type: 'setStateFromURLQuery'
+      type: 'SET_FROM_QUERY'
       payload: ParsedUrlQuery
     }
   | {
-      type: 'setConfig'
+      type: 'SET_CONFIG'
       payload: {
-        generator: MockingbirdGeneratorName
+        generatorName: MockingbirdGeneratorName
         config: Record<string, any>
       }
     }
   | {
-      type: 'setTemplate'
+      type: 'SET_TEMPLATE'
       payload: PresetSchemaNameWithCustom
     }
   | {
-      type: 'setContent'
+      type: 'SET_CONTENT'
       payload: Content
     }
   | {
-      type: 'setSchema'
+      type: 'SET_SCHEMA'
       payload: null
     }
   | {
-      type: 'setSchemaAndStartGenerating'
+      type: 'SAVE_AND_GENERATE'
       payload: {
         onMessage: (message: MessageEvent<number>) => void
         onError: (error: ErrorEvent) => void
       }
     }
   | {
-      type: 'startGenerating'
+      type: 'START_GENERATION'
       payload: {
         onMessage: (message: MessageEvent<number>) => void
         onError: (error: ErrorEvent) => void
       }
     }
   | {
-      type: 'stopGenerating'
+      type: 'STOP_GENERATION'
       payload: null
     }
   | {
-      type: 'setSentMessages'
+      type: 'SET_SENT'
       payload: number
     }
 
 export const initialState: State = {
   step: 0,
-  generator: null,
+  generatorName: null,
   config: null,
   schema: {},
   template: 'Custom',
@@ -100,7 +99,6 @@ export const initialState: State = {
   sampleCode: 'Click Preview to see what your data looks like',
   errors: [],
   worker: null,
-  isGenerating: false,
   sentMessages: {
     total: 0,
     session: 0,
@@ -109,7 +107,7 @@ export const initialState: State = {
 
 export function reducer(state: State, action: Action): State {
   switch (action.type) {
-    case 'goToNextStep': {
+    case 'INCREMENT_STEP': {
       if (state.step + 1 > steps.length) return state
 
       return {
@@ -117,20 +115,21 @@ export function reducer(state: State, action: Action): State {
         step: state.step + 1,
       }
     }
-    case 'setStateFromURLQuery': {
+    case 'SET_FROM_QUERY': {
       const { template, content } = handleContentFromURL(router.query)
-      const { generator, config } = handleConfigFromURL(router.query)
+      const { generatorName, config } = handleConfigFromURL(router.query)
 
       return {
         ...state,
-        generator,
+        generatorName,
         config,
         template,
         content,
+        step: generatorName && config ? 2 : 0,
       }
     }
-    case 'setConfig': {
-      new nameToGenerator[action.payload.generator]({
+    case 'SET_CONFIG': {
+      new nameToGenerator[action.payload.generatorName]({
         ...action.payload.config,
         schema: {} as Schema,
       } as any)
@@ -148,17 +147,17 @@ export function reducer(state: State, action: Action): State {
             value.toString(),
           ])
         ),
-        generator: action.payload.generator,
+        generatorName: action.payload.generatorName,
       })
       router.push(`?${urlParams}`, undefined, { scroll: false })
       return {
         ...state,
-        generator: action.payload.generator,
+        generatorName: action.payload.generatorName,
         config: action.payload.config as MockingbirdConfig,
       }
     }
 
-    case 'setTemplate': {
+    case 'SET_TEMPLATE': {
       return {
         ...state,
         schema: {},
@@ -169,7 +168,7 @@ export function reducer(state: State, action: Action): State {
             : state.content,
       }
     }
-    case 'setContent': {
+    case 'SET_CONTENT': {
       let template: PresetSchemaNameWithCustom = state.template
       if (state.template !== 'Custom') {
         try {
@@ -192,7 +191,7 @@ export function reducer(state: State, action: Action): State {
         content: action.payload,
       }
     }
-    case 'setSchema': {
+    case 'SET_SCHEMA': {
       const { schema, template, sampleCode, errors } = parseSchema(
         state.template,
         state.content
@@ -205,8 +204,8 @@ export function reducer(state: State, action: Action): State {
         errors,
       }
     }
-    case 'setSchemaAndStartGenerating': {
-      if (state.worker || !state.generator || !state.config) return state
+    case 'SAVE_AND_GENERATE': {
+      if (state.worker || !state.generatorName || !state.config) return state
 
       const { schema, template, sampleCode, errors } = parseSchema(
         state.template,
@@ -216,7 +215,7 @@ export function reducer(state: State, action: Action): State {
       if (!Object.keys(schema).length) return state
 
       const createdWorker = createWorker(
-        state.generator,
+        state.generatorName,
         {
           ...(state.config as MockingbirdConfig),
           schema,
@@ -236,22 +235,21 @@ export function reducer(state: State, action: Action): State {
         errors,
         step: state.step + 1,
         worker: createdWorker,
-        isGenerating: true,
         sentMessages: {
           total: 0,
           session: 0,
         },
       }
     }
-    case 'startGenerating': {
+    case 'START_GENERATION': {
       if (state.worker) return state
 
       const isSaved = Object.keys(state.schema).length > 0
 
-      if (!isSaved || !state.generator || !state.config) return state
+      if (!isSaved || !state.generatorName || !state.config) return state
 
       const createdWorker = createWorker(
-        state.generator,
+        state.generatorName,
         {
           ...(state.config as MockingbirdConfig),
           schema: state.schema,
@@ -267,14 +265,13 @@ export function reducer(state: State, action: Action): State {
       return {
         ...state,
         worker: createdWorker,
-        isGenerating: true,
         sentMessages: {
           total: state.sentMessages.total,
           session: 0,
         },
       }
     }
-    case 'stopGenerating': {
+    case 'STOP_GENERATION': {
       if (!state.worker) return state
 
       stopWorker(state.worker)
@@ -282,10 +279,9 @@ export function reducer(state: State, action: Action): State {
       return {
         ...state,
         worker: null,
-        isGenerating: false,
       }
     }
-    case 'setSentMessages': {
+    case 'SET_SENT': {
       const isDone =
         state.config &&
         state.config.limit !== -1 &&
@@ -300,7 +296,6 @@ export function reducer(state: State, action: Action): State {
           session: state.sentMessages.session + action.payload,
         },
         worker: isDone ? null : state.worker,
-        isGenerating: !isDone,
       }
     }
     default:
@@ -358,16 +353,16 @@ const handleContentFromURL = (
 }
 
 const handleConfigFromURL = (routerQuery: ParsedUrlQuery) => {
-  const generator = router.query.generator as
+  const generatorName = router.query.generatorName as
     | MockingbirdGeneratorName
     | undefined
 
-  if (!generator) return { generator: null, config: null }
+  if (!generatorName) return { generatorName: null, config: null }
 
   const eps = parseInt((routerQuery.eps as string | undefined) ?? '1')
   const limit = parseInt((routerQuery.limit as string | undefined) ?? '-1')
 
-  const config = nameToConfigItems[generator]
+  const config = nameToConfigItems[generatorName]
     .map(({ id }) => id)
     .reduce(
       (acc, key) => ({
@@ -377,7 +372,7 @@ const handleConfigFromURL = (routerQuery: ParsedUrlQuery) => {
       { eps, limit, schema: {} }
     ) as MockingbirdConfig
 
-  return { generator, config }
+  return { generatorName, config }
 }
 
 const parseSchema = (
@@ -399,11 +394,8 @@ const parseSchema = (
 
     if (schema && validation.valid) {
       sampleCode = JSON.stringify(
-        new TinybirdGenerator({
+        new BaseGenerator({
           schema,
-          datasource: '',
-          endpoint: '',
-          token: '',
           eps: 1,
           limit: -1,
         }).generateRow(),

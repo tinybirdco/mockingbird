@@ -23,17 +23,15 @@ export const baseConfigSchema = z.object({
 
 export type BaseConfig = z.infer<typeof baseConfigSchema>;
 
-export default class BaseGenerator<C extends BaseConfig> {
-  readonly config: C;
+export default abstract class BaseGenerator<C extends BaseConfig> {
+  config: C;
 
   private state: Record<string, unknown> = {};
 
-  constructor(config: C) {
-    this.config = baseConfigSchema.parse(config) as C;
-  }
+  abstract sendData(data: Row[]): Promise<void>;
 
-  async sendData(data: Row[]): Promise<void> {
-    return;
+  constructor(config: C) {
+    this.config = config;
   }
 
   log(level: "info" | "error", message: string) {

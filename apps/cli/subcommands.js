@@ -1,8 +1,8 @@
 import {
   AblyGenerator,
   AWSSNSGenerator,
-  BaseGenerator,
   ConfluentCloudKafkaGenerator,
+  LogGenerator,
   RabbitMQGenerator,
   TinybirdGenerator,
   UpstashKafkaGenerator,
@@ -57,8 +57,8 @@ export const subcommands = [
     ],
   },
   {
-    name: "base",
-    generator: BaseGenerator,
+    name: "log",
+    generator: LogGenerator,
     options: {},
   },
   {

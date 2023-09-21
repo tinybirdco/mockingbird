@@ -4,7 +4,7 @@ import { ParsedUrlQuery } from 'querystring'
 import { Content, JSONContent, TextContent } from 'vanilla-jsoneditor'
 
 import {
-  BaseGenerator,
+  LogGenerator,
   presetSchemas,
   Schema,
   validateSchema,
@@ -139,13 +139,13 @@ export function reducer(state: State, action: Action): State {
           Object.entries(router.query).map(([key, value]) => [
             key,
             value ? value.toString() : '',
-          ])
+          ]),
         ),
         ...Object.fromEntries(
           Object.entries(action.payload.config).map(([key, value]) => [
             key,
             value.toString(),
-          ])
+          ]),
         ),
         generatorName: action.payload.generatorName,
       })
@@ -194,7 +194,7 @@ export function reducer(state: State, action: Action): State {
     case 'SET_SCHEMA': {
       const { schema, template, sampleCode, errors } = parseSchema(
         state.template,
-        state.content
+        state.content,
       )
       return {
         ...state,
@@ -209,7 +209,7 @@ export function reducer(state: State, action: Action): State {
 
       const { schema, template, sampleCode, errors } = parseSchema(
         state.template,
-        state.content
+        state.content,
       )
 
       if (!Object.keys(schema).length) return state
@@ -221,7 +221,7 @@ export function reducer(state: State, action: Action): State {
           schema,
         },
         action.payload.onMessage,
-        action.payload.onError
+        action.payload.onError,
       )
 
       if (!createdWorker) return state
@@ -255,7 +255,7 @@ export function reducer(state: State, action: Action): State {
           schema: state.schema,
         },
         action.payload.onMessage,
-        action.payload.onError
+        action.payload.onError,
       )
 
       if (!createdWorker) return state
@@ -304,7 +304,7 @@ export function reducer(state: State, action: Action): State {
 }
 
 const handleContentFromURL = (
-  routerQuery: ParsedUrlQuery
+  routerQuery: ParsedUrlQuery,
 ): {
   template: PresetSchemaNameWithCustom
   content: JSONContent
@@ -369,7 +369,7 @@ const handleConfigFromURL = (routerQuery: ParsedUrlQuery) => {
         ...acc,
         [key]: (router.query[key] as string | undefined) ?? '',
       }),
-      { eps, limit, schema: {} }
+      { eps, limit, schema: {} },
     ) as MockingbirdConfig
 
   return { generatorName, config }
@@ -377,7 +377,7 @@ const handleConfigFromURL = (routerQuery: ParsedUrlQuery) => {
 
 const parseSchema = (
   template: PresetSchemaNameWithCustom,
-  content: Content
+  content: Content,
 ) => {
   let errors: string[] = []
   let sampleCode = ''
@@ -394,13 +394,13 @@ const parseSchema = (
 
     if (schema && validation.valid) {
       sampleCode = JSON.stringify(
-        new BaseGenerator({
+        new LogGenerator({
           schema,
           eps: 1,
           limit: -1,
         }).generateRow(),
         null,
-        4
+        4,
       )
 
       if (

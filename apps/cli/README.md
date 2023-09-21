@@ -18,6 +18,7 @@ Use `mockingbird-cli <command> --help` to get a list of available options for a 
 @tinybirdco/mockingbird-cli  ably
 @tinybirdco/mockingbird-cli  aws-sns
 @tinybirdco/mockingbird-cli  confluent-cloud-kafka
+@tinybirdco/mockingbird-cli  rabbitmq
 @tinybirdco/mockingbird-cli  tinybird
 @tinybirdco/mockingbird-cli  upstash-kafka
 ```
@@ -63,6 +64,15 @@ Use `mockingbird-cli <command> --help` to get a list of available options for a 
 --apiSecret     Confluent Cloud Kafka API Secret                    [required]
 --headers       Confluent Cloud Kafka headers JSON string
 --key           Confluent Cloud Kafka key JSON string
+```
+
+### RabbitMQ
+
+```bash
+--endpoint            RabbitMQ endpoint                              [required]
+--queue               RabbitMQ queue                                 [required]
+--assertQueueOptions  RabbitMQ assertQueue options JSON string
+--publishOptions      RabbitMQ publish options JSON string
 ```
 
 ### Tinybird

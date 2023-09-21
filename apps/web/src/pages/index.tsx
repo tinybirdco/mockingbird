@@ -22,8 +22,9 @@ export default function Home() {
   useEffect(() => {
     if (!router.isReady) return
 
-    dispatch({ type: 'SET_FROM_QUERY', payload: router.query })
-  }, [router.isReady, router.query])
+    if (state.step === 0)
+      dispatch({ type: 'SET_FROM_QUERY', payload: router.query })
+  }, [router.isReady, router.query, state.step])
 
   const stepToComponent = [
     <Landing
@@ -59,7 +60,7 @@ export default function Home() {
         <Layout.RightCol>
           <div className="flex flex-col gap-6">
             {stepToComponent.map(
-              (component, index) => index <= state.step && component
+              (component, index) => index <= state.step && component,
             )}
           </div>
 

@@ -8,6 +8,7 @@ export {
   ConfluentCloudKafkaConfig,
   default as ConfluentCloudKafkaGenerator,
 } from "./ConfluentCloudKafkaGenerator";
+export { default as LogGenerator } from "./LogGenerator";
 export {
   RabbitMQConfig,
   default as RabbitMQGenerator,

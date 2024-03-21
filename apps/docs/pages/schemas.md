@@ -84,3 +84,7 @@ The `Web Analytics Starter Kit` allows you to generate mock data for the [Tinybi
 ### Log Analytics Starter Kit
 
 The `Log Analytics Starter Kit` allows you to generate mock data for the [Tinybird Log Analytics Starter Kit](https://github.com/tinybirdco/log-analytics-starter-kit).
+
+### Flappybird
+
+The `Flappybird` schema is an example of a stream of game events.

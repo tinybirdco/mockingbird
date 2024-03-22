@@ -800,6 +800,16 @@ const presetSchemas: Record<PresetSchemaName, Schema> = {
           ]
         }
       ]
+    },
+    event: {
+      type: 'mockingbird.pick',
+      params: [
+        {
+          values: [
+            'Mockingbird'
+          ]
+        }
+      ]
     }
   }
 };

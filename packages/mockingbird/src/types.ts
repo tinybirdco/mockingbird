@@ -101,7 +101,8 @@ export const PRESET_SCHEMA_NAMES = [
   "Content Tracking",
   "Web Analytics Starter Kit",
   "Log Analytics Starter Kit",
-  "Flappybird"
+  "Flappybird",
+  "Sportsbetting"
 ] as const;
 export type PresetSchemaName = (typeof PRESET_SCHEMA_NAMES)[number];
 

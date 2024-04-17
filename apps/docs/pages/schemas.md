@@ -88,3 +88,7 @@ The `Log Analytics Starter Kit` allows you to generate mock data for the [Tinybi
 ### Flappybird
 
 The `Flappybird` schema is an example of a stream of game events.
+
+### Sportsbetting
+
+The `Sportsbetting` schema is an example of a stream of Sportsbetting location events.

@@ -30,7 +30,7 @@ Use `mockingbird-cli <command> --help` to get a list of available options for a 
 --template   Template to use for populating
   [choices: "Simple Example", "eCommerce Transactions", "Stock Prices", "Flight
     Bookings", "Content Tracking", "Web Analytics Starter Kit", "Log Analytics
-                                      Starter Kit"] [default: "Simple Example"]
+                                      Starter Kit", "Sportsbetting"] [default: "Simple Example"]
 --schema     Path to schema file
 --eps        Events per second                                    [default: 1]
 --limit      Max number of rows to send (-1 for unlimited)       [default: -1]

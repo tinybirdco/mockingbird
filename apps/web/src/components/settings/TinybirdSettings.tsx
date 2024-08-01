@@ -3,8 +3,8 @@ import { useState } from 'react'
 import { MockingbirdConfig } from '@/lib/constants'
 
 enum HostType {
-  GCP_EU_WEST3 = 'gcp_europe-west3',
-  GCP_US_EAST4 = 'gcp_us-east4',
+  GCP_EU_WEST3 = 'gcp_europe_west3',
+  GCP_US_EAST4 = 'gcp_us_east4',
   AWS_EU_CENTRAL_1 = 'aws_eu_central_1',
   AWS_US_EAST_1 = 'aws_us_east_1',
   AWS_US_WEST_2 = 'aws_us_west_2',

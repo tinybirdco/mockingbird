@@ -18,6 +18,9 @@ export default class TinybirdGenerator extends BaseGenerator<TinybirdConfig> {
   readonly endpoints = {
     eu_gcp: "https://api.tinybird.co",
     us_gcp: "https://api.us-east.tinybird.co",
+    us_east_1_aws: "https://api.us-east.aws.tinybird.co",
+    eu_central_1_aws: "https://api.eu-central-1.aws.tinybird.co"
+    us_west_2_aws: "https://api.us-west-2.aws.tinybird.co"
   } as const;
 
   readonly events_path = "/v0/events" as const;

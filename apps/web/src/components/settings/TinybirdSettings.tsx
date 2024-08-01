@@ -5,9 +5,9 @@ import { MockingbirdConfig } from '@/lib/constants'
 enum HostType {
   EU_GCP = 'eu_gcp',
   US_GCP = 'us_gcp',
-  EU_AWS_CENTRAL_1 = 'eu_aws_central_1',
-  US_AWS_EAST_1 = 'us_aws_east_1',
-  US_AWS_WEST_2 = 'us_aws_east_2',
+  EU_AWS_CENTRAL_1 = 'eu_central_1_aws',
+  US_AWS_EAST_1 = 'us_east_1_aws',
+  US_AWS_WEST_2 = 'us_west_2_aws',
   Custom = 'custom',
 }
 

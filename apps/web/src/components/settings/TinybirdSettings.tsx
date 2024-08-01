@@ -3,20 +3,20 @@ import { useState } from 'react'
 import { MockingbirdConfig } from '@/lib/constants'
 
 enum HostType {
-  EU_GCP = 'eu_gcp',
-  US_GCP = 'us_gcp',
-  EU_AWS_CENTRAL_1 = 'eu_central_1_aws',
-  US_AWS_EAST_1 = 'us_east_1_aws',
-  US_AWS_WEST_2 = 'us_west_2_aws',
+  GCP_EU_WEST3 = 'gcp_europe-west3',
+  GCP_US_EAST4 = 'gcp_us-east4',
+  AWS_EU_CENTRAL_1 = 'aws_eu_central_1',
+  AWS_US_EAST_1 = 'aws_us_east_1',
+  AWS_US_WEST_2 = 'aws_us_west_2',
   Custom = 'custom',
 }
 
 const ENDPOINT_OPTIONS = [
-  { label: 'EU (GCP)', value: HostType.EU_GCP },
-  { label: 'US (GCP)', value: HostType.US_GCP },
-  { label: 'EU (AWS)', value: HostType.EU_AWS_CENTRAL_1 },
-  { label: 'US EAST (AWS)', value: HostType.US_AWS_EAST_1},
-  { label: 'US WEST (AWS)', value: HostType.US_AWS_WEST_2},
+  { label: 'GCP europe-west3', value: HostType.GCP_EU_WEST3 },
+  { label: 'GCP us-east4', value: HostType.GCP_US_EAST4 },
+  { label: 'AWS eu-central-1', value: HostType.AWS_EU_CENTRAL_1 },
+  { label: 'AWS us-east-1', value: HostType.AWS_US_EAST_1},
+  { label: 'AWS us-west-2', value: HostType.AWS_US_WEST_2},
   { label: 'Custom', value: HostType.Custom },
 ] as const
 

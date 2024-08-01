@@ -5,12 +5,18 @@ import { MockingbirdConfig } from '@/lib/constants'
 enum HostType {
   EU_GCP = 'eu_gcp',
   US_GCP = 'us_gcp',
+  EU_AWS_CENTRAL_1 = 'eu_aws_central_1',
+  US_AWS_EAST_1 = 'us_aws_east_1',
+  US_AWS_WEST_2 = 'us_aws_east_2',
   Custom = 'custom',
 }
 
 const ENDPOINT_OPTIONS = [
   { label: 'EU (GCP)', value: HostType.EU_GCP },
   { label: 'US (GCP)', value: HostType.US_GCP },
+  { label: 'EU (AWS)', value: HostType.EU_AWS_CENTRAL_1 },
+  { label: 'US EAST (AWS)', value: HostType.US_AWS_EAST_1},
+  { label: 'US WEST (AWS)', value: HostType.US_AWS_WEST_2},
   { label: 'Custom', value: HostType.Custom },
 ] as const
 

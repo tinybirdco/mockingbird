@@ -16,11 +16,8 @@ export type TinybirdConfig = z.infer<typeof tinybirdConfigSchema>;
 
 export default class TinybirdGenerator extends BaseGenerator<TinybirdConfig> {
   readonly endpoints = {
-    gcp_europe_west3: "https://api.tinybird.co",
-    gcp_us_east4': "https://api.us-east.tinybird.co",
-    aws_us_east_1: "https://api.us-east.aws.tinybird.co",
-    aws_eu_central_1: "https://api.eu-central-1.aws.tinybird.co",
-    aws_us_west_2: "https://api.us-west-2.aws.tinybird.co"
+    eu_gcp: "https://api.tinybird.co",
+    us_gcp: "https://api.us-east.tinybird.co",
   } as const;
 
   readonly events_path = "/v0/events" as const;

@@ -3,14 +3,20 @@ import { useState } from 'react'
 import { MockingbirdConfig } from '@/lib/constants'
 
 enum HostType {
-  EU_GCP = 'eu_gcp',
-  US_GCP = 'us_gcp',
+  GCP_EU_WEST3 = 'gcp_europe_west3',
+  GCP_US_EAST4 = 'gcp_us_east4',
+  AWS_EU_CENTRAL_1 = 'aws_eu_central_1',
+  AWS_US_EAST_1 = 'aws_us_east_1',
+  AWS_US_WEST_2 = 'aws_us_west_2',
   Custom = 'custom',
 }
 
 const ENDPOINT_OPTIONS = [
-  { label: 'EU (GCP)', value: HostType.EU_GCP },
-  { label: 'US (GCP)', value: HostType.US_GCP },
+  { label: 'GCP europe-west3', value: HostType.GCP_EU_WEST3 },
+  { label: 'GCP us-east4', value: HostType.GCP_US_EAST4 },
+  { label: 'AWS eu-central-1', value: HostType.AWS_EU_CENTRAL_1 },
+  { label: 'AWS us-east-1', value: HostType.AWS_US_EAST_1},
+  { label: 'AWS us-west-2', value: HostType.AWS_US_WEST_2},
   { label: 'Custom', value: HostType.Custom },
 ] as const
 
@@ -24,7 +30,7 @@ export default function TinybirdSettings({ config }: TinybirdSettingsProps) {
   const datasource =
     config && 'datasource' in config ? config.datasource : undefined
   const defaultHost =
-    ENDPOINT_OPTIONS.find(ep => ep.value === endpoint)?.value ?? HostType.EU_GCP
+    ENDPOINT_OPTIONS.find(ep => ep.value === endpoint)?.value ?? HostType.GCP_EU_WEST3
 
   const [selectedHost, setSelectedHost] = useState<HostType>(defaultHost)
 
@@ -47,7 +53,7 @@ export default function TinybirdSettings({ config }: TinybirdSettingsProps) {
 
       <div className="h-6" />
 
-      <div className="grid lg:grid-cols-[140px_288px_auto] gap-6">
+      <div className="grid lg:grid-cols-[180px_248px_auto] gap-6">
         <div className="flex flex-col gap-1">
           <label htmlFor="host" className="text-sm text-tb-text1">
             Host

@@ -53,7 +53,7 @@ export default function TinybirdSettings({ config }: TinybirdSettingsProps) {
 
       <div className="h-6" />
 
-      <div className="grid lg:grid-cols-[140px_288px_auto] gap-6">
+      <div className="grid lg:grid-cols-[180px_248px_auto] gap-6">
         <div className="flex flex-col gap-1">
           <label htmlFor="host" className="text-sm text-tb-text1">
             Host

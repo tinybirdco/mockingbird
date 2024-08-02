@@ -30,7 +30,7 @@ export default function TinybirdSettings({ config }: TinybirdSettingsProps) {
   const datasource =
     config && 'datasource' in config ? config.datasource : undefined
   const defaultHost =
-    ENDPOINT_OPTIONS.find(ep => ep.value === endpoint)?.value ?? HostType.EU_GCP
+    ENDPOINT_OPTIONS.find(ep => ep.value === endpoint)?.value ?? HostType.GCP_EU_WEST3
 
   const [selectedHost, setSelectedHost] = useState<HostType>(defaultHost)
 

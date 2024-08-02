@@ -1,16 +1,13 @@
 {
+  "name": "mockingbird-monorepo",
   "private": true,
   "scripts": {
-    "build": "turbo run build",
-    "dev": "turbo run dev --parallel",
-    "lint": "turbo run lint",
-    "postinstall": "cd packages/mockingbird && npm link && cd ../../apps/cli && npm link @tinybirdco/mockingbird && cd ../web && npm link @tinybirdco/mockingbird"
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "lint": "turbo lint"
   },
   "devDependencies": {
     "turbo": "latest"
   },
-  "workspaces": [
-    "packages/*",
-    "apps/*"
-  ]
+  "packageManager": "pnpm@9.4.0"
 }

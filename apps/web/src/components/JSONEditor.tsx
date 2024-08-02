@@ -5,13 +5,14 @@ import { useEffect, useRef } from 'react'
 import {
   ValidationError,
   ValidationSeverity,
+  Validator,
   JSONEditor as VanillaJSONEditor,
   JSONEditorPropsOptional as VanillaJSONEditorPropsOptional,
 } from 'vanilla-jsoneditor'
 
 import mockingbirdSchema from '@tinybirdco/mockingbird/dist/Schema.json'
 
-const createAjvValidator = () => {
+const createAjvValidator = (): Validator => {
   const ajv = new Ajv({
     allErrors: true,
     verbose: true,
@@ -20,13 +21,13 @@ const createAjvValidator = () => {
 
   const validateAjv = ajv.compile(mockingbirdSchema)
 
-  return (json: JSONValue): ValidationError[] => {
+  return (json: unknown): ValidationError[] => {
     validateAjv(json)
     const ajvErrors = validateAjv.errors || []
 
     return _uniqBy(
       ajvErrors.map(ajvError => ({
-        path: parsePath(json, ajvError.instancePath),
+        path: parsePath(json as JSONValue, ajvError.instancePath),
         message: 'Invalid schema value',
         severity: ValidationSeverity.warning,
       })),

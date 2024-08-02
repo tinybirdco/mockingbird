@@ -1,7 +1,7 @@
 {
   "name": "@tinybirdco/mockingbird-cli",
   "description": "CLI for Mockingibrd",
-  "version": "1.1.4",
+  "version": "1.2.0",
   "main": "index.js",
   "bin": "index.js",
   "scripts": {
@@ -25,7 +25,7 @@
     "url": "https://github.com/tinybirdco/mockingbird/apps/cli"
   },
   "dependencies": {
-    "@tinybirdco/mockingbird": "^1.1.1",
-    "yargs": "^17.6.2"
+    "@tinybirdco/mockingbird": "^1.2.0",
+    "yargs": "^17.7.2"
   }
 }

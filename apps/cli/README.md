@@ -79,7 +79,7 @@ Use `mockingbird-cli <command> --help` to get a list of available options for a 
 
 ```bash
 --endpoint    API endpoint name
-                            [required] [choices: "eu_gcp", "us_gcp", "custom"]
+                            [required] [choices: "gcp_europe_west3", "gcp_us_east4", "aws_eu_central_1", "aws_us_east_1", "aws_us_west_2", "custom"]
 --datasource  Datasource name                                       [required]
 --token       API token                                             [required]
 ```

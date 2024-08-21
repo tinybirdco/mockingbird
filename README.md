@@ -24,7 +24,7 @@ If you need help with defining schemas, or configuring particular Destinations, 
 
 ### Passing params in the URL
 
-If you want to re-use configurations from a previous session, you can simply save the URL. All settings are saved as parameters in the URL, so you can re-use and share configs with your team. For example: [http://localhost:3000/?schema=z_sales&eps=1&host=eu_gcp&datasource=sales_dg&token=p.eyJ1IjogIjg4Nzk5NGUxLWZmNmMtNGUyMi1iZTg5LTNlYzBmNmRmMzlkZCIsICJpZCI6ICIwN2RlZThhMS0wNGMzLTQ4OTQtYmQxNi05ZTlkMmM3ZWRhMTgifQ.p_N4EETK7dbxOgHtugAUue3BUWwyGHT461Ha8P-d3Go](http://localhost:3000/?schema=z_sales&eps=1&host=eu_gcp&datasource=sales_dg&token=p.eyJ1IjogIjg4Nzk5NGUxLWZmNmMtNGUyMi1iZTg5LTNlYzBmNmRmMzlkZCIsICJpZCI6ICIwN2RlZThhMS0wNGMzLTQ4OTQtYmQxNi05ZTlkMmM3ZWRhMTgifQ.p_N4EETK7dbxOgHtugAUue3BUWwyGHT461Ha8P-d3Go)
+If you want to re-use configurations from a previous session, you can simply save the URL. All settings are saved as parameters in the URL, so you can re-use and share configs with your team. For example: [http://localhost:3000/?schema=z_sales&eps=1&host=gcp_europe_west3&datasource=sales_dg&token=p.eyJ1IjogIjg4Nzk5NGUxLWZmNmMtNGUyMi1iZTg5LTNlYzBmNmRmMzlkZCIsICJpZCI6ICIwN2RlZThhMS0wNGMzLTQ4OTQtYmQxNi05ZTlkMmM3ZWRhMTgifQ.p_N4EETK7dbxOgHtugAUue3BUWwyGHT461Ha8P-d3Go](http://localhost:3000/?schema=z_sales&eps=1&host=gcp_europe_west3&datasource=sales_dg&token=p.eyJ1IjogIjg4Nzk5NGUxLWZmNmMtNGUyMi1iZTg5LTNlYzBmNmRmMzlkZCIsICJpZCI6ICIwN2RlZThhMS0wNGMzLTQ4OTQtYmQxNi05ZTlkMmM3ZWRhMTgifQ.p_N4EETK7dbxOgHtugAUue3BUWwyGHT461Ha8P-d3Go)
 
 **Warning**: all settings are saved in the URL including senstive field such as tokens & passwords! This is helpful in many occasions for demos, POCs and tests where these credentials are short-lived and disposable - but take care if you are using credentials that must not be shared!
 
@@ -45,7 +45,7 @@ Here is an example of sending data to the Tinybird Events API:
   --schema schema.json \
   --datasource "my_data_source" \
   --token "e.Pdjdbfsbhksd...." \
-  --endpoint eu_gcp \
+  --endpoint gcp_europe_west3 \
   --eps 50 \
   --limit 200
 ```

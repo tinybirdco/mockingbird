@@ -71,7 +71,7 @@ Use `mockingbird-cli <command> --help` to get a list of available options for a 
 
 ```bash
 --endpoint    API endpoint name
-                            [required] [choices: "eu_gcp", "us_gcp", "custom"]
+                            [required] [choices: "gcp_europe_west3", "gcp_us_east4", "aws_eu_central_1", "aws_us_east_1", "aws_us_west_2", "custom"]
 --datasource  Datasource name                                       [required]
 --token       API token                                             [required]
 ```
@@ -90,5 +90,5 @@ Use `mockingbird-cli <command> --help` to get a list of available options for a 
 As an example, to send data to Tinybird, in the EU region, using the `Stock Prices` template, to a Data Source called `stocks`, at 100 Events Per Second:
 
 ```bash
-mockingbird-cli tinybird --datasource=stocks --token=e.pXXX --endpoint=eu_gcp --template "Stock Prices" --eps 100
+mockingbird-cli tinybird --datasource=stocks --token=e.pXXX --endpoint=gcp_europe_west3 --template "Stock Prices" --eps 100
 ```

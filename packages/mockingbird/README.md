@@ -23,7 +23,7 @@ const tbGenerator = new TinybirdGenerator({
   eps: z.number().optional().default(1), // Events per second
   limit: z.number().optional().default(-1), // Event limit
   logs: z.boolean().optional().default(false), // Enables logs
-  endpoint: z.string(), // Tinybird endpoint (eu_gcp, us_gcp or custom one)
+  endpoint: z.string(), // Tinybird endpoint (e.g. gcp_europe_west3, gcp_us_east4, aws_eu_central_1, aws_us_east_1, aws_us_west_2 or custom one)
   datasource: z.string(), // Name of the Tinybird datasource
   token: z.string(), // Tinybird admin token
 });

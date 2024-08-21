@@ -139,7 +139,7 @@ export const subcommands = [
     options: {
       endpoint: {
         describe: "API endpoint name",
-        choices: ["eu_gcp", "us_gcp", "custom"],
+        choices: ["eu_gcp", "us_gcp", "gcp_europe_west3", "gcp_us_east4", "aws_eu_central_1", "aws_us_east_1", "aws_us_west_2", "custom"],
         demandOption: true,
       },
       datasource: {
@@ -149,11 +149,20 @@ export const subcommands = [
       token: { describe: "API token", demandOption: true },
     },
     middlewares: [
-      (argv) => ({
-        endpoint: ["eu_gcp", "us_gcp"].includes(argv.endpoint)
-          ? argv.endpoint
-          : process.env.TB_ENDPOINT,
-      }),
+      (argv) => {
+        if (argv.endpoint === 'eu_gcp') {
+          console.error('eu_gcp is deprecated, use gcp_europe_west3 instead');
+          process.exit(1);
+        } else if (argv.endpoint === 'us_gcp') {
+          console.error('us_gcp is deprecated, use gcp_us_east4 instead');
+          process.exit(1);
+        } else if (argv.endpoint === 'custom' && !process.env.TB_ENDPOINT) {
+          console.error('process.env.TB_ENDPOINT must be set when endpoint is set to "custom"');
+          process.exit(1);
+        }
+
+        return argv.endpoint === 'custom' ? process.env.TB_ENDPOINT : argv.endpoint;
+      },
     ],
   },
   {

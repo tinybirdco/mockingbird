@@ -18,7 +18,6 @@ The most basic usage is to import one of the generators, initialize it and call 
 import {
   presetSchemas,
   TinybirdGenerator,
-  ALL_TINYBIRD_ENDPOINTS,
   generate,
 } from "@tinybirdco/mockingbird";
 
@@ -26,7 +25,7 @@ const schema = presetSchemas["Simple Example"];
 
 const tbGenerator = new TinybirdGenerator({
   schema,
-  endpoint: "eu_gcp",
+  endpoint: "gcp_europe_west3",
   datasource: "test",
   token: "e.pXXXX",
   eps: 100,

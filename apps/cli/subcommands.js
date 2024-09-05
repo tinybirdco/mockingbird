@@ -6,6 +6,7 @@ import {
   RabbitMQGenerator,
   TinybirdGenerator,
   UpstashKafkaGenerator,
+  AWSKinesisGenerator,
 } from "@tinybirdco/mockingbird";
 
 export const subcommands = [
@@ -186,5 +187,38 @@ export const subcommands = [
         demandOption: true,
       },
     },
+  },
+  {
+    name: "aws-kinesis",
+    generator: AWSKinesisGenerator,
+    options: {
+      region: {
+        describe: "AWS Region",
+        demandOption: true,
+      },
+      accessKeyId: {
+        describe: "AWS Access Key ID",
+        demandOption: true,
+      },
+      secretAccessKey: {
+        describe: "AWS Secret Access Key",
+        demandOption: true,
+      },
+      streamName: {
+        describe: "AWS Kinesis Stream Name",
+        demandOption: true,
+      },
+      partitionKey: {
+        describe: "Partition Key (optional)",
+      },
+      kinesisOptions: {
+        describe: "AWS Kinesis Options JSON string",
+      },
+    },
+    middlewares: [
+      (argv) => ({
+        kinesisOptions: argv.kinesisOptions ? JSON.parse(argv.kinesisOptions) : undefined,
+      }),
+    ],
   },
 ];

@@ -22,6 +22,7 @@ Use `mockingbird-cli <command> --help` to get a list of available options for a 
 @tinybirdco/mockingbird-cli  confluent-cloud-kafka
 @tinybirdco/mockingbird-cli  tinybird
 @tinybirdco/mockingbird-cli  upstash-kafka
+@tinybirdco/mockingbird-cli  aws-kinesis
 ```
 
 ### Common options
@@ -53,6 +54,17 @@ Use `mockingbird-cli <command> --help` to get a list of available options for a 
 --topicArn         AWS SNS Topic ARN                                [required]
 --subject          AWS SNS Subject
 --snsOptions       AWS SNS Options JSON string
+```
+
+### AWS Kinesis
+
+```bash
+--region           AWS Region                                       [required]
+--accessKeyId      AWS Access Key ID                                [required]
+--secretAccessKey  AWS Secret Access Key                            [required]
+--streamName       AWS Kinesis Stream Name                          [required]
+--partitionKey     AWS Kinesis Partition Key
+--kinesisOptions   AWS Kinesis Options JSON string
 ```
 
 ### Confluent Cloud Kafka

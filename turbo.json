@@ -2,17 +2,16 @@
   "$schema": "https://turbo.build/schema.json",
   "tasks": {
     "build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
-        "dist/**",
-        ".svelte-kit/**",
-        ".vercel/**"
-      ]
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".next/**"]
     },
-    "dev": {
-      "cache": false
+    "@tinybirdco/mockingbird#build": {
+      "dependsOn": [],
+      "outputs": ["dist/**"]
+    },
+    "web#build": {
+      "dependsOn": ["@tinybirdco/mockingbird#build"],
+      "outputs": [".next/**"]
     }
   }
 }

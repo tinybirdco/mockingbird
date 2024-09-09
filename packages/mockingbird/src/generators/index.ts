@@ -21,3 +21,5 @@ export {
   UpstashKafkaConfig,
   default as UpstashKafkaGenerator,
 } from "./UpstashKafkaGenerator";
+export { AWSKinesisConfig, default as AWSKinesisGenerator } from "./AWSKinesisGenerator";
+

@@ -23,6 +23,7 @@ Use `mockingbird-cli <command> --help` to get a list of available options for a 
 @tinybirdco/mockingbird-cli  tinybird
 @tinybirdco/mockingbird-cli  upstash-kafka
 @tinybirdco/mockingbird-cli  aws-kinesis
+@tinybirdco/mockingbird-cli  google-spanner
 ```
 
 ### Common options

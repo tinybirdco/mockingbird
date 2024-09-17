@@ -22,4 +22,5 @@ export {
   default as UpstashKafkaGenerator,
 } from "./UpstashKafkaGenerator";
 export { AWSKinesisConfig, default as AWSKinesisGenerator } from "./AWSKinesisGenerator";
+export { GoogleSpannerConfig, default as GoogleSpannerGenerator } from "./GoogleSpannerGenerator";
 

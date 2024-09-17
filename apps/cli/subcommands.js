@@ -7,6 +7,7 @@ import {
   TinybirdGenerator,
   UpstashKafkaGenerator,
   AWSKinesisGenerator,
+  GoogleSpannerGenerator
 } from "@tinybirdco/mockingbird";
 
 export const subcommands = [
@@ -220,5 +221,31 @@ export const subcommands = [
         kinesisOptions: argv.kinesisOptions ? JSON.parse(argv.kinesisOptions) : undefined,
       }),
     ],
+  },
+  {
+    name: "google-spanner",
+    generator: GoogleSpannerGenerator,
+    options: {
+      projectId: {
+        describe: "GCP Project ID",
+        demandOption: true,
+      },
+      instanceId: {
+        describe: "Spanner Instance ID",
+        demandOption: true,
+      },
+      databaseId: {
+        describe: "Spanner Database ID",
+        demandOption: true,
+      },
+      table: {
+        describe: "Spanner Table Name",
+        demandOption: true,
+      },
+      keyFilename: {
+        describe: "Path to GCP Service Account Key JSON file",
+        demandOption: true,
+      },
+    },
   },
 ];

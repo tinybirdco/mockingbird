@@ -80,6 +80,16 @@ Use `mockingbird-cli <command> --help` to get a list of available options for a 
 --key           Confluent Cloud Kafka key JSON string
 ```
 
+### Google Spanner
+
+```bash
+--projectId     Google Cloud project ID                              [required]
+--instanceId    Google Cloud Spanner instance ID                     [required]
+--databaseId    Google Cloud Spanner database ID                     [required]
+--table         Google Cloud Spanner table                           [required]
+--keyFilename   Google Cloud Spanner key filename                    [required]
+```
+
 ### Tinybird
 
 ```bash

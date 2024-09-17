@@ -20,6 +20,10 @@ const nextConfig = {
       ...config.resolve.fallback,
       net: false,
       tls: false,
+      http2: false,
+      dns: false,
+      child_process: false,
+      fs: false
     }
     return config
   },

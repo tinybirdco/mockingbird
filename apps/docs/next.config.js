@@ -4,15 +4,5 @@ const withNextra = require('nextra')({
 })
 
 module.exports = withNextra({
-  basePath: '/docs',
-  async redirects() {
-    return [
-      {
-        source: '/',
-        destination: '/docs',
-        basePath: false,
-        permanent: false,
-      },
-    ]
-  }
+  basePath: process.env.VERCEL_ENV === 'production' ? '/docs' : ''
 })

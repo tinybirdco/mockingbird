@@ -5,13 +5,13 @@ const nextConfig = {
     return [
       {
         source: '/docs',
-        has: [{ type: 'host', value: 'mockingbird.tinybird.co' }],
-        destination: 'https://mockingbird-docs.tinybird.co',
+        has: [{ type: 'host', value: 'mockingbird-web-git-fix-docs-rewrite-tinybird.vercel.app' }],
+        destination: 'https://mockingbird-docs-git-fix-docs-rewrite-tinybird.vercel.app',
       },
       {
         source: '/docs/:path*',
-        has: [{ type: 'host', value: 'mockingbird.tinybird.co' }],
-        destination: 'https://mockingbird-docs.tinybird.co/:path*',
+        has: [{ type: 'host', value: 'mockingbird-web-git-fix-docs-rewrite-tinybird.vercel.app' }],
+        destination: 'https://mockingbird-docs-git-fix-docs-rewrite-tinybird.vercel.app/:path*',
       },
     ]
   },

@@ -6,12 +6,12 @@ const nextConfig = {
       {
         source: '/docs',
         has: [{ type: 'host', value: 'mockingbird.tinybird.co' }],
-        destination: 'https://mockingbird-docs.tinybird.co/docs',
+        destination: 'https://mockingbird-docs.tinybird.co',
       },
       {
         source: '/docs/:path*',
         has: [{ type: 'host', value: 'mockingbird.tinybird.co' }],
-        destination: 'https://mockingbird-docs.tinybird.co/docs/:path*',
+        destination: 'https://mockingbird-docs.tinybird.co/:path*',
       },
     ]
   },

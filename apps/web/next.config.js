@@ -6,12 +6,12 @@ const nextConfig = {
       {
         source: '/docs',
         has: [{ type: 'host', value: 'mockingbird-web-git-fix-docs-rewrite-tinybird.vercel.app' }],
-        destination: 'https://mockingbird-docs-git-fix-docs-rewrite-tinybird.vercel.app.co',
+        destination: 'https://mockingbird-docs-git-fix-docs-rewrite-tinybird.vercel.app',
       },
       {
         source: '/docs/:path*',
         has: [{ type: 'host', value: 'mockingbird-web-git-fix-docs-rewrite-tinybird.vercel.app' }],
-        destination: 'https://mockingbird-docs-git-fix-docs-rewrite-tinybird.vercel.app.co/:path*',
+        destination: 'https://mockingbird-docs-git-fix-docs-rewrite-tinybird.vercel.app/:path*',
       },
     ]
   },

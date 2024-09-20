@@ -9,8 +9,8 @@ module.exports = withNextra({
     return [
       {
         source: '/_next/:path*',
-        has: [{ type: 'host', value: 'mockingbird.tinybird.co' }],
-        destination: 'https://mockingbird-docs.tinybird.co/_next/:path*',
+        has: [{ type: 'host', value: 'mockingbird-web-git-fix-docs-rewrite-tinybird.vercel.app' }],
+        destination: 'https://https://mockingbird-docs-git-fix-docs-rewrite-tinybird.vercel.app/_next/:path*',
       },
     ]
   },

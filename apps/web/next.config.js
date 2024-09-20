@@ -13,14 +13,6 @@ const nextConfig = {
         has: [{ type: 'host', value: 'mockingbird.tinybird.co' }],
         destination: 'https://mockingbird-docs.tinybird.co/:path*',
       },
-      {
-        source: '/_next/:path*',
-        has: [
-          { type: 'host', value: 'mockingbird.tinybird.co' },
-          { type: 'path', value: '/docs' }
-        ],
-        destination: 'https://mockingbird-docs.tinybird.co/_next/:path*',
-      },
     ]
   },
   webpack: config => {

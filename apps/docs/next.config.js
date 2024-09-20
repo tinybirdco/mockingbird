@@ -4,14 +4,5 @@ const withNextra = require('nextra')({
 })
 
 module.exports = withNextra({
-  basePath: process.env.VERCEL_ENV === 'production' ? '/docs' : '',
-  async rewrites() {
-    return [
-      {
-        source: '/_next/:path*',
-        has: [{ type: 'host', value: 'mockingbird-web-git-fix-docs-rewrite-tinybird.vercel.app' }],
-        destination: 'https://https://mockingbird-docs-git-fix-docs-rewrite-tinybird.vercel.app/_next/:path*',
-      },
-    ]
-  },
+  basePath: process.env.VERCEL_ENV === 'production' ? '/docs' : ''
 })

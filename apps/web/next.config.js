@@ -1,17 +1,17 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false,
-  async rewrites() {
+  async redirects() {
     return [
       {
         source: '/docs',
-        has: [{ type: 'host', value: 'mockingbird-web-git-fix-docs-rewrite-tinybird.vercel.app' }],
-        destination: 'https://mockingbird-docs-git-fix-docs-rewrite-tinybird.vercel.app',
+        destination: 'https://mockingbird-docs.tinybird.co',
+        permanent: true,
       },
       {
         source: '/docs/:path*',
-        has: [{ type: 'host', value: 'mockingbird-web-git-fix-docs-rewrite-tinybird.vercel.app' }],
-        destination: 'https://mockingbird-docs-git-fix-docs-rewrite-tinybird.vercel.app/:path*',
+        destination: 'https://mockingbird-docs.tinybird.co/:path*',
+        permanent: true,
       },
     ]
   },

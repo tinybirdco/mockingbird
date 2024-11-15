@@ -5,9 +5,7 @@ import {
   AblyGenerator,
   PRESET_SCHEMA_NAMES,
   TinybirdConfig,
-  TinybirdGenerator,
-  UpstashKafkaConfig,
-  UpstashKafkaGenerator,
+  TinybirdGenerator
 } from '@tinybirdco/mockingbird'
 
 export const steps = [
@@ -37,11 +35,6 @@ export const destinations = [
     icon: '/destinations/tinybird.svg',
   },
   {
-    title: 'Upstash Kafka',
-    generator: 'UpstashKafka',
-    icon: '/destinations/upstash-kafka.svg',
-  },
-  {
     title: 'Ably',
     generator: 'Ably',
     icon: '/destinations/ably.svg',
@@ -62,14 +55,12 @@ export const nameToGenerator = {
   Ably: AblyGenerator,
   AWSSNS: AWSSNSGenerator,
   Tinybird: TinybirdGenerator,
-  UpstashKafka: UpstashKafkaGenerator,
 } as const
 
 export type MockingbirdConfig =
   | AblyConfig
   | AWSSNSConfig
   | TinybirdConfig
-  | UpstashKafkaConfig
 
 export const ablyConfigItems = [
   {
@@ -123,31 +114,6 @@ export const tinybirdConfigItems = [
   },
 ]
 
-export const upstashKafkaConfigItems = [
-  {
-    id: 'address',
-    label: 'REST URL',
-    required: true,
-    type: 'url',
-  },
-  {
-    id: 'user',
-    label: 'REST Username',
-    required: true,
-  },
-  {
-    id: 'pass',
-    label: 'REST Password',
-    required: true,
-    type: 'password',
-  },
-  {
-    id: 'topic',
-    label: 'Topic',
-    required: true,
-  },
-]
-
 export const nameToConfigItems: Record<
   MockingbirdGeneratorName,
   Array<{ id: string; label: string }>
@@ -155,5 +121,4 @@ export const nameToConfigItems: Record<
   Ably: ablyConfigItems,
   AWSSNS: awsSnsConfigItems,
   Tinybird: tinybirdConfigItems,
-  UpstashKafka: upstashKafkaConfigItems,
 }

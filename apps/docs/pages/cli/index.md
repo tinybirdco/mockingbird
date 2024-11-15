@@ -21,7 +21,6 @@ Use `mockingbird-cli <command> --help` to get a list of available options for a 
 @tinybirdco/mockingbird-cli  aws-sns
 @tinybirdco/mockingbird-cli  confluent-cloud-kafka
 @tinybirdco/mockingbird-cli  tinybird
-@tinybirdco/mockingbird-cli  upstash-kafka
 @tinybirdco/mockingbird-cli  aws-kinesis
 @tinybirdco/mockingbird-cli  google-spanner
 ```
@@ -97,15 +96,6 @@ Use `mockingbird-cli <command> --help` to get a list of available options for a 
                             [required] [choices: "gcp_europe_west3", "gcp_us_east4", "aws_eu_central_1", "aws_us_east_1", "aws_us_west_2", "custom"]
 --datasource  Datasource name                                       [required]
 --token       API token                                             [required]
-```
-
-### Upstash Kafka
-
-```bash
---address   Upstash Kafka address                                   [required]
---user      Upstash Kafka user                                      [required]
---pass      Upstash Kafka password                                  [required]
---topic     Upstash Kafka topic                                     [required]
 ```
 
 ### Example

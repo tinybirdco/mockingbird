@@ -5,7 +5,6 @@ import {
   LogGenerator,
   RabbitMQGenerator,
   TinybirdGenerator,
-  UpstashKafkaGenerator,
   AWSKinesisGenerator,
   GoogleSpannerGenerator
 } from "@tinybirdco/mockingbird";
@@ -166,28 +165,6 @@ export const subcommands = [
         return argv.endpoint === 'custom' ? process.env.TB_ENDPOINT : argv.endpoint;
       },
     ],
-  },
-  {
-    name: "upstash-kafka",
-    generator: UpstashKafkaGenerator,
-    options: {
-      address: {
-        describe: "Upstash Kafka address",
-        demandOption: true,
-      },
-      user: {
-        describe: "Upstash Kafka user",
-        demandOption: true,
-      },
-      pass: {
-        describe: "Upstash Kafka password",
-        demandOption: true,
-      },
-      topic: {
-        describe: "Upstash Kafka topic",
-        demandOption: true,
-      },
-    },
   },
   {
     name: "aws-kinesis",

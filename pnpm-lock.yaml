@@ -15,8 +15,8 @@ importers:
   apps/cli:
     dependencies:
       '@tinybirdco/mockingbird':
-        specifier: ^1.4.0
-        version: 1.4.0
+        specifier: file:../../packages/mockingbird
+        version: link:../../packages/mockingbird
       yargs:
         specifier: ^17.7.2
         version: 17.7.2
@@ -1186,9 +1186,6 @@ packages:
 
   '@tinybirdco/mockingbird@1.2.0':
     resolution: {integrity: sha512-vd57TVDnvHzn6mumFTTH3YjGMdDdegzwwacnoStTWXqZ14ClIOzyx5alZv0MPYXrLMM0+2nV31MkIStVcMaDgQ==}
-
-  '@tinybirdco/mockingbird@1.4.0':
-    resolution: {integrity: sha512-mkGOQHJnCk/stU3uZYd3wPDQd3oaH+1tjYPKtGVUMYqBfPM3Hy8FVYfUZx7kd9gBLVRDPf8B/DKz1RtbY2oDug==}
 
   '@tootallnate/once@2.0.0':
     resolution: {integrity: sha512-XCuKFP5PS55gnMVu3dty8KPatLqUoy/ZYzDzAGCQ8JNFCkLXzmI7vNHCR+XpbZaMWQK/vQubr7PkYq8g470J/A==}
@@ -5653,24 +5650,6 @@ snapshots:
       - encoding
       - supports-color
 
-  '@tinybirdco/mockingbird@1.4.0':
-    dependencies:
-      '@aws-sdk/client-kinesis': 3.654.0
-      '@aws-sdk/client-sns': 3.654.0
-      '@faker-js/faker': 8.4.1
-      '@google-cloud/spanner': 7.14.0
-      amqplib: 0.10.4
-      cross-fetch: 4.0.0
-      google-auth-library: 9.14.1
-      lodash.get: 4.4.2
-      ts-json-schema-generator: 1.5.1
-      ts-morph: 19.0.0
-      zod: 3.23.8
-    transitivePeerDependencies:
-      - aws-crt
-      - encoding
-      - supports-color
-
   '@tootallnate/once@2.0.0': {}
 
   '@ts-morph/common@0.20.0':
@@ -6692,7 +6671,7 @@ snapshots:
       eslint: 9.7.0
       eslint-import-resolver-node: 0.3.9
       eslint-import-resolver-typescript: 3.6.3(@typescript-eslint/parser@7.2.0(eslint@9.7.0)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.30.0(eslint@9.7.0))(eslint@9.7.0)
-      eslint-plugin-import: 2.30.0(@typescript-eslint/parser@7.2.0(eslint@9.7.0)(typescript@5.5.4))(eslint-import-resolver-typescript@3.6.3)(eslint@9.7.0)
+      eslint-plugin-import: 2.30.0(@typescript-eslint/parser@7.2.0(eslint@9.7.0)(typescript@5.5.4))(eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@7.2.0(eslint@9.7.0)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.30.0(eslint@9.7.0))(eslint@9.7.0))(eslint@9.7.0)
       eslint-plugin-jsx-a11y: 6.10.0(eslint@9.7.0)
       eslint-plugin-react: 7.36.1(eslint@9.7.0)
       eslint-plugin-react-hooks: 4.6.2(eslint@9.7.0)
@@ -6727,7 +6706,7 @@ snapshots:
       is-bun-module: 1.2.1
       is-glob: 4.0.3
     optionalDependencies:
-      eslint-plugin-import: 2.30.0(@typescript-eslint/parser@7.2.0(eslint@9.7.0)(typescript@5.5.4))(eslint-import-resolver-typescript@3.6.3)(eslint@9.7.0)
+      eslint-plugin-import: 2.30.0(@typescript-eslint/parser@7.2.0(eslint@9.7.0)(typescript@5.5.4))(eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@7.2.0(eslint@9.7.0)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.30.0(eslint@9.7.0))(eslint@9.7.0))(eslint@9.7.0)
     transitivePeerDependencies:
       - '@typescript-eslint/parser'
       - eslint-import-resolver-node
@@ -6745,7 +6724,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-import@2.30.0(@typescript-eslint/parser@7.2.0(eslint@9.7.0)(typescript@5.5.4))(eslint-import-resolver-typescript@3.6.3)(eslint@9.7.0):
+  eslint-plugin-import@2.30.0(@typescript-eslint/parser@7.2.0(eslint@9.7.0)(typescript@5.5.4))(eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@7.2.0(eslint@9.7.0)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.30.0(eslint@9.7.0))(eslint@9.7.0))(eslint@9.7.0):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.8

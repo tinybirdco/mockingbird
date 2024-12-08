@@ -1,8 +1,11 @@
-import _get from "lodash.get";
-
 import { z } from "zod";
 import extendedFaker from "../extendedFaker";
 import { Row, Schema, validateSchema } from "../types";
+
+// Helper function to safely get nested object properties
+const getNestedValue = (obj: any, path: string) => {
+  return path.split('.').reduce((current, key) => current?.[key], obj);
+};
 
 export const schemaSchema = z.record(
   z.object({
@@ -47,7 +50,7 @@ export default abstract class BaseGenerator<C extends BaseConfig> {
   generateRow(): Row {
     const generatedRow = Object.entries(this.config.schema).reduce(
       (acc, [key, value]) => {
-        const generator = _get(extendedFaker, value.type),
+        const generator = getNestedValue(extendedFaker, value.type),
           params = value.params ?? [],
           count = value.count ?? 1;
 

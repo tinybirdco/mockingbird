@@ -1,5 +1,3 @@
-import _get from "lodash.get";
-
 import extendedFaker from "./extendedFaker";
 
 /**
@@ -106,6 +104,11 @@ export const PRESET_SCHEMA_NAMES = [
 ] as const;
 export type PresetSchemaName = (typeof PRESET_SCHEMA_NAMES)[number];
 
+// Helper function to safely get nested object properties
+const getNestedValue = (obj: any, path: string) => {
+  return path.split('.').reduce((current, key) => current?.[key], obj);
+};
+
 export function validateSchema(schema: Schema) {
   const errors = [] as string[];
 
@@ -116,7 +119,7 @@ export function validateSchema(schema: Schema) {
       errors.push(`${type}: Count must be greater than 0`);
 
     if ("params" in schemaItem) {
-      const generator = _get(extendedFaker, type);
+      const generator = getNestedValue(extendedFaker, type);
 
       try {
         // @ts-ignore

@@ -10,7 +10,8 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
-    }
+    },
+    "./dist/Schema.json": "./dist/Schema.json"
   },
   "files": [
     "dist/**"
@@ -45,10 +46,12 @@
     "google-auth-library": "^9.15.0",
     "ts-json-schema-generator": "^2.3.0",
     "ts-morph": "^24.0.0",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "lodash.get": "^4.4.2"
   },
   "devDependencies": {
     "@types/amqplib": "^0.10.6",
+    "@types/lodash.get": "^4.4.7",
     "tsup": "^8.3.5",
     "typescript": "^5.7.2"
   },

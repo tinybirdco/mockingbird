@@ -6,6 +6,7 @@ export { default as webAnalytics } from "./webAnalytics";
 export { default as logAnalytics } from "./logAnalytics";
 export { default as flappybird } from "./flappybird";
 export { default as sportsbetting } from "./sportsbetting";
+export { default as flightBookings } from "./flightBookings";
 
 import simpleExample from "./simpleExample";
 import ecommerceTransactions from "./ecommerceTransactions";
@@ -15,8 +16,11 @@ import webAnalytics from "./webAnalytics";
 import logAnalytics from "./logAnalytics";
 import flappybird from "./flappybird";
 import sportsbetting from "./sportsbetting";
+import flightBookings from "./flightBookings";
 
-export const presetSchemas = {
+import { Schema } from "../types";
+
+export const presetSchemas: Record<string, Schema> = {
   "Simple Example": simpleExample,
   "eCommerce Transactions": ecommerceTransactions,
   "Stock Prices": stockPrices,
@@ -25,4 +29,7 @@ export const presetSchemas = {
   "Log Analytics Starter Kit": logAnalytics,
   Flappybird: flappybird,
   Sportsbetting: sportsbetting,
+  "Flight Bookings": flightBookings,
 };
+
+export const PRESET_SCHEMA_NAMES = Object.keys(presetSchemas);

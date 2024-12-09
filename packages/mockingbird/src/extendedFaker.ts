@@ -119,7 +119,7 @@ const mockingbirdModule = {
 };
 
 const extendedFaker = {
-  ...faker,
+  ...{ ...faker },
   helpers: { ...faker.helpers, ...helpersModule },
   mockingbird: mockingbirdModule,
 };

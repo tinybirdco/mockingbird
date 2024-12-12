@@ -3,7 +3,7 @@ import {
   AWSSNSGenerator,
   LogGenerator,
   TinybirdGenerator,
-  NodeGenerators
+  NodeGenerators,
 } from "@tinybirdco/mockingbird";
 
 export const subcommands = [
@@ -138,8 +138,6 @@ export const subcommands = [
       endpoint: {
         describe: "API endpoint name",
         choices: [
-          "eu_gcp",
-          "us_gcp",
           "gcp_europe_west3",
           "gcp_us_east4",
           "aws_eu_central_1",
@@ -157,13 +155,7 @@ export const subcommands = [
     },
     middlewares: [
       (argv) => {
-        if (argv.endpoint === "eu_gcp") {
-          console.error("eu_gcp is deprecated, use gcp_europe_west3 instead");
-          process.exit(1);
-        } else if (argv.endpoint === "us_gcp") {
-          console.error("us_gcp is deprecated, use gcp_us_east4 instead");
-          process.exit(1);
-        } else if (argv.endpoint === "custom" && !process.env.TB_ENDPOINT) {
+        if (argv.endpoint === "custom" && !process.env.TB_ENDPOINT) {
           console.error(
             'process.env.TB_ENDPOINT must be set when endpoint is set to "custom"'
           );

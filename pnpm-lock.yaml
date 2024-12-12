@@ -15,8 +15,8 @@ importers:
   apps/cli:
     dependencies:
       '@tinybirdco/mockingbird':
-        specifier: file:../../packages/mockingbird
-        version: link:../../packages/mockingbird
+        specifier: ^1.5.0
+        version: 1.5.0
       yargs:
         specifier: ^17.7.2
         version: 17.7.2
@@ -1315,6 +1315,10 @@ packages:
 
   '@tinybirdco/mockingbird@1.2.0':
     resolution: {integrity: sha512-vd57TVDnvHzn6mumFTTH3YjGMdDdegzwwacnoStTWXqZ14ClIOzyx5alZv0MPYXrLMM0+2nV31MkIStVcMaDgQ==}
+
+  '@tinybirdco/mockingbird@1.5.0':
+    resolution: {integrity: sha512-N1XKiQ7EYXMRtxNi1Yy3EZ7Lp+2ZjnbhAD+5ylBe+zn759orWHCtH5E5x0PBR4yVSD7KZAsrcIjae++sXcvwWg==}
+    engines: {node: '>=18'}
 
   '@tootallnate/once@2.0.0':
     resolution: {integrity: sha512-XCuKFP5PS55gnMVu3dty8KPatLqUoy/ZYzDzAGCQ8JNFCkLXzmI7vNHCR+XpbZaMWQK/vQubr7PkYq8g470J/A==}
@@ -6186,6 +6190,24 @@ snapshots:
       lodash.get: 4.4.2
       ts-json-schema-generator: 1.5.1
       ts-morph: 19.0.0
+      zod: 3.23.8
+    transitivePeerDependencies:
+      - aws-crt
+      - encoding
+      - supports-color
+
+  '@tinybirdco/mockingbird@1.5.0':
+    dependencies:
+      '@aws-sdk/client-kinesis': 3.699.0
+      '@aws-sdk/client-sns': 3.699.0
+      '@faker-js/faker': 8.4.1
+      '@google-cloud/spanner': 7.16.0
+      amqplib: 0.10.5
+      cross-fetch: 4.0.0
+      google-auth-library: 9.15.0
+      lodash.get: 4.4.2
+      ts-json-schema-generator: 2.3.0
+      ts-morph: 24.0.0
       zod: 3.23.8
     transitivePeerDependencies:
       - aws-crt

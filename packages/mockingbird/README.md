@@ -4,8 +4,8 @@
 
 - All faker functions and custom functions
 - Type definitions
-- 5 destinations - Ably, AWS SNS, Confluent Cloud Kafka, Tinybird and Upstash Kafka
-- 8 preset schemas
+- Destinations: Tinybird, Ably, AWS SNS, AWS Kinesis, Confluent Cloud Kafka, Google Spanner, RabbitMQ
+- Preset schemas
 
 ## Installing
 

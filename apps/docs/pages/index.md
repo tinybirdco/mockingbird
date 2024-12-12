@@ -16,7 +16,6 @@ Current Destinations are:
 - [AWS SNS](./destinations/aws_sns.md)
 - [Confluent Cloud Kafka](./destinations/confluent_cloud_kafka.md)
 - [Tinybird](./destinations/tinybird.md)
-- [Upstash Kafka](./destinations/upstash_kafka.md)
 
 Missing your favourite destination? Please [contribute a Destination](https://github.com/tinybirdco/mockingbird)!
 

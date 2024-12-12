@@ -2,6 +2,12 @@
 
 [AWS Kinesis](https://aws.amazon.com/kinesis/) is a fully managed, scalable, and real-time data streaming service. It can continuously capture gigabytes of data per second from hundreds of thousands of sources, making it ideal for real-time analytics, application logs, and IoT device data.
 
+## Support
+
+| Web | CLI |
+| :-: | :-: |
+| No  | Yes |
+
 ## How it works
 
 The AWS Kinesis destination sends data to AWS using [official node.js SDK](https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-kinesis/).

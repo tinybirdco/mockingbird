@@ -2,6 +2,12 @@
 
 [Ably](https://ably.com/) reliably distributes realtime data to your users using the publish/subscribe messaging pattern over WebSocket connections.
 
+## Support
+
+| Web | CLI |
+| :-: | :-: |
+| Yes | Yes |
+
 ## How it works
 
 The Ably destination sends data to Ably via the [Ably REST API](https://ably.com/docs/api/rest-api#publish).

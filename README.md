@@ -84,7 +84,7 @@ The value of the item must be a function that returns the desired value. The fun
 For example, a custom Data Type that takes no input params:
 
 ```javascript
-latitudeNumeric: () => parseFloat(faker.address.latitude()),
+latitudeString: () => faker.address.latitude().toString(),
 ```
 
 A custom Data Type that accepts incoming parameters:
@@ -94,40 +94,27 @@ pick: (params: { values: unknown[] }) =>
     params.values[Math.floor(Math.random() * params.values.length)],
 ```
 
-#### Adding new preset Schemas
+#### Adding new preset schemas
 
-Preset Schemas are defined in [/packages/mockingbird/src/presetSchemas.ts](./packages/mockingbird/src/presetSchemas.ts).
+Preset schemas are defined in [/packages/mockingbird/src/schemas/](./packages/mockingbird/src/schemas).
 
-To add a new Schema, add a new item to the `presetSchemas` object.
+Create a new file in the `./packages/mockingbird/src/schemas/` directory.
 
-They key of the item will become the name of the Schema. Ensure that you choose a name that does not clash with an existing preset Schema.
-
-The value of the item is an object that defined the Schema, just as you would define it via the Web UI.
+The contents of the file should look like this:
 
 ```javascript
-"Simple Example": {
-    some_int: {
-        type: "mockingbird.int",
-    },
-    some_values: {
-        type: "mockingbird.pick",
-        params: [
-            {
-                values: [123, 456],
-            },
-        ],
-    },
-    values_weighted: {
-        type: "mockingbird.pickWeighted",
-        params: [
-            {
-                values: [123, 456, 789],
-                weights: [90, 7, 3],
-            },
-        ],
-    },
-},
+import { Schema } from "../types";
+
+const newSchema: Schema = {
+  timestamp: {
+    type: "mockingbird.timestampNow",
+  },
+};
+
+export default newSchema;
 ```
+
+Ensure a new schema is exported in [./packages/mockingbird/src/schemas/index.ts](./packages/mockingbird/src/schemas/index.ts)
 
 ### CLI
 

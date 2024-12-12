@@ -1,6 +1,12 @@
 # AWS SNS
 
-[AWS SNS](https://aws.amazon.com/sns/) is a fully managed Pub/Sub service for A2A and A2P messaging
+[AWS SNS](https://aws.amazon.com/sns/) is a fully managed Pub/Sub service for A2A and A2P messaging.
+
+## Support
+
+| Web | CLI |
+| :-: | :-: |
+| Yes | Yes |
 
 ## How it works
 

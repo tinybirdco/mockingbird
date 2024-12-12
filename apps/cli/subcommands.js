@@ -1,12 +1,9 @@
 import {
   AblyGenerator,
   AWSSNSGenerator,
-  ConfluentCloudKafkaGenerator,
   LogGenerator,
-  RabbitMQGenerator,
   TinybirdGenerator,
-  UpstashKafkaGenerator,
-  AWSKinesisGenerator,
+  NodeGenerators,
 } from "@tinybirdco/mockingbird";
 
 export const subcommands = [
@@ -64,7 +61,7 @@ export const subcommands = [
   },
   {
     name: "confluent-cloud-kafka",
-    generator: ConfluentCloudKafkaGenerator,
+    generator: NodeGenerators.ConfluentCloudKafkaGenerator,
     options: {
       restEndpoint: {
         describe: "Confluent Cloud Kafka REST endpoint",
@@ -104,7 +101,7 @@ export const subcommands = [
   },
   {
     name: "rabbitmq",
-    generator: RabbitMQGenerator,
+    generator: NodeGenerators.RabbitMQGenerator,
     options: {
       endpoint: {
         describe: "RabbitMQ endpoint",
@@ -140,7 +137,14 @@ export const subcommands = [
     options: {
       endpoint: {
         describe: "API endpoint name",
-        choices: ["eu_gcp", "us_gcp", "gcp_europe_west3", "gcp_us_east4", "aws_eu_central_1", "aws_us_east_1", "aws_us_west_2", "custom"],
+        choices: [
+          "gcp_europe_west3",
+          "gcp_us_east4",
+          "aws_eu_central_1",
+          "aws_us_east_1",
+          "aws_us_west_2",
+          "custom",
+        ],
         demandOption: true,
       },
       datasource: {
@@ -151,46 +155,22 @@ export const subcommands = [
     },
     middlewares: [
       (argv) => {
-        if (argv.endpoint === 'eu_gcp') {
-          console.error('eu_gcp is deprecated, use gcp_europe_west3 instead');
-          process.exit(1);
-        } else if (argv.endpoint === 'us_gcp') {
-          console.error('us_gcp is deprecated, use gcp_us_east4 instead');
-          process.exit(1);
-        } else if (argv.endpoint === 'custom' && !process.env.TB_ENDPOINT) {
-          console.error('process.env.TB_ENDPOINT must be set when endpoint is set to "custom"');
+        if (argv.endpoint === "custom" && !process.env.TB_ENDPOINT) {
+          console.error(
+            'process.env.TB_ENDPOINT must be set when endpoint is set to "custom"'
+          );
           process.exit(1);
         }
 
-        return argv.endpoint === 'custom' ? process.env.TB_ENDPOINT : argv.endpoint;
+        return argv.endpoint === "custom"
+          ? process.env.TB_ENDPOINT
+          : argv.endpoint;
       },
     ],
   },
   {
-    name: "upstash-kafka",
-    generator: UpstashKafkaGenerator,
-    options: {
-      address: {
-        describe: "Upstash Kafka address",
-        demandOption: true,
-      },
-      user: {
-        describe: "Upstash Kafka user",
-        demandOption: true,
-      },
-      pass: {
-        describe: "Upstash Kafka password",
-        demandOption: true,
-      },
-      topic: {
-        describe: "Upstash Kafka topic",
-        demandOption: true,
-      },
-    },
-  },
-  {
     name: "aws-kinesis",
-    generator: AWSKinesisGenerator,
+    generator: NodeGenerators.AWSKinesisGenerator,
     options: {
       region: {
         describe: "AWS Region",
@@ -217,8 +197,36 @@ export const subcommands = [
     },
     middlewares: [
       (argv) => ({
-        kinesisOptions: argv.kinesisOptions ? JSON.parse(argv.kinesisOptions) : undefined,
+        kinesisOptions: argv.kinesisOptions
+          ? JSON.parse(argv.kinesisOptions)
+          : undefined,
       }),
     ],
+  },
+  {
+    name: "google-spanner",
+    generator: NodeGenerators.GoogleSpannerGenerator,
+    options: {
+      projectId: {
+        describe: "GCP Project ID",
+        demandOption: true,
+      },
+      instanceId: {
+        describe: "Spanner Instance ID",
+        demandOption: true,
+      },
+      databaseId: {
+        describe: "Spanner Database ID",
+        demandOption: true,
+      },
+      table: {
+        describe: "Spanner Table Name",
+        demandOption: true,
+      },
+      keyFilename: {
+        describe: "Path to GCP Service Account Key JSON file",
+        demandOption: true,
+      },
+    },
   },
 ];

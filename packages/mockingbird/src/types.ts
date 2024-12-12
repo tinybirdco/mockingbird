@@ -1,6 +1,6 @@
-import _get from "lodash.get";
-
 import extendedFaker from "./extendedFaker";
+import { presetSchemas } from "./schemas";
+import _get from "lodash.get";
 
 /**
  * @description Generates all possible paths of an object
@@ -18,14 +18,14 @@ type ObjectPath<T extends object, D extends string = ""> = {
  */
 type ObjectAtPath<
   T,
-  Path extends string
+  Path extends string,
 > = Path extends `${infer Key}.${infer Rest}`
   ? Key extends keyof T
     ? ObjectAtPath<T[Key], Rest>
     : never
   : Path extends keyof T
-  ? T[Path]
-  : never;
+    ? T[Path]
+    : never;
 
 /**
  * @description All actual faker functions, excluding utils
@@ -93,18 +93,13 @@ export type SchemaValue<K extends SchemaKey = SchemaKey> =
  */
 export type Schema = Record<string, SchemaValue>;
 
-export const PRESET_SCHEMA_NAMES = [
-  "Simple Example",
-  "eCommerce Transactions",
-  "Stock Prices",
-  "Flight Bookings",
-  "Content Tracking",
-  "Web Analytics Starter Kit",
-  "Log Analytics Starter Kit",
-  "Flappybird",
-  "Sportsbetting"
-] as const;
-export type PresetSchemaName = (typeof PRESET_SCHEMA_NAMES)[number];
+export { PRESET_SCHEMA_NAMES } from "./schemas";
+export type PresetSchemaName = keyof typeof presetSchemas;
+
+// Helper function to safely get nested object properties
+const getNestedValue = (obj: any, path: string) => {
+  return path.split(".").reduce((current, key) => current?.[key], obj);
+};
 
 export function validateSchema(schema: Schema) {
   const errors = [] as string[];
@@ -116,6 +111,7 @@ export function validateSchema(schema: Schema) {
       errors.push(`${type}: Count must be greater than 0`);
 
     if ("params" in schemaItem) {
+      // const generator = getNestedValue(extendedFaker, type);
       const generator = _get(extendedFaker, type);
 
       try {

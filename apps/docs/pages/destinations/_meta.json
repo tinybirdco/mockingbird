@@ -1,8 +1,0 @@
-{
-  "tinybird": "Tinybird",
-  "upstash_kafka": "Upstash Kafka",
-  "confluent_cloud_kafka": "Confluent Cloud",
-  "ably": "Ably",
-  "aws_sns": "AWS SNS",
-  "aws_kinesis": "AWS Kinesis"
-}

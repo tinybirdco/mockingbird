@@ -1,17 +1,17 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false,
-  async rewrites() {
+  async redirects() {
     return [
       {
         source: '/docs',
-        has: [{ type: 'host', value: 'mockingbird.tinybird.co' }],
-        destination: 'https://mockingbird-docs.tinybird.co/docs',
+        destination: 'https://mockingbird-docs.tinybird.co',
+        permanent: true,
       },
       {
         source: '/docs/:path*',
-        has: [{ type: 'host', value: 'mockingbird.tinybird.co' }],
-        destination: 'https://mockingbird-docs.tinybird.co/docs/:path*',
+        destination: 'https://mockingbird-docs.tinybird.co/:path*',
+        permanent: true,
       },
     ]
   },
@@ -20,6 +20,10 @@ const nextConfig = {
       ...config.resolve.fallback,
       net: false,
       tls: false,
+      http2: false,
+      dns: false,
+      child_process: false,
+      fs: false
     }
     return config
   },

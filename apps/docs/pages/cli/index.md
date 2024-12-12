@@ -21,8 +21,8 @@ Use `mockingbird-cli <command> --help` to get a list of available options for a 
 @tinybirdco/mockingbird-cli  aws-sns
 @tinybirdco/mockingbird-cli  confluent-cloud-kafka
 @tinybirdco/mockingbird-cli  tinybird
-@tinybirdco/mockingbird-cli  upstash-kafka
 @tinybirdco/mockingbird-cli  aws-kinesis
+@tinybirdco/mockingbird-cli  google-spanner
 ```
 
 ### Common options
@@ -79,6 +79,16 @@ Use `mockingbird-cli <command> --help` to get a list of available options for a 
 --key           Confluent Cloud Kafka key JSON string
 ```
 
+### Google Spanner
+
+```bash
+--projectId     Google Cloud project ID                              [required]
+--instanceId    Google Cloud Spanner instance ID                     [required]
+--databaseId    Google Cloud Spanner database ID                     [required]
+--table         Google Cloud Spanner table                           [required]
+--keyFilename   Google Cloud Spanner key filename                    [required]
+```
+
 ### Tinybird
 
 ```bash
@@ -86,15 +96,6 @@ Use `mockingbird-cli <command> --help` to get a list of available options for a 
                             [required] [choices: "gcp_europe_west3", "gcp_us_east4", "aws_eu_central_1", "aws_us_east_1", "aws_us_west_2", "custom"]
 --datasource  Datasource name                                       [required]
 --token       API token                                             [required]
-```
-
-### Upstash Kafka
-
-```bash
---address   Upstash Kafka address                                   [required]
---user      Upstash Kafka user                                      [required]
---pass      Upstash Kafka password                                  [required]
---topic     Upstash Kafka topic                                     [required]
 ```
 
 ### Example

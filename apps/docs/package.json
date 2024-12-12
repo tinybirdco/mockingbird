@@ -2,6 +2,7 @@
   "name": "mockingbird-docs",
   "version": "0.0.1",
   "description": "Mockingbird Docs",
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

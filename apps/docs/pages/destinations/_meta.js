@@ -1,4 +1,4 @@
-{
+export default {
   "tinybird": "Tinybird",
   "ably": "Ably",
   "aws_sns": "AWS SNS",

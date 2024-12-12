@@ -1,8 +1,14 @@
-const withNextra = require('nextra')({
-  theme: 'nextra-theme-docs',
-  themeConfig: './theme.config.tsx',
-})
+import nextra from "nextra";
 
-module.exports = withNextra({
-  basePath: process.env.VERCEL_ENV === 'production' ? '/docs' : ''
-})
+const withNextra = nextra({
+  theme: "nextra-theme-docs",
+  themeConfig: "./theme.config.tsx",
+  latex: true,
+  search: {
+    codeblocks: false,
+  },
+});
+
+export default withNextra({
+  reactStrictMode: true,
+});

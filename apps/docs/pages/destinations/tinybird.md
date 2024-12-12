@@ -4,6 +4,12 @@
 
 Tinybird developers and data teams to harness the power of real-time data and quickly build data pipelines and data products. With Tinybird, you can ingest multiple data sources at scale, query and shape them using the 100% pure SQL you already know and love, and publish the results as low-latency, high-concurrency APIs you consume in your applications. Developers can create fast APIs, faster. What used to take hours and days now only takes minutes.
 
+## Support
+
+| Web | CLI |
+| :-: | :-: |
+| Yes | Yes |
+
 ## How it works
 
 The Tinybird destination sends data to Tinybird via the [Tinybird Events API](https://www.tinybird.co/docs/ingest/events-api.html). Data is sent as new-line delimited JSON (NJDSON), contained in the body of a POST request.

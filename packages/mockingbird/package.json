@@ -34,7 +34,8 @@
   },
   "scripts": {
     "build": "tsup",
-    "dev": "npm run build --watch"
+    "dev": "npm run build --watch",
+    "clean": "rm -rf dist && rm -rf node_modules && rm -rf .turbo"
   },
   "dependencies": {
     "@aws-sdk/client-kinesis": "^3.699.0",

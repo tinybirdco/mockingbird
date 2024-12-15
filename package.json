@@ -5,7 +5,7 @@
     "build": "turbo build",
     "dev": "turbo dev",
     "lint": "turbo lint",
-    "clean": "rm -rf dist && rm -rf node_modules && rm -rf .turbo && cd packages/mockingbird && pnpm clean && cd ../../apps/cli && pnpm clean && cd ../web && pnpm clean && cd ../docs && pnpm clean"
+    "clean": "rm -rf dist && rm -rf node_modules && rm -rf .turbo && cd packages/mockingbird && pnpm clean && cd ../../apps/cli && pnpm clean && cd ../web && pnpm clean"
   },
   "devDependencies": {
     "turbo": "latest"

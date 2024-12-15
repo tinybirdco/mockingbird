@@ -5,12 +5,8 @@ const nextConfig = {
     return [
       {
         source: '/docs',
-        destination: 'https://mockingbird-docs.tinybird.co',
-        permanent: true,
-      },
-      {
-        source: '/docs/:path*',
-        destination: 'https://mockingbird-docs.tinybird.co/:path*',
+        destination:
+          'https://github.com/tinybirdco/mockingbird/blob/main/README.md',
         permanent: true,
       },
     ]

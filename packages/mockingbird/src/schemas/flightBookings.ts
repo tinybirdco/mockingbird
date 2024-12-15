@@ -32,10 +32,10 @@ const flightBookings: Schema = {
     ],
   },
   flight_from: {
-    type: "location.cityName",
+    type: "location.city",
   },
   flight_to: {
-    type: "location.cityName",
+    type: "location.city",
   },
   extra_bags: {
     type: "mockingbird.pickWeighted",

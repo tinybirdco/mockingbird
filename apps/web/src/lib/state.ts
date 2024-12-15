@@ -1,4 +1,3 @@
-import _isEqual from 'lodash.isequal'
 import router from 'next/router'
 import { ParsedUrlQuery } from 'querystring'
 import { Content, JSONContent, TextContent } from 'vanilla-jsoneditor'
@@ -21,6 +20,7 @@ import {
 } from './constants'
 import { compressJSON, decompressJSON } from './helpers'
 import { createWorker, startWorker, stopWorker } from './workerBuilder'
+import { deepEqual } from './utils'
 
 export type State = {
   step: number
@@ -176,7 +176,7 @@ export function reducer(state: State, action: Action): State {
             ? (action.payload as JSONContent).json
             : JSON.parse((action.payload as TextContent).text)
 
-          if (!_isEqual(parsedContent, presetSchemas[state.template]))
+          if (!deepEqual(parsedContent, presetSchemas[state.template]))
             template = 'Custom'
         } catch (e) {
           console.error(e)

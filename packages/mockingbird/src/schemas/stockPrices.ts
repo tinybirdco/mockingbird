@@ -8,12 +8,8 @@ const stockPrices: Schema = {
     type: "mockingbird.datetimeNow",
   },
   stock_symbol: {
-    type: "mockingbird.pick",
-    params: [
-      {
-        values: ["ABF:XLON", "ADS:XETR", "APG:XNYS", "APPS:XMAD", "BLNK:XNAS"],
-      },
-    ],
+    type: "helpers.arrayElement",
+    params: ["ABF:XLON", "ADS:XETR", "APG:XNYS", "APPS:XMAD", "BLNK:XNAS"],
   },
 };
 

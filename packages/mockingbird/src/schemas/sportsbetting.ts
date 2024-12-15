@@ -6,13 +6,11 @@ const sportsbetting: Schema = {
   },
   location: {
     type: "location.nearbyGPSCoordinate",
-    params: [
-      {
-        isMetric: true,
-        radius: 5,
-        origin: [35.225808, -80.852861],
-      },
-    ],
+    params: {
+      isMetric: true,
+      radius: 5,
+      origin: [35.225808, -80.852861],
+    },
   },
   userEmail: {
     type: "internet.email",

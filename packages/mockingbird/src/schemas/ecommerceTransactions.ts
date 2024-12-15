@@ -6,56 +6,44 @@ const ecommerceTransactions: Schema = {
   },
   store_id: {
     type: "number.int",
-    params: [
-      {
-        min: 1,
-        max: 6,
-      },
-    ],
+    params: { min: 1, max: 6 },
   },
   browser: {
-    type: "mockingbird.pickWeighted",
+    type: "helpers.weightedArrayElement",
     params: [
-      {
-        values: ["Chrome", "Brave", "Firefox", "Safari"],
-        weights: [65, 3, 8, 20],
-      },
+      { weight: 65, value: "Chrome" },
+      { weight: 3, value: "Brave" },
+      { weight: 8, value: "Firefox" },
+      { weight: 20, value: "Safari" },
     ],
   },
   product_id: {
     type: "number.int",
-    params: [
-      {
-        min: 3278123,
-        max: 3378123,
-      },
-    ],
+    params: { min: 3278123, max: 3378123 },
   },
   promo: {
-    type: "mockingbird.pickWeighted",
+    type: "helpers.weightedArrayElement",
     params: [
-      {
-        values: [0, 1],
-        weights: [19, 1],
-      },
+      { weight: 19, value: 0 },
+      { weight: 1, value: 1 },
     ],
   },
   sales: {
-    type: "mockingbird.pickWeighted",
+    type: "helpers.weightedArrayElement",
     params: [
-      {
-        values: [1, 2, 3, 4],
-        weights: [50, 5, 2, 1],
-      },
+      { weight: 50, value: 1 },
+      { weight: 5, value: 2 },
+      { weight: 2, value: 3 },
+      { weight: 1, value: 4 },
     ],
   },
   utm_source: {
-    type: "mockingbird.pickWeighted",
+    type: "helpers.weightedArrayElement",
     params: [
-      {
-        values: ["instagram", "newsletter", "tiktok", "search_engine"],
-        weights: [65, 13, 18, 20],
-      },
+      { weight: 65, value: "instagram" },
+      { weight: 13, value: "newsletter" },
+      { weight: 18, value: "tiktok" },
+      { weight: 20, value: "search_engine" },
     ],
   },
 };

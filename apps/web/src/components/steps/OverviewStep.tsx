@@ -11,27 +11,27 @@ export default function OverviewStep({ state, dispatch }: OverviewStepProps) {
   const overviewItems = [
     ...(state.config
       ? [
-        {
-          title: 'Events Per Seconds',
-          value: state.config.eps,
-        },
-        {
-          title: 'Limit',
-          value: state.config.limit,
-        },
-      ]
+          {
+            title: 'Events Per Seconds',
+            value: state.config.eps,
+          },
+          {
+            title: 'Limit',
+            value: state.config.limit,
+          },
+        ]
       : []),
     ...(state.config && 'datasource' in state.config
       ? [
-        {
-          title: 'Destination',
-          value: 'Tinybird Events API',
-        },
-        {
-          title: 'Data Source',
-          value: state.config.datasource,
-        },
-      ]
+          {
+            title: 'Destination',
+            value: 'Tinybird Events API',
+          },
+          {
+            title: 'Data Source',
+            value: state.config.datasource,
+          },
+        ]
       : []),
   ] as { title: string; value: string | number }[]
 
@@ -39,11 +39,16 @@ export default function OverviewStep({ state, dispatch }: OverviewStepProps) {
     dispatch({
       type: 'START_GENERATION',
       payload: {
-        onMessage: ({ data }) =>
-          dispatch({
-            type: 'SET_SENT',
-            payload: data,
-          }),
+        onMessage: ({ data }) => {
+          if (typeof data === 'number') {
+            dispatch({
+              type: 'SET_SENT',
+              payload: data,
+            })
+          } else if ('error' in data) {
+            console.error(data.error)
+          }
+        },
         onError: console.error,
       },
     })

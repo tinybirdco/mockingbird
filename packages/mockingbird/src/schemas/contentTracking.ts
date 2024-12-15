@@ -12,21 +12,17 @@ const contentTracking: Schema = {
   },
   timeSpentSeconds: {
     type: "number.int",
-    params: [
-      {
-        min: 1,
-        max: 3600,
-      },
-    ],
+    params: {
+      min: 1,
+      max: 3600,
+    },
   },
   scrollDepthPercent: {
     type: "number.int",
-    params: [
-      {
-        min: 0,
-        max: 100,
-      },
-    ],
+    params: {
+      min: 0,
+      max: 100,
+    },
   },
 };
 

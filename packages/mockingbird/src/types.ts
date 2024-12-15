@@ -32,7 +32,7 @@ type ObjectAtPath<
  */
 export type FakerFunctions = Omit<
   typeof extendedFaker,
-  "helpers" | "locales" | "definitions"
+  "locales" | "definitions"
 >;
 
 /**
@@ -79,13 +79,13 @@ export type UnparameterizedSchemaKey = Exclude<
 export type SchemaValue<K extends SchemaKey = SchemaKey> =
   K extends UnparameterizedSchemaKey
     ? {
-        type: UnparameterizedSchemaKey;
+        type: K;
         count?: number;
       }
     : {
         type: K;
         count?: number;
-        params?: FakerFunctionParams<ObjectAtPath<FakerFunctions, K>>;
+        params?: any;
       };
 
 /**
@@ -112,13 +112,15 @@ export function validateSchema(schema: Schema) {
 
     if ("params" in schemaItem) {
       const generator = getNestedValue(extendedFaker, type);
-      // const generator = _get(extendedFaker, type);
+      // console.log(`Validating ${type}:`, {
+      //   params: schemaItem.params,
+      //   generator: generator?.toString(),
+      // });
 
       try {
-        // @ts-ignore
-        // @ts-nocheck
-        generator(...schemaItem.params);
+        generator(schemaItem.params);
       } catch (e) {
+        console.error(`Error validating ${type}:`, e);
         errors.push(
           `${type}: ${
             e && typeof e === "object" && "toString" in e

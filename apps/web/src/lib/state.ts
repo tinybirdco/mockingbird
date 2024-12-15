@@ -69,14 +69,14 @@ export type Action =
   | {
       type: 'SAVE_AND_GENERATE'
       payload: {
-        onMessage: (message: MessageEvent<number>) => void
+        onMessage: (message: MessageEvent<number | { error: string }>) => void
         onError: (error: ErrorEvent) => void
       }
     }
   | {
       type: 'START_GENERATION'
       payload: {
-        onMessage: (message: MessageEvent<number>) => void
+        onMessage: (message: MessageEvent<number | { error: string }>) => void
         onError: (error: ErrorEvent) => void
       }
     }
@@ -384,24 +384,34 @@ const parseSchema = (
   let schema: Schema = {}
 
   try {
+    // console.log('Parsing schema content...')
     schema = (
       isJSONContent(content)
         ? (content as JSONContent).json
         : JSON.parse((content as TextContent).text)
     ) as Schema
+    // console.log('Parsed schema:', schema)
+
     const validation = validateSchema(schema!)
     errors = validation.errors
+    // console.log('Schema validation:', { valid: validation.valid, errors })
 
     if (schema && validation.valid) {
-      sampleCode = JSON.stringify(
-        new LogGenerator({
+      try {
+        // console.log('Generating sample row...')
+        const generator = new LogGenerator({
           schema,
           eps: 1,
           limit: -1,
-        }).generateRow(),
-        null,
-        4,
-      )
+        })
+        const sampleRow = generator.generateRow()
+        // console.log('Generated sample row:', sampleRow)
+        sampleCode = JSON.stringify(sampleRow, null, 4)
+      } catch (genError) {
+        console.error('Error generating sample:', genError)
+        errors.push(`Error generating sample: ${genError}`)
+        sampleCode = 'Error generating sample data'
+      }
 
       if (
         template !== 'Custom' &&
@@ -419,9 +429,9 @@ const parseSchema = (
       router.push(`?${urlParams}`, undefined, { scroll: false })
     }
   } catch (e) {
-    console.error(e)
+    console.error('Error parsing schema:', e)
     errors = [(e as Error).toString()]
-    sampleCode = 'Save to start generating'
+    sampleCode = 'Error parsing schema'
   }
 
   return {

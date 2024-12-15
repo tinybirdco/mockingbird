@@ -1,6 +1,6 @@
 {
   "name": "mockingbird-docs",
-  "version": "0.0.1",
+  "version": "2.0.0",
   "description": "Mockingbird Docs",
   "type": "module",
   "scripts": {

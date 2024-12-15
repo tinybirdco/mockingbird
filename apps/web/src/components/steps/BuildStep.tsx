@@ -7,10 +7,7 @@ import { cx } from '@/lib/utils'
 
 import { ArrowDownIcon } from '../Icons'
 
-const JSONEditor = dynamic(() => import('@/components/JSONEditor'), {
-  loading: () => <p>Loading...</p>,
-  ssr: false,
-})
+import JSONEditor from '@/components/JSONEditor'
 
 type BuildStepProps = {
   state: State
@@ -80,7 +77,7 @@ export default function BuildStep({ state, dispatch }: BuildStepProps) {
         }
       />
 
-      {state.errors.length > 0 && (
+      {/* {state.errors.length > 0 && (
         <ul className="my-4">
           {state.errors.map(validationError => (
             <li key={validationError} className="text-red-500">
@@ -88,7 +85,7 @@ export default function BuildStep({ state, dispatch }: BuildStepProps) {
             </li>
           ))}
         </ul>
-      )}
+      )*/}
 
       <div className="h-6" />
 

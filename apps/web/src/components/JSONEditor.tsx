@@ -1,56 +1,31 @@
-import Ajv from 'ajv'
-import { JSONValue, parsePath } from 'immutable-json-patch'
-import _uniqBy from 'lodash.uniqby'
+'use client';
+
 import { useEffect, useRef } from 'react'
 import {
-  // ValidationError,
-  // ValidationSeverity,
-  // Validator,
-  JSONEditor as VanillaJSONEditor,
-  JSONEditorPropsOptional as VanillaJSONEditorPropsOptional,
+  createJSONEditor,
+  JsonEditor,
+  JSONEditorPropsOptional,
 } from 'vanilla-jsoneditor'
 
-// import mockingbirdSchema from '@tinybirdco/mockingbird/dist/Schema.json'
-
-// const createAjvValidator = (): Validator => {
-//   const ajv = new Ajv({
-//     allErrors: true,
-//     verbose: true,
-//     $data: true,
-//   })
-
-// const validateAjv = ajv.compile(mockingbirdSchema)
-
-//   return (json: unknown): ValidationError[] => {
-//     validateAjv(json)
-//     const ajvErrors = validateAjv.errors || []
-
-//     return _uniqBy(
-//       ajvErrors.map(ajvError => ({
-//         path: parsePath(json as JSONValue, ajvError.instancePath),
-//         message: 'Invalid schema value',
-//         severity: ValidationSeverity.warning,
-//       })),
-//       ajvError => ajvError.path[0]
-//     )
-//   }
-// }
-
-export default function JSONEditor(props: VanillaJSONEditorPropsOptional) {
-  const refContainer = useRef<HTMLDivElement | null>(null)
-  const refEditor = useRef<VanillaJSONEditor | null>(null)
+const JSONEditor: React.FC<JSONEditorPropsOptional> = props => {
+  const refContainer = useRef<HTMLDivElement>(null)
+  const refEditor = useRef<JsonEditor | null>(null)
 
   useEffect(() => {
-    if (!refContainer.current) return
-
-    refEditor.current = new VanillaJSONEditor({
-      target: refContainer.current,
+    // create editor
+    refEditor.current = createJSONEditor({
+      target: refContainer.current!,
       props: {
-        // validator: createAjvValidator(),
+        mode: 'tree',
+        mainMenuBar: true,
+        navigationBar: true,
+        statusBar: true,
+        ...props,
       },
     })
 
     return () => {
+      // destroy editor
       if (refEditor.current) {
         refEditor.current.destroy()
         refEditor.current = null
@@ -59,8 +34,13 @@ export default function JSONEditor(props: VanillaJSONEditorPropsOptional) {
   }, [])
 
   useEffect(() => {
-    if (refEditor.current) refEditor.current.updateProps(props)
+    // update props
+    if (refEditor.current) {
+      refEditor.current.updateProps(props)
+    }
   }, [props])
 
-  return <div ref={refContainer} className="h-[326px]" />
+  return <div className="vanilla-jsoneditor-react" ref={refContainer} />
 }
+
+export default JSONEditor

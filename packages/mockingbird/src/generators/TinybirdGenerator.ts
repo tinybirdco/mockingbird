@@ -2,7 +2,7 @@ import fetch from "cross-fetch";
 import { z } from "zod";
 
 import { Row } from "../types";
-import BaseGenerator, { baseConfigSchema } from "./BaseGenerator";
+import { BaseGenerator, baseConfigSchema } from "./BaseGenerator";
 
 const tinybirdConfigSchema = baseConfigSchema.merge(
   z.object({
@@ -14,7 +14,7 @@ const tinybirdConfigSchema = baseConfigSchema.merge(
 
 export type TinybirdConfig = z.infer<typeof tinybirdConfigSchema>;
 
-export default class TinybirdGenerator extends BaseGenerator<TinybirdConfig> {
+export class TinybirdGenerator extends BaseGenerator<TinybirdConfig> {
   readonly endpoints = {
     gcp_europe_west3: "https://api.tinybird.co",
     gcp_us_east4: "https://api.us-east.tinybird.co",

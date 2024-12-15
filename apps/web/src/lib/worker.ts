@@ -1,4 +1,4 @@
-import { MockingbirdGenerator } from '@tinybirdco/mockingbird'
+import { MockingbirdGenerator } from '@tinybirdco/mockingbird/client'
 
 import { nameToGenerator } from './constants'
 

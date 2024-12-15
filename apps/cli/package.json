@@ -25,7 +25,8 @@
     "url": "https://github.com/tinybirdco/mockingbird/apps/cli"
   },
   "dependencies": {
-    "@tinybirdco/mockingbird": "^1.5.0",
+    "@tinybirdco/mockingbird": "file:../../packages/mockingbird",
+    "builtin-modules": "^4.0.0",
     "yargs": "^17.7.2"
   }
 }

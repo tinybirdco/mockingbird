@@ -1,12 +1,15 @@
 import {
-  AWSSNSConfig,
   AWSSNSGenerator,
-  AblyConfig,
   AblyGenerator,
   PRESET_SCHEMA_NAMES,
+  TinybirdGenerator,
+} from '@tinybirdco/mockingbird/client'
+
+import type {
+  AWSSNSConfig,
+  AblyConfig,
   TinybirdConfig,
-  TinybirdGenerator
-} from '@tinybirdco/mockingbird'
+} from '@tinybirdco/mockingbird/client'
 
 export const steps = [
   {
@@ -57,10 +60,7 @@ export const nameToGenerator = {
   Tinybird: TinybirdGenerator,
 } as const
 
-export type MockingbirdConfig =
-  | AblyConfig
-  | AWSSNSConfig
-  | TinybirdConfig
+export type MockingbirdConfig = AblyConfig | AWSSNSConfig | TinybirdConfig
 
 export const ablyConfigItems = [
   {

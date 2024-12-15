@@ -1,7 +1,41 @@
-import { faker } from "@faker-js/faker";
+import { Faker, en } from "@faker-js/faker";
 
-const helpersModule = {
-  weightedRandom(items: unknown[], weights: number[]) {
+const faker = new Faker({ locale: en });
+
+type CustomHelpersModule = {
+  weightedRandom: <T>(items: T[], weights: number[]) => T;
+  normalDistribution: () => number;
+};
+
+type MockingbirdModule = {
+  searchEngineName: () => string;
+  osName: () => string;
+  browserName: () => string;
+  browserEngineName: () => string;
+  datetimeNow: () => string;
+  datetimeRecent: () => string;
+  datetimeBetween: (params: {
+    start: string | number | Date;
+    end: string | number | Date;
+  }) => string;
+  timestampNow: () => string;
+  pickType: (
+    params: { type: keyof typeof faker.datatype; length: number },
+    opts: { state: Record<string, unknown> } | undefined
+  ) => unknown;
+  pick: (params: {
+    values: unknown[];
+    distribution?: "random" | "normal";
+  }) => unknown;
+  pickWeighted: (params: { values: unknown[]; weights: number[] }) => unknown;
+  sequentialArray: (
+    params: { values: unknown[]; iterations?: number },
+    opts: { state: Record<string, unknown> } | undefined
+  ) => unknown;
+};
+
+const helpersModule: CustomHelpersModule = {
+  weightedRandom(items, weights) {
     return faker.helpers.weightedArrayElement(
       new Array(items.length).fill(null).map((_, i) => ({
         weight: weights[i],
@@ -25,7 +59,7 @@ const helpersModule = {
   },
 };
 
-const mockingbirdModule = {
+const mockingbirdModule: MockingbirdModule = {
   searchEngineName() {
     const searchEngines = [
       "https://www.google.co.uk/",
@@ -50,19 +84,13 @@ const mockingbirdModule = {
   },
   datetimeNow: () => new Date().toISOString().slice(0, 19),
   datetimeRecent: () => faker.date.recent().toISOString().slice(0, 19),
-  datetimeBetween: (params: {
-    start: string | number | Date;
-    end: string | number | Date;
-  }) =>
+  datetimeBetween: (params) =>
     faker.date
       .between({ from: params.start, to: params.end })
       .toISOString()
       .slice(0, 19),
   timestampNow: () => new Date().toISOString(),
-  pickType: (
-    params: { type: keyof typeof faker.datatype; length: number },
-    opts: { state: Record<string, unknown> } | undefined
-  ) => {
+  pickType: (params, opts) => {
     if (!opts) return;
     const state = opts.state;
 
@@ -80,7 +108,7 @@ const mockingbirdModule = {
     state[key] = arr;
     return value;
   },
-  pick: (params: { values: unknown[]; distribution?: "random" | "normal" }) =>
+  pick: (params) =>
     params.values[
       Math.floor(
         (!params.distribution || params.distribution === "random"
@@ -88,12 +116,9 @@ const mockingbirdModule = {
           : helpersModule.normalDistribution()) * params.values.length
       )
     ],
-  pickWeighted: (params: { values: unknown[]; weights: number[] }) =>
+  pickWeighted: (params) =>
     helpersModule.weightedRandom(params.values, params.weights),
-  sequentialArray: (
-    params: { values: unknown[]; iterations?: number },
-    opts: { state: Record<string, unknown> } | undefined
-  ) => {
+  sequentialArray: (params, opts) => {
     if (!opts) return;
     const state = opts.state;
 
@@ -118,10 +143,13 @@ const mockingbirdModule = {
   },
 };
 
-const extendedFaker = {
-  ...{ ...faker },
-  helpers: { ...faker.helpers, ...helpersModule },
-  mockingbird: mockingbirdModule,
+type ExtendedFaker = Omit<Faker, "helpers"> & {
+  helpers: Faker["helpers"] & CustomHelpersModule;
+  mockingbird: MockingbirdModule;
 };
 
-export default extendedFaker;
+export const extendedFaker = {
+  ...faker,
+  helpers: { ...faker.helpers, ...helpersModule },
+  mockingbird: mockingbirdModule,
+} as ExtendedFaker;

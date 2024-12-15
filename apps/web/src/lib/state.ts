@@ -8,7 +8,7 @@ import {
   presetSchemas,
   Schema,
   validateSchema,
-} from '@tinybirdco/mockingbird'
+} from '@tinybirdco/mockingbird/client'
 
 import {
   MockingbirdConfig,

@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: false,
+  reactStrictMode: true,
   async redirects() {
     return [
       {
@@ -23,7 +23,8 @@ const nextConfig = {
       http2: false,
       dns: false,
       child_process: false,
-      fs: false
+      fs: false,
+      // async_hooks: false,
     }
     return config
   },

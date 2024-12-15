@@ -1,6 +1,6 @@
-import extendedFaker from "./extendedFaker";
+import { extendedFaker } from "./extendedFaker";
 import { presetSchemas } from "./schemas";
-import _get from "lodash.get";
+// import _get from "lodash.get";
 
 /**
  * @description Generates all possible paths of an object
@@ -111,8 +111,8 @@ export function validateSchema(schema: Schema) {
       errors.push(`${type}: Count must be greater than 0`);
 
     if ("params" in schemaItem) {
-      // const generator = getNestedValue(extendedFaker, type);
-      const generator = _get(extendedFaker, type);
+      const generator = getNestedValue(extendedFaker, type);
+      // const generator = _get(extendedFaker, type);
 
       try {
         // @ts-ignore

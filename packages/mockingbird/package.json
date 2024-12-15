@@ -3,15 +3,23 @@
   "description": "Mockingbird",
   "version": "1.5.0",
   "type": "module",
-  "main": "./dist/index.js",
-  "module": "./dist/index.js",
+  "main": "./dist/client/index.es.js",
+  "module": "./dist/client/index.es.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "types": "./dist/client/client.d.ts",
+      "import": "./dist/client/index.es.js"
     },
-    "./dist/Schema.json": "./dist/Schema.json"
+    "./client": {
+      "types": "./dist/client/client.d.ts",
+      "import": "./dist/client/index.es.js"
+    },
+    "./server": {
+      "types": "./dist/server/server.d.ts",
+      "require": "./dist/server/index.es.js",
+      "import": "./dist/server/index.es.js"
+    }
   },
   "files": [
     "dist/**"
@@ -33,8 +41,10 @@
     "url": "https://github.com/tinybirdco/mockingbird/packages/mockingbird"
   },
   "scripts": {
-    "build": "tsup",
-    "dev": "npm run build --watch",
+    "build:client": "tsc --project tsconfig.client.json && vite build --config vite.config.client.js",
+    "build:server": "tsc --project tsconfig.server.json && vite build --config vite.config.server.js",
+    "build": "npm run build:client && npm run build:server",
+    "dev": "vite build --watch",
     "clean": "rm -rf dist && rm -rf node_modules && rm -rf .turbo"
   },
   "dependencies": {
@@ -47,16 +57,16 @@
     "google-auth-library": "^9.15.0",
     "ts-json-schema-generator": "^2.3.0",
     "ts-morph": "^24.0.0",
-    "zod": "^3.23.8",
-    "lodash.get": "^4.4.2"
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/amqplib": "^0.10.6",
-    "@types/lodash.get": "^4.4.7",
-    "tsup": "^8.3.5",
-    "typescript": "^5.7.2"
+    "rollup-plugin-visualizer": "^5.12.0",
+    "typescript": "^5.7",
+    "vite": "^6.0.3"
   },
   "engines": {
-    "node": ">=18"
-  }
+    "node": ">=22"
+  },
+  "packageManager": "pnpm@9.15.0"
 }

@@ -1,15 +1,18 @@
 {
   "compilerOptions": {
-    "moduleResolution": "node",
-    "lib": ["ES2022"],
-    "module": "ESNext",
-    "target": "ES2022",
-    "strict": true,
-    "esModuleInterop": true,
+    "target": "esnext",
+    "module": "esnext",
+    "lib": ["esnext"],
+    "moduleResolution": "bundler",
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
     "resolveJsonModule": true,
-    "isolatedModules": true
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true
   },
-  "include": ["src/**/*.ts", "tsup.config.ts", "typeFootprint.ts"]
+  "include": ["src/**/*.ts"]
 }

@@ -1,9 +1,8 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
 import { MapPin, Database, Play, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { validateStepState, type Step } from "@/lib/navigation";
+import { type Step } from "@/lib/navigation";
 import Image from "next/image";
 
 const steps = [
@@ -29,9 +28,20 @@ const steps = [
   },
 ];
 
-export function Sidebar() {
-  const searchParams = useSearchParams();
-  const { currentStep } = validateStepState(searchParams);
+interface SidebarProps {
+  currentStep: Step;
+  onStepChange: (step: Step) => void;
+}
+
+export function Sidebar({ currentStep, onStepChange }: SidebarProps) {
+  const handleStepClick = (clickedStep: Step, index: number) => {
+    const currentIndex = steps.findIndex(s => s.step === currentStep);
+    
+    // Only allow clicking on current or previous steps
+    if (index > currentIndex) return;
+
+    onStepChange(clickedStep);
+  };
 
   return (
     <div className="w-64 border-r bg-background">
@@ -47,8 +57,8 @@ export function Sidebar() {
             {steps.map((step, index) => {
               const Icon = step.icon;
               const isActive = currentStep === step.step;
-              const isPast =
-                steps.findIndex((s) => s.step === currentStep) > index;
+              const isPast = steps.findIndex((s) => s.step === currentStep) > index;
+              const isClickable = index <= steps.findIndex(s => s.step === currentStep);
 
               return (
                 <div
@@ -56,14 +66,23 @@ export function Sidebar() {
                   className={cn(
                     "relative flex items-start gap-3 pl-2",
                     (isActive || isPast) && "text-foreground",
-                    !isActive && !isPast && "text-muted-foreground"
+                    !isActive && !isPast && "text-muted-foreground",
+                    isClickable && "cursor-pointer hover:opacity-80"
                   )}
+                  onClick={() => handleStepClick(step.step, index)}
+                  role={isClickable ? "button" : undefined}
+                  tabIndex={isClickable ? 0 : undefined}
+                  onKeyDown={(e) => {
+                    if (isClickable && (e.key === 'Enter' || e.key === ' ')) {
+                      e.preventDefault();
+                      handleStepClick(step.step, index);
+                    }
+                  }}
                 >
                   <div
                     className={cn(
                       "relative z-10 flex h-8 w-8 items-center justify-center rounded-full border bg-background",
-                      isActive &&
-                        "border-primary bg-primary text-primary-foreground",
+                      isActive && "border-primary bg-primary text-primary-foreground",
                       isPast && "border-muted bg-muted"
                     )}
                   >
@@ -71,13 +90,6 @@ export function Sidebar() {
                   </div>
                   <div className="pt-1">
                     <p className="text-sm font-medium">{step.name}</p>
-                    {isActive &&
-                      step.step === "config" &&
-                      searchParams.get("destination") && (
-                        <p className="text-xs text-muted-foreground mt-0.5">
-                          Configuring {searchParams.get("destination")}
-                        </p>
-                      )}
                   </div>
                 </div>
               );

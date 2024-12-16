@@ -1,6 +1,6 @@
-import { ReadonlyURLSearchParams } from "next/navigation";
 import { destinations } from "./constants";
 import type { AWSSNSConfig, AblyConfig, TinybirdConfig } from '@tinybirdco/mockingbird/client';
+import { z } from 'zod';
 
 export type Step = "destination" | "config" | "schema" | "generate";
 
@@ -11,113 +11,135 @@ export interface StepState {
   schema: Record<string, any> | null;
 }
 
-// Type guard functions to validate config objects
-export function isAblyConfig(config: Record<string, string>): config is AblyConfig {
-  return 'channelId' in config && 'apiKey' in config;
-}
+// Zod schemas for config validation
+export const tinybirdConfigSchema = z.object({
+  endpoint: z.string(),
+  token: z.string(),
+  datasource: z.string(),
+});
 
-export function isAWSSNSConfig(config: Record<string, string>): config is AWSSNSConfig {
-  return 'region' in config && 'topicArn' in config && 'accessKeyId' in config && 'secretAccessKey' in config;
-}
+export const ablyConfigSchema = z.object({
+  channelId: z.string(),
+  apiKey: z.string(),
+});
 
-export function isTinybirdConfig(config: Record<string, string>): config is TinybirdConfig {
-  return 'endpoint' in config && 'token' in config && 'datasource' in config;
-}
+export const awsSNSConfigSchema = z.object({
+  region: z.string(),
+  topicArn: z.string(),
+  accessKeyId: z.string(),
+  secretAccessKey: z.string(),
+});
+
+// Type assertions to ensure our Zod schemas match the Mockingbird types
+type ZodTinybirdConfig = z.infer<typeof tinybirdConfigSchema>;
+type ZodAblyConfig = z.infer<typeof ablyConfigSchema>;
+type ZodAWSSNSConfig = z.infer<typeof awsSNSConfigSchema>;
+
+// These will fail at compile time if our Zod schemas don't match the Mockingbird types
+const _tinybirdTypeCheck: ZodTinybirdConfig = {} as TinybirdConfig;
+const _ablyTypeCheck: ZodAblyConfig = {} as AblyConfig;
+const _awsSNSTypeCheck: ZodAWSSNSConfig = {} as AWSSNSConfig;
 
 export function validateStepState(
-  searchParams: ReadonlyURLSearchParams
+  destination: string | null,
+  config: Record<string, string> | null,
+  schema: Record<string, any> | null
 ): StepState {
-  const destination = searchParams.get("destination");
-  const configStr = searchParams.get("config");
-  const schemaStr = searchParams.get("schema");
+  console.log('Validating state:', { destination, config, schema });
+  
+  // Start with a base state
+  const baseState = {
+    destination,
+    config: null,
+    schema: null,
+  };
 
   // Validate destination
-  const isValidDestination = destinations.some(
-    (d) => d.generator.toLowerCase() === destination
+  const isValidDestination = destination && destinations.some(
+    (d) => d.generator === destination
   );
+  console.log('Destination validation:', { destination, isValidDestination });
 
   if (!destination || !isValidDestination) {
     return {
+      ...baseState,
       currentStep: "destination",
-      destination: null,
-      config: null,
-      schema: null,
     };
   }
 
   // Validate config
-  let config: Record<string, string> | null = null;
-  if (configStr) {
-    try {
-      const parsedConfig = JSON.parse(configStr);
-      
-      // First check if all values are non-empty strings
-      const hasNonEmptyValues = Object.values(parsedConfig).every(
-        (value) => value && value.trim() !== ""
-      );
-
-      if (!hasNonEmptyValues) {
-        config = null;
-      } else {
-        // Then validate against the expected config type
-        const destinationType = destination.toLowerCase();
-        let isValidConfig = false;
-
-        switch (destinationType) {
-          case 'ably':
-            isValidConfig = isAblyConfig(parsedConfig);
-            break;
-          case 'awssns':
-            isValidConfig = isAWSSNSConfig(parsedConfig);
-            break;
-          case 'tinybird':
-            isValidConfig = isTinybirdConfig(parsedConfig);
-            break;
-          default:
-            isValidConfig = false;
-        }
-
-        config = isValidConfig ? parsedConfig : null;
-      }
-    } catch (e) {
-      config = null;
-    }
-  }
-
   if (!config) {
     return {
+      ...baseState,
       currentStep: "config",
-      destination,
-      config: null,
-      schema: null,
     };
   }
+
+  // Validate config type
+  const destinationType = destination;
+  let isValidConfig = false;
+
+  try {
+    switch (destinationType) {
+      case 'Ably':
+        ablyConfigSchema.parse(config);
+        isValidConfig = true;
+        break;
+      case 'AWSSNS':
+        awsSNSConfigSchema.parse(config);
+        isValidConfig = true;
+        break;
+      case 'Tinybird':
+        tinybirdConfigSchema.parse(config);
+        isValidConfig = true;
+        break;
+      default:
+        isValidConfig = false;
+    }
+  } catch (e) {
+    console.error('Config validation error:', e);
+    isValidConfig = false;
+  }
+  
+  console.log('Config type validation:', { destinationType, isValidConfig });
+
+  if (!isValidConfig) {
+    return {
+      ...baseState,
+      currentStep: "config",
+    };
+  }
+
+  // At this point, we have a valid config
+  const stateWithConfig = {
+    ...baseState,
+    config,
+  };
 
   // Validate schema
-  let schema: Record<string, any> | null = null;
-  if (schemaStr) {
-    try {
-      schema = JSON.parse(schemaStr);
-      // Add any specific schema validation here if needed
-    } catch (e) {
-      schema = null;
-    }
+  if (!schema || typeof schema !== 'object') {
+    return {
+      ...stateWithConfig,
+      currentStep: "schema",
+    };
   }
 
-  if (!schema) {
+  // Check if schema is empty (empty object)
+  const isEmptySchema = Object.keys(schema).length === 0;
+  console.log('Schema validation:', { schema, isEmptySchema });
+  
+  if (isEmptySchema) {
     return {
+      ...stateWithConfig,
       currentStep: "schema",
-      destination,
-      config,
       schema: null,
     };
   }
 
-  // All steps are valid
+  // If we have a valid schema, we can proceed to generate
   return {
+    ...stateWithConfig,
     currentStep: "generate",
-    destination,
-    config,
     schema,
   };
 }

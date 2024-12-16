@@ -1,18 +1,15 @@
 "use client";
 
 import Image from "next/image";
-import { useRouter, useSearchParams } from "next/navigation";
 import { Card } from "@/components/ui/card";
 import { destinations } from "@/lib/constants";
+import { useQueryState } from "nuqs";
 
 export function DestinationPicker() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
+  const [, setDestination] = useQueryState("destination");
 
-  const handleSelect = (generator: string) => {
-    const params = new URLSearchParams(searchParams);
-    params.set("destination", generator.toLowerCase());
-    router.replace(`/?${params.toString()}`);
+  const handleSelect = async (generator: string) => {
+    await setDestination(generator); // Remove toLowerCase() to preserve case
   };
 
   return (

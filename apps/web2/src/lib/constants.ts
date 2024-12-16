@@ -3,116 +3,117 @@ import {
   AblyGenerator,
   PRESET_SCHEMA_NAMES,
   TinybirdGenerator,
-} from '@tinybirdco/mockingbird/client'
+  presetSchemas,
+} from "@tinybirdco/mockingbird/client";
 
 import type {
   AWSSNSConfig,
   AblyConfig,
   TinybirdConfig,
-} from '@tinybirdco/mockingbird/client'
+} from "@tinybirdco/mockingbird/client";
 
 export const steps = [
   {
-    id: 'connect-step',
-    title: 'Connect.',
-    description: 'Select a destination and configure your project settings.',
+    id: "connect-step",
+    title: "Connect.",
+    description: "Select a destination and configure your project settings.",
   },
   {
-    id: 'build-step',
-    title: 'Build the schema.',
+    id: "build-step",
+    title: "Build the schema.",
     description:
-      'Define the structure of your data from scratch or using a template.',
+      "Define the structure of your data from scratch or using a template.",
   },
   {
-    id: 'overview-step',
-    title: 'Generate data.',
+    id: "overview-step",
+    title: "Generate data.",
     description:
-      'Mockingbird will generate and stream events to your selected destination.',
+      "Mockingbird will generate and stream events to your selected destination.",
   },
-] as const
+] as const;
 
 export const destinations = [
   {
-    title: 'Tinybird Events API',
-    generator: 'Tinybird',
-    icon: '/destinations/tinybird.svg',
+    title: "Tinybird Events API",
+    generator: "Tinybird",
+    icon: "/destinations/tinybird.svg",
   },
   {
-    title: 'Ably',
-    generator: 'Ably',
-    icon: '/destinations/ably.svg',
+    title: "Ably",
+    generator: "Ably",
+    icon: "/destinations/ably.svg",
   },
   {
-    title: 'AWS SNS',
-    generator: 'AWSSNS',
-    icon: '/destinations/awssns.svg',
+    title: "AWS SNS",
+    generator: "AWSSNS",
+    icon: "/destinations/awssns.svg",
   },
-] as const
-export type Destination = (typeof destinations)[number]
-export type MockingbirdGeneratorName = Destination['generator']
+] as const;
+export type Destination = (typeof destinations)[number];
+export type MockingbirdGeneratorName = Destination["generator"];
 
-export const TEMPLATE_OPTIONS = [...PRESET_SCHEMA_NAMES, 'Custom'] as const
-export type PresetSchemaNameWithCustom = (typeof TEMPLATE_OPTIONS)[number]
+export const TEMPLATE_OPTIONS = [...PRESET_SCHEMA_NAMES, "Custom"] as const;
+export type PresetSchemaNameWithCustom = (typeof TEMPLATE_OPTIONS)[number];
 
 export const nameToGenerator = {
   Ably: AblyGenerator,
   AWSSNS: AWSSNSGenerator,
   Tinybird: TinybirdGenerator,
-} as const
+} as const;
 
-export type MockingbirdConfig = AblyConfig | AWSSNSConfig | TinybirdConfig
+export type MockingbirdConfig = AblyConfig | AWSSNSConfig | TinybirdConfig;
 
 export const ablyConfigItems = [
   {
-    id: 'channelId',
-    label: 'Channel ID',
+    id: "channelId",
+    label: "Channel ID",
     required: true,
   },
   {
-    id: 'apiKey',
-    label: 'API Key',
+    id: "apiKey",
+    label: "API Key",
     required: true,
   },
-]
+];
 
 export const awsSnsConfigItems = [
   {
-    id: 'region',
-    label: 'Region',
+    id: "region",
+    label: "Region",
     required: true,
   },
   {
-    id: 'topicArn',
-    label: 'Topic ARN',
+    id: "topicArn",
+    label: "Topic ARN",
     required: true,
   },
   {
-    id: 'accessKeyId',
-    label: 'Access Key',
+    id: "accessKeyId",
+    label: "Access Key",
     required: true,
   },
   {
-    id: 'secretAccessKey',
-    label: 'Secret Key',
+    id: "secretAccessKey",
+    label: "Secret Key",
     required: true,
-    type: 'password',
+    type: "password",
   },
-]
+];
 
 export const tinybirdConfigItems = [
   {
-    id: 'endpoint',
-    label: 'Endpoint',
+    id: "endpoint",
+    label: "Endpoint",
   },
   {
-    id: 'token',
-    label: 'Token',
+    id: "token",
+    label: "Token",
   },
   {
-    id: 'datasource',
-    label: 'Datasource',
+    id: "datasource",
+    label: "Datasource",
   },
-]
+];
 
 export const nameToConfigItems: Record<
   MockingbirdGeneratorName,
@@ -121,4 +122,4 @@ export const nameToConfigItems: Record<
   Ably: ablyConfigItems,
   AWSSNS: awsSnsConfigItems,
   Tinybird: tinybirdConfigItems,
-}
+};

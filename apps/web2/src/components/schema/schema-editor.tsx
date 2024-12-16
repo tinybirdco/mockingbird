@@ -1,8 +1,8 @@
 "use client";
 
 import { Editor } from "@monaco-editor/react";
-import { useRef, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRef, useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -15,54 +15,77 @@ import {
   Alert,
   AlertDescription,
 } from "@/components/ui/alert";
-
-const templates = [
-  {
-    name: "Simple User",
-    schema: {
-      name: "string",
-      age: "number",
-      email: "email",
-    },
-  },
-  {
-    name: "Product",
-    schema: {
-      id: "uuid",
-      name: "string",
-      price: "number",
-      description: "string",
-      inStock: "boolean",
-    },
-  },
-];
+import { presetSchemas } from "@tinybirdco/mockingbird/client";
+import { TEMPLATE_OPTIONS } from "@/lib/constants";
+import { useQueryState } from "nuqs";
 
 export function SchemaEditor() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const editorRef = useRef(null);
   const [error, setError] = useState<string | null>(null);
+  const [isEdited, setIsEdited] = useState(false);
 
-  // Try to load existing schema from URL
-  const existingSchema = searchParams.get("schema");
-  const defaultValue = existingSchema 
-    ? JSON.stringify(JSON.parse(existingSchema), null, 2)
-    : "{}";
+  const [template, setTemplate] = useQueryState("template");
+  const [schema, setSchema] = useQueryState("schema", {
+    parse: (value: string) => JSON.parse(value),
+    serialize: (value: object) => JSON.stringify(value),
+  });
 
-  const handleTemplateChange = (value: string) => {
-    const template = templates.find((t) => t.name === value);
-    if (template && editorRef.current) {
+  // Initialize editor value based on template or schema
+  const getInitialValue = () => {
+    if (template && template !== "Custom") {
+      return JSON.stringify(presetSchemas[template], null, 2);
+    }
+    if (schema) {
+      return JSON.stringify(schema, null, 2);
+    }
+    return "{}";
+  };
+
+  const handleTemplateChange = async (templateName: string) => {
+    setIsEdited(false);
+    
+    if (templateName === "Custom") {
+      await setTemplate(null);
+      await setSchema({});
+    } else {
+      await setTemplate(templateName);
+      await setSchema(null);
+    }
+    
+    if (editorRef.current) {
       const editor = editorRef.current as any;
-      editor.setValue(JSON.stringify(template.schema, null, 2));
-      setError(null);
+      editor.setValue(templateName === "Custom" ? "{}" : JSON.stringify(presetSchemas[templateName], null, 2));
     }
   };
 
   const handleEditorDidMount = (editor: any) => {
     editorRef.current = editor;
+    
+    // Add change listener to detect when user modifies the schema
+    editor.onDidChangeModelContent(() => {
+      if (!isEdited) {
+        setIsEdited(true);
+        
+        // If editing a template, convert it to a custom schema
+        if (template) {
+          const handleSchemaChange = async () => {
+            await setTemplate(null);
+            try {
+              const value = editor.getValue();
+              await setSchema(JSON.parse(value));
+            } catch (e) {
+              // If JSON is invalid, don't update the schema
+              console.error("Invalid JSON:", e);
+            }
+          };
+          handleSchemaChange();
+        }
+      }
+    });
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!editorRef.current) return;
 
     const editor = editorRef.current as any;
@@ -70,16 +93,13 @@ export function SchemaEditor() {
 
     try {
       // Validate JSON
-      const schema = JSON.parse(value);
-
-      // Additional validation could go here
-      // For example, checking that all fields have valid types
+      const schemaValue = JSON.parse(value);
 
       // Update URL with new schema
-      const params = new URLSearchParams(searchParams);
-      params.set("schema", JSON.stringify(schema));
-      router.replace(`/?${params.toString()}`);
+      await setTemplate(null);
+      await setSchema(schemaValue);
       setError(null);
+      setIsEdited(false);
     } catch (e) {
       setError("Invalid JSON schema. Please check your syntax.");
     }
@@ -88,14 +108,17 @@ export function SchemaEditor() {
   return (
     <div className="flex flex-col h-full">
       <div className="flex items-center justify-between mb-4">
-        <Select onValueChange={handleTemplateChange}>
+        <Select 
+          value={template || "Custom"} 
+          onValueChange={handleTemplateChange}
+        >
           <SelectTrigger className="w-64">
             <SelectValue placeholder="Select a template..." />
           </SelectTrigger>
           <SelectContent>
-            {templates.map((template) => (
-              <SelectItem key={template.name} value={template.name}>
-                {template.name}
+            {TEMPLATE_OPTIONS.map((templateName) => (
+              <SelectItem key={templateName} value={templateName}>
+                {templateName}
               </SelectItem>
             ))}
           </SelectContent>
@@ -113,7 +136,7 @@ export function SchemaEditor() {
         <Editor
           height="100%"
           defaultLanguage="json"
-          defaultValue={defaultValue}
+          defaultValue={getInitialValue()}
           theme="vs-light"
           options={{
             minimap: { enabled: false },

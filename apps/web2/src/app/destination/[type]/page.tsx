@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { ConfigForm } from "@/components/destination/config-form";
 import {
   tinybirdConfigItems,
@@ -24,13 +24,11 @@ const destinationNames = {
 export default function DestinationConfigPage() {
   const params = useParams();
   const router = useRouter();
-  const searchParams = useSearchParams();
   const type = params.type as string;
   const [, setConfig] = useQueryState("config", { 
     parse: (value: string) => JSON.parse(value),
     serialize: (value: Record<string, string>) => JSON.stringify(value),
   });
-  const [, setStep] = useQueryState("step");
 
   const items = configItems[type as keyof typeof configItems];
   const destinationName =
@@ -42,14 +40,7 @@ export default function DestinationConfigPage() {
 
   const handleSave = async (config: Record<string, string>) => {
     await setConfig(config);
-    await setStep("schema");
-    
-    // Create new URLSearchParams with current params
-    const params = new URLSearchParams(searchParams);
-    params.set("config", JSON.stringify(config));
-    params.set("step", "schema");
-    
-    router.replace(`/schema?${params.toString()}`);
+    router.push("/schema");
   };
 
   return (
@@ -60,7 +51,7 @@ export default function DestinationConfigPage() {
       <p className="text-muted-foreground mb-6">
         Enter your {destinationName} credentials to start generating data
       </p>
-      <ConfigForm items={items} onSave={handleSave} />
+      <ConfigForm items={items} onComplete={handleSave} />
     </div>
   );
 }

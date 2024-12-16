@@ -16,6 +16,7 @@
     "@tinybirdco/mockingbird": "file:../../packages/mockingbird",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "jsoncrush": "^1.1.8",
     "lucide-react": "^0.468.0",
     "monaco-editor": "^0.52.2",
     "next": "15.1.0",
@@ -23,7 +24,8 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tailwind-merge": "^2.5.5",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",

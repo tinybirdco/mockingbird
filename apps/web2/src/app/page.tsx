@@ -4,7 +4,13 @@ import { useState, useEffect } from "react";
 import { DestinationPicker } from "@/components/destination/destination-picker";
 import { ConfigForm } from "@/components/destination/config-form";
 import { SchemaEditor } from "@/components/schema/schema-editor";
-import { validateStepState, type Step, tinybirdConfigSchema, ablyConfigSchema, awsSNSConfigSchema } from "@/lib/navigation";
+import {
+  validateStepState,
+  type Step,
+  tinybirdConfigSchema,
+  ablyConfigSchema,
+  awsSNSConfigSchema,
+} from "@/lib/navigation";
 import { Sidebar } from "@/components/layout/sidebar";
 import { useQueryState, parseAsJson } from "nuqs";
 import { z } from "zod";
@@ -24,55 +30,47 @@ const configSchema = z.union([
 ]);
 
 // Schema for the mockingbird schema
-const schemaSchema = z.record(z.object({
-  type: z.string(),
-  params: z.any().optional(),
-}));
+const mockingbirdSchema = z.record(
+  z.object({
+    type: z.string(),
+    params: z.any().optional(),
+  })
+);
 
 export default function Home() {
   const [step, setStep] = useState<Step>("destination");
   const [prevDestination, setPrevDestination] = useState<string | null>(null);
-  
+
   const [destination] = useQueryState("destination");
-  const [config] = useQueryState("config", {
-    parse: (value) => {
-      if (!value) return null;
-      try {
-        const parsed = JSON.parse(value);
-        console.log('Parsed config:', parsed);
-        return parsed;
-      } catch (e) {
-        console.error('Error parsing config:', e);
-        return null;
-      }
-    }
-  });
-  const [schema] = useQueryState("schema", {
-    parse: (value) => {
-      if (!value) return null;
-      try {
-        const parsed = JSON.parse(value);
-        console.log('Parsed schema:', parsed);
-        return parsed;
-      } catch (e) {
-        console.error('Error parsing schema:', e);
-        return null;
-      }
-    }
-  });
-  
-  // Watch for destination changes 
+  const [config, setConfig] = useQueryState(
+    "config",
+    parseAsJson(configSchema.parse)
+  );
+  const [schema, setSchema] = useQueryState(
+    "schema",
+    parseAsJson(mockingbirdSchema.parse)
+  );
+
+  // Watch for destination changes and clear all state when it changes
   useEffect(() => {
     if (destination !== prevDestination) {
       setPrevDestination(destination);
+
+      // If we had a previous destination and the destination changed,
+      // clear all state
+      if (prevDestination !== null && destination !== null) {
+        console.log("Destination changed, clearing state");
+        setConfig(null);
+        setSchema(null);
+      }
     }
-  }, [destination, prevDestination]);
+  }, [destination, prevDestination, setConfig, setSchema]);
 
   // Validate step state and update current step
   useEffect(() => {
-    console.log('Current state:', { destination, config, schema });
+    console.log("Current state:", { destination, config, schema });
     const validatedState = validateStepState(destination, config, schema);
-    console.log('Validated state:', validatedState);
+    console.log("Validated state:", validatedState);
     setStep(validatedState.currentStep);
   }, [destination, config, schema]);
 

@@ -6,21 +6,17 @@ const flappybird: Schema = {
   },
   score: {
     type: "number.int",
-    params: [
-      {
-        min: 0,
-        max: 100,
-      },
-    ],
+    params: {
+      min: 0,
+      max: 100,
+    },
   },
   duration: {
     type: "number.int",
-    params: [
-      {
-        min: 5,
-        max: 300,
-      },
-    ],
+    params: {
+      min: 5,
+      max: 300,
+    },
   },
 };
 

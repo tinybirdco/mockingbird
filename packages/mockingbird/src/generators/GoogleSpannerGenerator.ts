@@ -3,7 +3,7 @@ import { GoogleAuth } from "google-auth-library";
 import { z } from "zod";
 
 import { Row } from "../types";
-import BaseGenerator, { baseConfigSchema } from "./BaseGenerator";
+import { BaseGenerator, baseConfigSchema } from "./BaseGenerator";
 
 const GoogleSpannerConfigSchema = baseConfigSchema.merge(
   z.object({
@@ -17,7 +17,7 @@ const GoogleSpannerConfigSchema = baseConfigSchema.merge(
 
 export type GoogleSpannerConfig = z.infer<typeof GoogleSpannerConfigSchema>;
 
-export default class GoogleSpannerGenerator extends BaseGenerator<GoogleSpannerConfig> {
+export class GoogleSpannerGenerator extends BaseGenerator<GoogleSpannerConfig> {
   readonly client: Spanner;
   readonly instance: Instance;
   readonly database: Database;

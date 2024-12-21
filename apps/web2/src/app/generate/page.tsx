@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { GenerateStats } from "@/components/generate/generate-stats";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,14 +28,24 @@ import {
   getDestinationFields,
   type DestinationType,
 } from "@/lib/types";
+import JSONCrush from "jsoncrush";
 
 export default function GeneratePage() {
-  const [destination, setDestination] = useQueryState<DestinationType | null>("destination", {
-    parse: (value) => value as DestinationType,
-  });
+  const [destination, setDestination] = useQueryState<DestinationType | null>(
+    "destination",
+    {
+      parse: (value) => value as DestinationType,
+    }
+  );
   const [config, setConfig] = useQueryState("config", {
-    parse: (value: string) => JSON.parse(value),
-    serialize: (value: object) => JSON.stringify(value),
+    parse: (value: string) => {
+      const uncrushed = JSONCrush.uncrush(decodeURIComponent(value));
+      return JSON.parse(uncrushed);
+    },
+    serialize: (value: object) => {
+      const stringified = JSON.stringify(value);
+      return encodeURIComponent(JSONCrush.crush(stringified));
+    },
   });
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [formData, setFormData] = useState<Record<string, string>>({});
@@ -43,11 +53,18 @@ export default function GeneratePage() {
 
   const selectedConfig = destination ? getDestinationFields(destination) : null;
 
+  useEffect(() => {
+    if (!config || !destination) return;
+    for (const [key, value] of Object.entries(config)) {
+      handleInputChange(key, value);
+    }
+  }, [config, destination]);
+
   const handleConfigSave = () => {
     if (!destination || !selectedConfig) return;
 
     const result = validateDestinationConfig(destination, formData);
-    
+
     if (result.success) {
       setConfig(result.data);
       setFormErrors({});

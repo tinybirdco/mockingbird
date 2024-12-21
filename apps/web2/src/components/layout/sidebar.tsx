@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import { useQueryState } from "nuqs";
 
 interface SidebarProps {
-  currentStep: Step;
+  currentStep: Step | null;
 }
 
 const steps = [
@@ -37,13 +37,6 @@ export function Sidebar({ currentStep }: SidebarProps) {
   return (
     <div className="flex flex-col h-full p-4">
       <div className="mb-8">
-        <Image
-          src="/logo.svg"
-          alt="Mockingbird Logo"
-          width={32}
-          height={32}
-          className="mb-2"
-        />
         <h1 className="text-xl font-semibold">Mockingbird</h1>
       </div>
 

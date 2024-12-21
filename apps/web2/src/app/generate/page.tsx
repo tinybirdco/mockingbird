@@ -140,35 +140,36 @@ function GeneratePageContent() {
   const handleGenerate = () => {
     if (!destination || !config || !schema) return;
 
-    setIsGenerating(true);
-    setGeneratedCount(0);
-
-    const worker = createWorker(
-      destination,
-      config,
-      schema,
-      (event) => {
-        if (typeof event.data === "number") {
-          setGeneratedCount(event.data);
-        }
-      },
-      (error) => {
-        console.error("Worker error:", error);
+    if (isGenerating) {
+      if (workerRef.current) {
+        stopWorker(workerRef.current);
+        workerRef.current = null;
         setIsGenerating(false);
       }
-    );
+    } else {
+      setIsGenerating(true);
+      setGeneratedCount(0);
 
-    if (worker) {
-      workerRef.current = worker;
-      startWorker(worker);
-    }
-  };
+      const worker = createWorker(
+        destination,
+        config,
+        schema,
+        (event) => {
+          console.log(event);
+          if (typeof event.data === "number") {
+            setGeneratedCount((prev) => prev + (event.data as number));
+          }
+        },
+        (error) => {
+          console.error("Worker error:", error);
+          setIsGenerating(false);
+        }
+      );
 
-  const handleStop = () => {
-    if (workerRef.current) {
-      stopWorker(workerRef.current);
-      workerRef.current = null;
-      setIsGenerating(false);
+      if (worker) {
+        workerRef.current = worker;
+        startWorker(worker);
+      }
     }
   };
 
@@ -243,31 +244,16 @@ function GeneratePageContent() {
           </Button>
         </div>
       </div>
-
-      <GenerateStats />
-
-      <div className="flex flex-col gap-4 p-4">
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">Generate Data</h1>
-          {isGenerating ? (
-            <div className="flex items-center gap-4">
-              <p className="text-sm text-muted-foreground">
-                Generated {generatedCount} records
-              </p>
-              <Button onClick={handleStop} variant="destructive">
-                Stop
-              </Button>
-            </div>
-          ) : (
-            <Button
-              onClick={handleGenerate}
-              disabled={!destination || !config || !schema}
-            >
-              Start Generating
-            </Button>
-          )}
-        </div>
+      <div className="flex flex-col">
+        <Button
+          onClick={handleGenerate}
+          disabled={!destination || !config || !schema}
+        >
+          {isGenerating ? "Stop Generating" : "Start Generating"}
+        </Button>
       </div>
+
+      <GenerateStats isGenerating={isGenerating} rowsSent={generatedCount} />
 
       <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
         <DrawerContent>
@@ -283,13 +269,37 @@ function GeneratePageContent() {
                     <span className="text-red-500 ml-1">*</span>
                   )}
                 </Label>
-                <Input
-                  id={field.id}
-                  type={field.type || "text"}
-                  value={formData[field.id] || ""}
-                  onChange={(e) => handleInputChange(field.id, e.target.value)}
-                  className={formErrors[field.id] ? "border-red-500" : ""}
-                />
+                {field.type === "select" && field.options ? (
+                  <Select
+                    value={formData[field.id] || ""}
+                    onValueChange={(value) =>
+                      handleInputChange(field.id, value)
+                    }
+                  >
+                    <SelectTrigger
+                      className={formErrors[field.id] ? "border-red-500" : ""}
+                    >
+                      <SelectValue placeholder="Select an option" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {field.options.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                ) : (
+                  <Input
+                    id={field.id}
+                    type={field.type === "input" ? "text" : field.type}
+                    value={formData[field.id] || ""}
+                    onChange={(e) =>
+                      handleInputChange(field.id, e.target.value)
+                    }
+                    className={formErrors[field.id] ? "border-red-500" : ""}
+                  />
+                )}
                 {formErrors[field.id] && (
                   <p className="text-sm text-red-500">{formErrors[field.id]}</p>
                 )}

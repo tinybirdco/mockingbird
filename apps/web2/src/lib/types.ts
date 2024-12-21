@@ -1,17 +1,28 @@
 import { z } from "zod";
-import type {
-  AWSSNSConfig,
-  AblyConfig,
-  TinybirdConfig,
+import {
+  type AWSSNSConfig,
+  type AblyConfig,
+  type TinybirdConfig,
 } from "@tinybirdco/mockingbird/client";
 
 export type DestinationType = "Tinybird" | "AWSSNS" | "Ably";
 export type DestinationConfig = AWSSNSConfig | AblyConfig | TinybirdConfig;
 
+enum tinybirdEndpoints {
+  gcp_europe_west3,
+  gcp_us_east4,
+  aws_us_east_1,
+  aws_eu_central_1,
+  aws_us_west_2,
+}
+
 // Validation schemas
 export const tinybirdConfigSchema = z.object({
   token: z.string().min(1, "API Token is required"),
   datasource: z.string().min(1, "Datasource Name is required"),
+  endpoint: z.enum(
+    Object.keys(tinybirdEndpoints) as [keyof typeof tinybirdEndpoints]
+  ),
 });
 
 export const awsSNSConfigSchema = z.object({
@@ -24,7 +35,6 @@ export const awsSNSConfigSchema = z.object({
 export const ablyConfigSchema = z.object({
   apiKey: z.string().min(1, "API Key is required"),
   channelId: z.string().min(1, "Channel ID is required"),
-  eventName: z.string().min(1, "Event Name is required"),
 });
 
 // Field configurations
@@ -33,6 +43,10 @@ interface ConfigField {
   label: string;
   type?: string;
   required?: boolean;
+  options?: {
+    label: string;
+    value: string;
+  }[];
 }
 
 interface DestinationFields {
@@ -49,11 +63,26 @@ export const destinationFields: Record<DestinationType, DestinationFields> = {
         id: "token",
         label: "API Token",
         required: true,
+        type: "input",
       },
       {
         id: "datasource",
         label: "Datasource Name",
         required: true,
+        type: "input",
+      },
+      {
+        id: "endpoint",
+        label: "Endpoint",
+        required: true,
+        type: "select",
+        options: [
+          { label: "GCP Europe West 3", value: "gcp_europe_west3" },
+          { label: "GCP US East 4", value: "gcp_us_east4" },
+          { label: "AWS US East 1", value: "aws_us_east_1" },
+          { label: "AWS EU Central 1", value: "aws_eu_central_1" },
+          { label: "AWS US West 2", value: "aws_us_west_2" },
+        ],
       },
     ],
     schema: tinybirdConfigSchema,
@@ -65,21 +94,25 @@ export const destinationFields: Record<DestinationType, DestinationFields> = {
         id: "accessKeyId",
         label: "Access Key ID",
         required: true,
+        type: "input",
       },
       {
         id: "secretAccessKey",
         label: "Secret Access Key",
         required: true,
+        type: "input",
       },
       {
         id: "region",
         label: "Region",
         required: true,
+        type: "input",
       },
       {
         id: "topicArn",
         label: "Topic ARN",
         required: true,
+        type: "input",
       },
     ],
     schema: awsSNSConfigSchema,
@@ -91,11 +124,13 @@ export const destinationFields: Record<DestinationType, DestinationFields> = {
         id: "apiKey",
         label: "API Key",
         required: true,
+        type: "input",
       },
       {
         id: "channelId",
         label: "Channel Name",
         required: true,
+        type: "input",
       },
     ],
     schema: ablyConfigSchema,

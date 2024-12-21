@@ -44,9 +44,11 @@ export function createWorker(
 }
 
 export function startWorker(worker: Worker) {
+  console.log("starting worker");
   worker.postMessage({ start: true });
 }
 
 export function stopWorker(worker: Worker) {
+  console.log("stopping worker");
   worker.terminate();
 }

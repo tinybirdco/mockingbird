@@ -15,7 +15,7 @@ import {
 import { useQueryState } from "nuqs";
 import { destinations } from "@/lib/constants";
 import Image from "next/image";
-import { Settings2 } from "lucide-react";
+import { Settings2, Check } from "lucide-react";
 import {
   Drawer,
   DrawerContent,
@@ -50,13 +50,29 @@ export default function GeneratePage() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [formData, setFormData] = useState<Record<string, string>>({});
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+  const [configSaved, setConfigSaved] = useState(false);
 
   const selectedConfig = destination ? getDestinationFields(destination) : null;
 
   useEffect(() => {
     if (!config || !destination) return;
+    const fd: Record<string, string> = {};
     for (const [key, value] of Object.entries(config)) {
+      fd[key] = value;
       handleInputChange(key, value);
+    }
+    const result = validateDestinationConfig(destination, fd);
+    if (result.success) {
+      setFormErrors({});
+      setConfigSaved(true);
+    } else {
+      const errors: Record<string, string> = {};
+      result.error.errors.forEach((err) => {
+        if (err.path) {
+          errors[err.path[0]] = err.message;
+        }
+      });
+      setFormErrors(errors);
     }
   }, [config, destination]);
 
@@ -69,6 +85,7 @@ export default function GeneratePage() {
       setConfig(result.data);
       setFormErrors({});
       setIsDrawerOpen(false);
+      setConfigSaved(true);
     } else {
       const errors: Record<string, string> = {};
       result.error.errors.forEach((err) => {
@@ -97,7 +114,13 @@ export default function GeneratePage() {
       <div className="grid grid-cols-2 gap-4">
         <div>
           <Label>Destination</Label>
-          <Select value={destination || ""} onValueChange={setDestination}>
+          <Select
+            value={destination || ""}
+            onValueChange={(value: DestinationType) => {
+              setDestination(value);
+              setConfigSaved(false);
+            }}
+          >
             <SelectTrigger>
               <SelectValue placeholder="Select a destination">
                 {destination && (
@@ -140,7 +163,11 @@ export default function GeneratePage() {
             disabled={!destination}
             className="w-full"
           >
-            <Settings2 className="w-4 h-4 mr-2" />
+            {configSaved ? (
+              <Check className="w-4 h-4 mr-2 text-green-500" />
+            ) : (
+              <Settings2 className="w-4 h-4 mr-2" />
+            )}
             Configure
           </Button>
         </div>

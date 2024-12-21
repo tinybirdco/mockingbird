@@ -1,7 +1,7 @@
 "use client";
 
 import { Editor } from "@monaco-editor/react";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,39 +18,39 @@ import {
 import { presetSchemas } from "@tinybirdco/mockingbird/client";
 import { TEMPLATE_OPTIONS } from "@/lib/constants";
 import { useQueryState } from "nuqs";
+import JSONCrush from "jsoncrush";
 
 export function SchemaEditor() {
   const router = useRouter();
   const editorRef = useRef(null);
   const [error, setError] = useState<string | null>(null);
-  const [isEdited, setIsEdited] = useState(false);
-
-  const [template, setTemplate] = useQueryState("template");
+  const [selectedTemplate, setSelectedTemplate] = useState<string>("Custom");
   const [schema, setSchema] = useQueryState("schema", {
-    parse: (value: string) => JSON.parse(value),
-    serialize: (value: object) => JSON.stringify(value),
+    parse: (value: string) => {
+      const uncrushed = JSONCrush.uncrush(decodeURIComponent(value));
+      return JSON.parse(uncrushed);
+    },
+    serialize: (value: object) => {
+      const stringified = JSON.stringify(value);
+      return encodeURIComponent(JSONCrush.crush(stringified));
+    },
   });
 
   // Initialize editor value based on template or schema
   const getInitialValue = () => {
-    if (template && template !== "Custom") {
-      return JSON.stringify(presetSchemas[template], null, 2);
-    }
     if (schema) {
       return JSON.stringify(schema, null, 2);
     }
     return "{}";
   };
 
-  const handleTemplateChange = async (templateName: string) => {
-    setIsEdited(false);
+  const handleTemplateChange = (templateName: string) => {
+    setSelectedTemplate(templateName);
     
     if (templateName === "Custom") {
-      await setTemplate(null);
-      await setSchema({});
+      setSchema({});
     } else {
-      await setTemplate(templateName);
-      await setSchema(null);
+      setSchema(presetSchemas[templateName]);
     }
     
     if (editorRef.current) {
@@ -64,23 +64,13 @@ export function SchemaEditor() {
     
     // Add change listener to detect when user modifies the schema
     editor.onDidChangeModelContent(() => {
-      if (!isEdited) {
-        setIsEdited(true);
-        
-        // If editing a template, convert it to a custom schema
-        if (template) {
-          const handleSchemaChange = async () => {
-            await setTemplate(null);
-            try {
-              const value = editor.getValue();
-              await setSchema(JSON.parse(value));
-            } catch (e) {
-              // If JSON is invalid, don't update the schema
-              console.error("Invalid JSON:", e);
-            }
-          };
-          handleSchemaChange();
-        }
+      try {
+        const value = editor.getValue();
+        const parsed = JSON.parse(value);
+        setSchema(parsed);
+      } catch (e) {
+        // If JSON is invalid, don't update the schema
+        console.error("Invalid JSON:", e);
       }
     });
   };
@@ -94,12 +84,12 @@ export function SchemaEditor() {
     try {
       // Validate JSON
       const schemaValue = JSON.parse(value);
-
-      // Update URL with new schema
-      await setTemplate(null);
       await setSchema(schemaValue);
       setError(null);
-      setIsEdited(false);
+      
+      // Navigate to generate step with search params
+      const searchParams = new URLSearchParams(window.location.search);
+      router.push(`/generate?${searchParams.toString()}`);
     } catch (e) {
       setError("Invalid JSON schema. Please check your syntax.");
     }
@@ -109,7 +99,7 @@ export function SchemaEditor() {
     <div className="flex flex-col h-full">
       <div className="flex items-center justify-between mb-4">
         <Select 
-          value={template || "Custom"} 
+          value={selectedTemplate} 
           onValueChange={handleTemplateChange}
         >
           <SelectTrigger className="w-64">
@@ -123,7 +113,7 @@ export function SchemaEditor() {
             ))}
           </SelectContent>
         </Select>
-        <Button onClick={handleSave}>Save Schema</Button>
+        <Button onClick={handleSave}>Save & Continue</Button>
       </div>
 
       {error && (
@@ -132,20 +122,19 @@ export function SchemaEditor() {
         </Alert>
       )}
 
-      <div className="flex-1 border rounded-lg overflow-hidden">
+      <div className="flex-1 overflow-hidden rounded-md border">
         <Editor
-          height="100%"
-          defaultLanguage="json"
           defaultValue={getInitialValue()}
-          theme="vs-light"
+          onMount={handleEditorDidMount}
+          language="json"
           options={{
             minimap: { enabled: false },
             fontSize: 14,
             lineNumbers: "on",
             scrollBeyondLastLine: false,
-            automaticLayout: true,
+            wordWrap: "on",
+            wrappingStrategy: "advanced",
           }}
-          onMount={handleEditorDidMount}
         />
       </div>
     </div>

@@ -1,21 +1,17 @@
 "use client";
 
-import { MapPin, Database, Play, Settings } from "lucide-react";
+import { Database, Play } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { type Step } from "@/lib/navigation";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useQueryState } from "nuqs";
+
+interface SidebarProps {
+  currentStep: Step;
+}
 
 const steps = [
-  {
-    name: "Select Destination",
-    step: "destination" as Step,
-    icon: MapPin,
-  },
-  {
-    name: "Configure Destination",
-    step: "config" as Step,
-    icon: Settings,
-  },
   {
     name: "Define Schema",
     step: "schema" as Step,
@@ -28,75 +24,49 @@ const steps = [
   },
 ];
 
-interface SidebarProps {
-  currentStep: Step;
-  onStepChange: (step: Step) => void;
-}
+export function Sidebar({ currentStep }: SidebarProps) {
+  const router = useRouter();
+  const [schema] = useQueryState("schema");
+  const [destination] = useQueryState("destination");
 
-export function Sidebar({ currentStep, onStepChange }: SidebarProps) {
-  const handleStepClick = (clickedStep: Step, index: number) => {
-    const currentIndex = steps.findIndex(s => s.step === currentStep);
-    
-    // Only allow clicking on current or previous steps
-    if (index > currentIndex) return;
-
-    onStepChange(clickedStep);
+  const handleStepClick = async (clickedStep: Step) => {
+    const searchParams = new URLSearchParams(window.location.search);
+    router.push(`/${clickedStep}?${searchParams.toString()}`);
   };
 
   return (
-    <div className="w-64 border-r bg-background">
-      <div className="flex h-16 items-center border-b px-6">
-        <h1 className="text-lg font-semibold">Mockingbird</h1>
+    <div className="flex flex-col h-full p-4">
+      <div className="mb-8">
+        <Image
+          src="/logo.svg"
+          alt="Mockingbird Logo"
+          width={32}
+          height={32}
+          className="mb-2"
+        />
+        <h1 className="text-xl font-semibold">Mockingbird</h1>
       </div>
-      <div className="p-4">
-        <div className="relative">
-          {/* Vertical line connecting steps */}
-          <div className="absolute left-[17px] top-[28px] bottom-2 w-px bg-border" />
 
-          <div className="space-y-6">
-            {steps.map((step, index) => {
-              const Icon = step.icon;
-              const isActive = currentStep === step.step;
-              const isPast = steps.findIndex((s) => s.step === currentStep) > index;
-              const isClickable = index <= steps.findIndex(s => s.step === currentStep);
-
-              return (
-                <div
-                  key={step.step}
-                  className={cn(
-                    "relative flex items-start gap-3 pl-2",
-                    (isActive || isPast) && "text-foreground",
-                    !isActive && !isPast && "text-muted-foreground",
-                    isClickable && "cursor-pointer hover:opacity-80"
-                  )}
-                  onClick={() => handleStepClick(step.step, index)}
-                  role={isClickable ? "button" : undefined}
-                  tabIndex={isClickable ? 0 : undefined}
-                  onKeyDown={(e) => {
-                    if (isClickable && (e.key === 'Enter' || e.key === ' ')) {
-                      e.preventDefault();
-                      handleStepClick(step.step, index);
-                    }
-                  }}
-                >
-                  <div
-                    className={cn(
-                      "relative z-10 flex h-8 w-8 items-center justify-center rounded-full border bg-background",
-                      isActive && "border-primary bg-primary text-primary-foreground",
-                      isPast && "border-muted bg-muted"
-                    )}
-                  >
-                    <Icon className="h-4 w-4" />
-                  </div>
-                  <div className="pt-1">
-                    <p className="text-sm font-medium">{step.name}</p>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </div>
+      <nav className="space-y-1">
+        {steps.map(({ name, step, icon: Icon }) => {
+          const isActive = step === currentStep;
+          return (
+            <button
+              key={step}
+              onClick={() => handleStepClick(step)}
+              className={cn(
+                "flex items-center w-full px-4 py-2 text-sm rounded-lg",
+                isActive
+                  ? "bg-gray-100 text-gray-900"
+                  : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+              )}
+            >
+              <Icon className="w-5 h-5 mr-3" />
+              {name}
+            </button>
+          );
+        })}
+      </nav>
     </div>
   );
 }

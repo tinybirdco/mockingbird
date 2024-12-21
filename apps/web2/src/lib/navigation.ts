@@ -2,7 +2,7 @@ import { destinations } from "./constants";
 import type { AWSSNSConfig, AblyConfig, TinybirdConfig } from '@tinybirdco/mockingbird/client';
 import { z } from 'zod';
 
-export type Step = "destination" | "config" | "schema" | "generate";
+export type Step = "schema" | "generate";
 
 export interface StepState {
   currentStep: Step;
@@ -63,7 +63,7 @@ export function validateStepState(
   if (!destination || !isValidDestination) {
     return {
       ...baseState,
-      currentStep: "destination",
+      currentStep: "schema",
     };
   }
 
@@ -71,7 +71,7 @@ export function validateStepState(
   if (!config) {
     return {
       ...baseState,
-      currentStep: "config",
+      currentStep: "schema",
     };
   }
 
@@ -106,7 +106,7 @@ export function validateStepState(
   if (!isValidConfig) {
     return {
       ...baseState,
-      currentStep: "config",
+      currentStep: "schema",
     };
   }
 

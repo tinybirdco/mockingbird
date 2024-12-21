@@ -5,13 +5,13 @@ import { NuqsAdapter } from "nuqs/adapters/next/app";
 import "./globals.css";
 
 const geistSans = Geist({
-  variable: "--font-geist-sans",
   subsets: ["latin"],
+  variable: "--font-geist-sans",
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
   subsets: ["latin"],
+  variable: "--font-geist-mono",
 });
 
 export const metadata: Metadata = {
@@ -29,9 +29,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <MainLayout>
-          <NuqsAdapter>{children}</NuqsAdapter>
-        </MainLayout>
+        <NuqsAdapter>
+          <MainLayout>{children}</MainLayout>
+        </NuqsAdapter>
       </body>
     </html>
   );

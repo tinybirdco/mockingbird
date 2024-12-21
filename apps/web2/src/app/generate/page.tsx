@@ -23,49 +23,16 @@ import {
   DrawerTitle,
   DrawerFooter,
 } from "@/components/ui/drawer";
-import { z } from "zod";
-
-interface ConfigField {
-  id: string;
-  label: string;
-  type?: string;
-  required?: boolean;
-  validation?: z.ZodType<any>;
-}
-
-interface DestinationConfig {
-  name: string;
-  fields: ConfigField[];
-  validation: z.ZodObject<any>;
-}
-
-const destinationConfigs: Record<string, DestinationConfig> = {
-  Tinybird: {
-    name: "Tinybird",
-    fields: [
-      {
-        id: "token",
-        label: "API Token",
-        required: true,
-        validation: z.string().min(1, "API Token is required"),
-      },
-      {
-        id: "datasource",
-        label: "Datasource Name",
-        required: true,
-        validation: z.string().min(1, "Datasource Name is required"),
-      },
-    ],
-    validation: z.object({
-      token: z.string().min(1, "API Token is required"),
-      datasource: z.string().min(1, "Datasource Name is required"),
-    }),
-  },
-  // Add other destinations here
-};
+import {
+  validateDestinationConfig,
+  getDestinationFields,
+  type DestinationType,
+} from "@/lib/types";
 
 export default function GeneratePage() {
-  const [destination, setDestination] = useQueryState("destination");
+  const [destination, setDestination] = useQueryState<DestinationType | null>("destination", {
+    parse: (value) => value as DestinationType,
+  });
   const [config, setConfig] = useQueryState("config", {
     parse: (value: string) => JSON.parse(value),
     serialize: (value: object) => JSON.stringify(value),
@@ -74,27 +41,25 @@ export default function GeneratePage() {
   const [formData, setFormData] = useState<Record<string, string>>({});
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
-  const selectedConfig = destination ? destinationConfigs[destination] : null;
+  const selectedConfig = destination ? getDestinationFields(destination) : null;
 
   const handleConfigSave = () => {
-    if (!selectedConfig) return;
+    if (!destination || !selectedConfig) return;
 
-    try {
-      // Validate all fields
-      const validatedData = selectedConfig.validation.parse(formData);
-      setConfig(validatedData);
+    const result = validateDestinationConfig(destination, formData);
+    
+    if (result.success) {
+      setConfig(result.data);
       setFormErrors({});
       setIsDrawerOpen(false);
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        const errors: Record<string, string> = {};
-        error.errors.forEach((err) => {
-          if (err.path) {
-            errors[err.path[0]] = err.message;
-          }
-        });
-        setFormErrors(errors);
-      }
+    } else {
+      const errors: Record<string, string> = {};
+      result.error.errors.forEach((err) => {
+        if (err.path) {
+          errors[err.path[0]] = err.message;
+        }
+      });
+      setFormErrors(errors);
     }
   };
 

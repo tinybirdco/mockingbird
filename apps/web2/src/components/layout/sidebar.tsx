@@ -3,7 +3,6 @@
 import { Database, Play } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { type Step } from "@/lib/navigation";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useQueryState } from "nuqs";
 

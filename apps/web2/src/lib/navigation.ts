@@ -8,7 +8,7 @@ export interface StepState {
   currentStep: Step;
   destination: string | null;
   config: Record<string, string> | null;
-  schema: Record<string, any> | null;
+  schema: Record<string, z.ZodTypeAny> | null;
 }
 
 // Zod schemas for config validation
@@ -43,7 +43,7 @@ const _awsSNSTypeCheck: ZodAWSSNSConfig = {} as AWSSNSConfig;
 export function validateStepState(
   destination: string | null,
   config: Record<string, string> | null,
-  schema: Record<string, any> | null
+  schema: Record<string, z.ZodTypeAny> | null
 ): StepState {
   console.log('Validating state:', { destination, config, schema });
   

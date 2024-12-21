@@ -23,7 +23,7 @@ export const awsSNSConfigSchema = z.object({
 
 export const ablyConfigSchema = z.object({
   apiKey: z.string().min(1, "API Key is required"),
-  channelName: z.string().min(1, "Channel Name is required"),
+  channelId: z.string().min(1, "Channel ID is required"),
   eventName: z.string().min(1, "Event Name is required"),
 });
 
@@ -38,7 +38,7 @@ interface ConfigField {
 interface DestinationFields {
   name: string;
   fields: ConfigField[];
-  schema: z.ZodObject<any>;
+  schema: z.ZodObject<z.ZodRawShape>;
 }
 
 export const destinationFields: Record<DestinationType, DestinationFields> = {
@@ -93,13 +93,8 @@ export const destinationFields: Record<DestinationType, DestinationFields> = {
         required: true,
       },
       {
-        id: "channelName",
+        id: "channelId",
         label: "Channel Name",
-        required: true,
-      },
-      {
-        id: "eventName",
-        label: "Event Name",
         required: true,
       },
     ],
@@ -113,7 +108,10 @@ export function validateDestinationConfig(
   config: unknown
 ): z.SafeParseReturnType<unknown, DestinationConfig> {
   const schema = destinationFields[destination].schema;
-  return schema.safeParse(config) as z.SafeParseReturnType<unknown, DestinationConfig>;
+  return schema.safeParse(config) as z.SafeParseReturnType<
+    unknown,
+    DestinationConfig
+  >;
 }
 
 export function getDestinationFields(destination: DestinationType) {

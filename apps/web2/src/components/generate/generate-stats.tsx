@@ -11,7 +11,7 @@ interface Stats {
 }
 
 export function GenerateStats() {
-  const [stats, setStats] = useState<Stats>({
+  const [stats] = useState<Stats>({
     rowsSent: 0,
     rowsPerSecond: 0,
     timeElapsed: 0,

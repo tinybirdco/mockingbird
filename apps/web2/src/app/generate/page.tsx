@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { GenerateStats } from "@/components/generate/generate-stats";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -31,6 +31,14 @@ import {
 import JSONCrush from "jsoncrush";
 
 export default function GeneratePage() {
+  return (
+    <Suspense>
+      <GeneratePageContent />
+    </Suspense>
+  );
+}
+
+function GeneratePageContent() {
   const [destination, setDestination] = useQueryState<DestinationType | null>(
     "destination",
     {

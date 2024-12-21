@@ -4,7 +4,6 @@ import { Database, Play } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { type Step } from "@/lib/navigation";
 import { useRouter } from "next/navigation";
-import { useQueryState } from "nuqs";
 
 interface SidebarProps {
   currentStep: Step | null;
@@ -25,8 +24,6 @@ const steps = [
 
 export function Sidebar({ currentStep }: SidebarProps) {
   const router = useRouter();
-  const [schema] = useQueryState("schema");
-  const [destination] = useQueryState("destination");
 
   const handleStepClick = async (clickedStep: Step) => {
     const searchParams = new URLSearchParams(window.location.search);

@@ -1,6 +1,7 @@
 "use client";
 
-import { Editor } from "@monaco-editor/react";
+import { Editor, type OnMount } from "@monaco-editor/react";
+import type * as Monaco from "monaco-editor";
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -22,7 +23,7 @@ import JSONCrush from "jsoncrush";
 
 export function SchemaEditor() {
   const router = useRouter();
-  const editorRef = useRef(null);
+  const editorRef = useRef<Monaco.editor.IStandaloneCodeEditor | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [selectedTemplate, setSelectedTemplate] = useState<string>("Custom");
   const [schema, setSchema] = useQueryState("schema", {
@@ -54,12 +55,11 @@ export function SchemaEditor() {
     }
     
     if (editorRef.current) {
-      const editor = editorRef.current as any;
-      editor.setValue(templateName === "Custom" ? "{}" : JSON.stringify(presetSchemas[templateName], null, 2));
+      editorRef.current.setValue(templateName === "Custom" ? "{}" : JSON.stringify(presetSchemas[templateName], null, 2));
     }
   };
 
-  const handleEditorDidMount = (editor: any) => {
+  const handleEditorDidMount: OnMount = (editor) => {
     editorRef.current = editor;
     
     // Add change listener to detect when user modifies the schema
@@ -78,8 +78,7 @@ export function SchemaEditor() {
   const handleSave = async () => {
     if (!editorRef.current) return;
 
-    const editor = editorRef.current as any;
-    const value = editor.getValue();
+    const value = editorRef.current.getValue();
 
     try {
       // Validate JSON
@@ -91,7 +90,11 @@ export function SchemaEditor() {
       const searchParams = new URLSearchParams(window.location.search);
       router.push(`/generate?${searchParams.toString()}`);
     } catch (e) {
-      setError("Invalid JSON schema. Please check your syntax.");
+      if (e instanceof Error) {
+        setError("Invalid JSON schema. Please check your syntax. " + e.message);
+      } else {
+        setError("Invalid JSON schema. Please check your syntax.");
+      }
     }
   };
 

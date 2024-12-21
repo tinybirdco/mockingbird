@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, Suspense, useRef } from "react";
 import { GenerateStats } from "@/components/generate/generate-stats";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -29,6 +29,13 @@ import {
   type DestinationType,
 } from "@/lib/types";
 import JSONCrush from "jsoncrush";
+import { createWorker, startWorker, stopWorker } from "@/lib/workerBuilder";
+import type {
+  TinybirdConfig,
+  AblyConfig,
+  AWSSNSConfig,
+  Schema,
+} from "@tinybirdco/mockingbird/client";
 
 export default function GeneratePage() {
   return (
@@ -46,7 +53,17 @@ function GeneratePageContent() {
     }
   );
   const [config, setConfig] = useQueryState("config", {
-    parse: (value: string) => {
+    parse: (value: string): TinybirdConfig | AblyConfig | AWSSNSConfig => {
+      const uncrushed = JSONCrush.uncrush(decodeURIComponent(value));
+      return JSON.parse(uncrushed);
+    },
+    serialize: (value: object) => {
+      const stringified = JSON.stringify(value);
+      return encodeURIComponent(JSONCrush.crush(stringified));
+    },
+  });
+  const [schema] = useQueryState("schema", {
+    parse: (value: string): Schema => {
       const uncrushed = JSONCrush.uncrush(decodeURIComponent(value));
       return JSON.parse(uncrushed);
     },
@@ -59,6 +76,9 @@ function GeneratePageContent() {
   const [formData, setFormData] = useState<Record<string, string>>({});
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [configSaved, setConfigSaved] = useState(false);
+  const [generatedCount, setGeneratedCount] = useState(0);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const workerRef = useRef<Worker | null>(null);
 
   const selectedConfig = destination ? getDestinationFields(destination) : null;
 
@@ -116,6 +136,49 @@ function GeneratePageContent() {
       });
     }
   };
+
+  const handleGenerate = () => {
+    if (!destination || !config || !schema) return;
+
+    setIsGenerating(true);
+    setGeneratedCount(0);
+
+    const worker = createWorker(
+      destination,
+      config,
+      schema,
+      (event) => {
+        if (typeof event.data === "number") {
+          setGeneratedCount(event.data);
+        }
+      },
+      (error) => {
+        console.error("Worker error:", error);
+        setIsGenerating(false);
+      }
+    );
+
+    if (worker) {
+      workerRef.current = worker;
+      startWorker(worker);
+    }
+  };
+
+  const handleStop = () => {
+    if (workerRef.current) {
+      stopWorker(workerRef.current);
+      workerRef.current = null;
+      setIsGenerating(false);
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (workerRef.current) {
+        stopWorker(workerRef.current);
+      }
+    };
+  }, []);
 
   return (
     <div className="space-y-8">
@@ -182,6 +245,29 @@ function GeneratePageContent() {
       </div>
 
       <GenerateStats />
+
+      <div className="flex flex-col gap-4 p-4">
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-bold">Generate Data</h1>
+          {isGenerating ? (
+            <div className="flex items-center gap-4">
+              <p className="text-sm text-muted-foreground">
+                Generated {generatedCount} records
+              </p>
+              <Button onClick={handleStop} variant="destructive">
+                Stop
+              </Button>
+            </div>
+          ) : (
+            <Button
+              onClick={handleGenerate}
+              disabled={!destination || !config || !schema}
+            >
+              Start Generating
+            </Button>
+          )}
+        </div>
+      </div>
 
       <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
         <DrawerContent>

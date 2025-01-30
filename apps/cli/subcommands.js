@@ -161,10 +161,11 @@ export const subcommands = [
           );
           process.exit(1);
         }
-
-        return argv.endpoint === "custom"
-          ? process.env.TB_ENDPOINT
-          : argv.endpoint;
+        return {
+          endpoint: argv.endpoint === "custom"
+            ? process.env.TB_ENDPOINT
+            : argv.endpoint,
+        };
       },
     ],
   },

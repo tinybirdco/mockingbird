@@ -50,6 +50,18 @@ Here is an example of sending data to the Tinybird Events API:
   --limit 200
 ```
 
+Or if you use [Tinybird Local](https://www.tinybird.co/docs/cli/local-container):
+
+```sh
+> TB_ENDPOINT=http://localhost mockingbird-cli tinybird
+  --schema schema.json \
+  --datasource "my_data_source" \
+  --token "e.Pdjdbfsbhksd...." \
+  --endpoint "custom" \
+  --eps 50 \
+  --limit 200
+```
+
 ## Contributing
 
 All contributions are welcome! We encourages individuals & commerical vendors to contribute to Mockingbird to build a data generator that works for everyone.

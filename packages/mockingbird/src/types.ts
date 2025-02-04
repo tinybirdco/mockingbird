@@ -1,6 +1,5 @@
 import { extendedFaker } from "./extendedFaker";
 import { presetSchemas } from "./schemas";
-// import _get from "lodash.get";
 
 /**
  * @description Generates all possible paths of an object

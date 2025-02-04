@@ -51,7 +51,7 @@
     "@aws-sdk/client-kinesis": "^3.741.0",
     "@aws-sdk/client-sns": "^3.741.0",
     "@faker-js/faker": "^9.4.0",
-    "@google-cloud/spanner": "^7.18.0",
+    "@google-cloud/spanner": "7.17.1",
     "amqplib": "^0.10.5",
     "cross-fetch": "^4.1.0",
     "google-auth-library": "^9.15.1",

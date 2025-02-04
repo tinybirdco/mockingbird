@@ -1,12 +1,16 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
+  reactStrictMode: false,
   async redirects() {
     return [
       {
         source: '/docs',
-        destination:
-          'https://github.com/tinybirdco/mockingbird/blob/main/README.md',
+        destination: 'https://mockingbird-docs.tinybird.co',
+        permanent: true,
+      },
+      {
+        source: '/docs/:path*',
+        destination: 'https://mockingbird-docs.tinybird.co/:path*',
         permanent: true,
       },
     ]
@@ -19,8 +23,7 @@ const nextConfig = {
       http2: false,
       dns: false,
       child_process: false,
-      fs: false,
-      // async_hooks: false,
+      fs: false
     }
     return config
   },

@@ -1,3 +1,4 @@
+import dynamic from 'next/dynamic'
 import { ChangeEvent, Dispatch } from 'react'
 
 import { PresetSchemaNameWithCustom, TEMPLATE_OPTIONS } from '@/lib/constants'
@@ -6,7 +7,10 @@ import { cx } from '@/lib/utils'
 
 import { ArrowDownIcon } from '../Icons'
 
-import JSONEditor from '@/components/JSONEditor'
+const JSONEditor = dynamic(() => import('@/components/JSONEditor'), {
+  loading: () => <p>Loading...</p>,
+  ssr: false,
+})
 
 type BuildStepProps = {
   state: State
@@ -29,16 +33,11 @@ export default function BuildStep({ state, dispatch }: BuildStepProps) {
     dispatch({
       type: 'SAVE_AND_GENERATE',
       payload: {
-        onMessage: ({ data }) => {
-          if (typeof data === 'number') {
-            dispatch({
-              type: 'SET_SENT',
-              payload: data,
-            });
-          } else if ('error' in data) {
-            console.error(data.error);
-          }
-        },
+        onMessage: ({ data }) =>
+          dispatch({
+            type: 'SET_SENT',
+            payload: data,
+          }),
         onError: console.error,
       },
     })
@@ -81,7 +80,7 @@ export default function BuildStep({ state, dispatch }: BuildStepProps) {
         }
       />
 
-      {/* {state.errors.length > 0 && (
+      {state.errors.length > 0 && (
         <ul className="my-4">
           {state.errors.map(validationError => (
             <li key={validationError} className="text-red-500">
@@ -89,7 +88,7 @@ export default function BuildStep({ state, dispatch }: BuildStepProps) {
             </li>
           ))}
         </ul>
-      )*/}
+      )}
 
       <div className="h-6" />
 

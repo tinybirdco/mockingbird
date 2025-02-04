@@ -34,7 +34,7 @@ function LeftCol({ stepIndex }: LeftColProps) {
 
         <div className="flex items-center gap-2 text-tb-text1">
           <a
-            href="https://github.com/tinybirdco/mockingbird/blob/main/README.md"
+            href="https://mockingbird.tinybird.co/docs"
             rel="noopener noreferrer"
             target="_blank"
             className="flex text-sm cursor-pointer hover:text-tb-primary"

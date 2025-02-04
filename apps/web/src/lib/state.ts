@@ -1,3 +1,4 @@
+import _isEqual from 'lodash.isequal'
 import router from 'next/router'
 import { ParsedUrlQuery } from 'querystring'
 import { Content, JSONContent, TextContent } from 'vanilla-jsoneditor'
@@ -7,7 +8,7 @@ import {
   presetSchemas,
   Schema,
   validateSchema,
-} from '@tinybirdco/mockingbird/client'
+} from '@tinybirdco/mockingbird'
 
 import {
   MockingbirdConfig,
@@ -20,7 +21,6 @@ import {
 } from './constants'
 import { compressJSON, decompressJSON } from './helpers'
 import { createWorker, startWorker, stopWorker } from './workerBuilder'
-import { deepEqual } from './utils'
 
 export type State = {
   step: number
@@ -69,14 +69,14 @@ export type Action =
   | {
       type: 'SAVE_AND_GENERATE'
       payload: {
-        onMessage: (message: MessageEvent<number | { error: string }>) => void
+        onMessage: (message: MessageEvent<number>) => void
         onError: (error: ErrorEvent) => void
       }
     }
   | {
       type: 'START_GENERATION'
       payload: {
-        onMessage: (message: MessageEvent<number | { error: string }>) => void
+        onMessage: (message: MessageEvent<number>) => void
         onError: (error: ErrorEvent) => void
       }
     }
@@ -176,7 +176,7 @@ export function reducer(state: State, action: Action): State {
             ? (action.payload as JSONContent).json
             : JSON.parse((action.payload as TextContent).text)
 
-          if (!deepEqual(parsedContent, presetSchemas[state.template]))
+          if (!_isEqual(parsedContent, presetSchemas[state.template]))
             template = 'Custom'
         } catch (e) {
           console.error(e)
@@ -384,34 +384,24 @@ const parseSchema = (
   let schema: Schema = {}
 
   try {
-    // console.log('Parsing schema content...')
     schema = (
       isJSONContent(content)
         ? (content as JSONContent).json
         : JSON.parse((content as TextContent).text)
     ) as Schema
-    // console.log('Parsed schema:', schema)
-
     const validation = validateSchema(schema!)
     errors = validation.errors
-    // console.log('Schema validation:', { valid: validation.valid, errors })
 
     if (schema && validation.valid) {
-      try {
-        // console.log('Generating sample row...')
-        const generator = new LogGenerator({
+      sampleCode = JSON.stringify(
+        new LogGenerator({
           schema,
           eps: 1,
           limit: -1,
-        })
-        const sampleRow = generator.generateRow()
-        // console.log('Generated sample row:', sampleRow)
-        sampleCode = JSON.stringify(sampleRow, null, 4)
-      } catch (genError) {
-        console.error('Error generating sample:', genError)
-        errors.push(`Error generating sample: ${genError}`)
-        sampleCode = 'Error generating sample data'
-      }
+        }).generateRow(),
+        null,
+        4,
+      )
 
       if (
         template !== 'Custom' &&
@@ -429,9 +419,9 @@ const parseSchema = (
       router.push(`?${urlParams}`, undefined, { scroll: false })
     }
   } catch (e) {
-    console.error('Error parsing schema:', e)
+    console.error(e)
     errors = [(e as Error).toString()]
-    sampleCode = 'Error parsing schema'
+    sampleCode = 'Save to start generating'
   }
 
   return {

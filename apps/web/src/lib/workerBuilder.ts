@@ -3,7 +3,7 @@ import { MockingbirdGeneratorName, MockingbirdConfig } from './constants'
 export function createWorker(
   generator: MockingbirdGeneratorName,
   config: MockingbirdConfig,
-  onMessage?: (message: MessageEvent<number | { error: string }>) => void,
+  onMessage?: (message: MessageEvent<number>) => void,
   onError?: (e: ErrorEvent) => void
 ) {
   if (!window.Worker) return null
@@ -12,16 +12,7 @@ export function createWorker(
     type: 'module',
   })
 
-  if (onMessage) {
-    worker.onmessage = (event) => {
-      if (typeof event.data === 'object' && 'error' in event.data) {
-        console.error('Worker error:', event.data.error)
-        if (onError) onError(new ErrorEvent('error', { error: new Error(event.data.error) }))
-      } else {
-        onMessage(event)
-      }
-    }
-  }
+  if (onMessage) worker.onmessage = onMessage
   if (onError) worker.onerror = onError
 
   worker.postMessage({

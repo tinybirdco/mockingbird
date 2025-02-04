@@ -1,8 +1,13 @@
-import { KinesisClient, PutRecordsCommand } from "@aws-sdk/client-kinesis";
+import {
+  KinesisClient,
+  PutRecordsCommand,
+  PutRecordsCommandInput,
+  PutRecordsRequestEntry,
+} from "@aws-sdk/client-kinesis";
 import { z } from "zod";
 
 import { Row } from "../types";
-import BaseGenerator, { baseConfigSchema } from "./BaseGenerator";
+import { BaseGenerator, baseConfigSchema } from "./BaseGenerator";
 
 const awsKinesisConfigSchema = baseConfigSchema.merge(
   z.object({
@@ -17,7 +22,7 @@ const awsKinesisConfigSchema = baseConfigSchema.merge(
 
 export type AWSKinesisConfig = z.infer<typeof awsKinesisConfigSchema>;
 
-export default class AWSKinesisGenerator extends BaseGenerator<AWSKinesisConfig> {
+export class AWSKinesisGenerator extends BaseGenerator<AWSKinesisConfig> {
   readonly client: KinesisClient;
 
   constructor(config: AWSKinesisConfig) {
@@ -34,14 +39,15 @@ export default class AWSKinesisGenerator extends BaseGenerator<AWSKinesisConfig>
   }
 
   async sendData(rows: Row[]): Promise<void> {
-    const records = rows.map((row) => ({
-      Data: Buffer.from(JSON.stringify(row)),
-      PartitionKey: this.config.partitionKey || Math.random().toString(36).substring(2, 15),
+    const records: PutRecordsRequestEntry[] = rows.map((row) => ({
+      Data: new Uint8Array(Buffer.from(JSON.stringify(row))),
+      PartitionKey:
+        this.config.partitionKey || Math.random().toString(36).substring(2, 15),
     }));
     const command = new PutRecordsCommand({
       StreamName: this.config.streamName,
       Records: records,
-    });
+    } as PutRecordsCommandInput);
 
     try {
       const response = await this.client.send(command);

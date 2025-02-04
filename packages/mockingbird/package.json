@@ -1,17 +1,25 @@
 {
   "name": "@tinybirdco/mockingbird",
   "description": "Mockingbird",
-  "version": "1.5.0",
+  "version": "2.0.0",
   "type": "module",
-  "main": "./dist/index.js",
-  "module": "./dist/index.js",
+  "main": "./dist/client/index.es.js",
+  "module": "./dist/client/index.es.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "types": "./dist/client/client.d.ts",
+      "import": "./dist/client/index.es.js"
     },
-    "./dist/Schema.json": "./dist/Schema.json"
+    "./client": {
+      "types": "./dist/client/client.d.ts",
+      "import": "./dist/client/index.es.js"
+    },
+    "./server": {
+      "types": "./dist/server/server.d.ts",
+      "require": "./dist/server/index.es.js",
+      "import": "./dist/server/index.es.js"
+    }
   },
   "files": [
     "dist/**"
@@ -33,30 +41,32 @@
     "url": "https://github.com/tinybirdco/mockingbird/packages/mockingbird"
   },
   "scripts": {
-    "build": "tsup",
-    "dev": "npm run build --watch",
+    "build:client": "tsc --project tsconfig.client.json && vite build --config vite.config.client.js",
+    "build:server": "tsc --project tsconfig.server.json && vite build --config vite.config.server.js",
+    "build": "npm run build:client && npm run build:server",
+    "dev": "vite build --watch",
     "clean": "rm -rf dist && rm -rf node_modules && rm -rf .turbo"
   },
   "dependencies": {
-    "@aws-sdk/client-kinesis": "^3.699.0",
-    "@aws-sdk/client-sns": "^3.699.0",
-    "@faker-js/faker": "^8.4.1",
-    "@google-cloud/spanner": "^7.16.0",
+    "@aws-sdk/client-kinesis": "^3.741.0",
+    "@aws-sdk/client-sns": "^3.741.0",
+    "@faker-js/faker": "^9.4.0",
+    "@google-cloud/spanner": "7.17.1",
     "amqplib": "^0.10.5",
-    "cross-fetch": "^4.0.0",
-    "google-auth-library": "^9.15.0",
+    "cross-fetch": "^4.1.0",
+    "google-auth-library": "^9.15.1",
     "ts-json-schema-generator": "^2.3.0",
-    "ts-morph": "^24.0.0",
-    "zod": "^3.23.8",
-    "lodash.get": "^4.4.2"
+    "ts-morph": "^25.0.0",
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "@types/amqplib": "^0.10.6",
-    "@types/lodash.get": "^4.4.7",
-    "tsup": "^8.3.5",
-    "typescript": "^5.7.2"
+    "rollup-plugin-visualizer": "^5.14.0",
+    "typescript": "^5.7.3",
+    "vite": "^6.0.11"
   },
   "engines": {
-    "node": ">=18"
-  }
+    "node": ">=22"
+  },
+  "packageManager": "pnpm@9.15.0"
 }

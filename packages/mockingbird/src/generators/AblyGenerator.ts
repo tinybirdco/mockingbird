@@ -2,7 +2,7 @@ import fetch from "cross-fetch";
 import { z } from "zod";
 
 import { Row } from "../types";
-import BaseGenerator, { baseConfigSchema } from "./BaseGenerator";
+import { BaseGenerator, baseConfigSchema } from "./BaseGenerator";
 
 const ablyConfigSchema = baseConfigSchema.merge(
   z.object({
@@ -13,7 +13,7 @@ const ablyConfigSchema = baseConfigSchema.merge(
 
 export type AblyConfig = z.infer<typeof ablyConfigSchema>;
 
-export default class AblyGenerator extends BaseGenerator<AblyConfig> {
+export class AblyGenerator extends BaseGenerator<AblyConfig> {
   readonly token: string;
 
   constructor(config: AblyConfig) {

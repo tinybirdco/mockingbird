@@ -1,6 +1,5 @@
-import extendedFaker from "./extendedFaker";
+import { extendedFaker } from "./extendedFaker";
 import { presetSchemas } from "./schemas";
-import _get from "lodash.get";
 
 /**
  * @description Generates all possible paths of an object
@@ -32,7 +31,7 @@ type ObjectAtPath<
  */
 export type FakerFunctions = Omit<
   typeof extendedFaker,
-  "helpers" | "locales" | "definitions"
+  "locales" | "definitions"
 >;
 
 /**
@@ -79,13 +78,13 @@ export type UnparameterizedSchemaKey = Exclude<
 export type SchemaValue<K extends SchemaKey = SchemaKey> =
   K extends UnparameterizedSchemaKey
     ? {
-        type: UnparameterizedSchemaKey;
+        type: K;
         count?: number;
       }
     : {
         type: K;
         count?: number;
-        params?: FakerFunctionParams<ObjectAtPath<FakerFunctions, K>>;
+        params?: any;
       };
 
 /**
@@ -111,14 +110,16 @@ export function validateSchema(schema: Schema) {
       errors.push(`${type}: Count must be greater than 0`);
 
     if ("params" in schemaItem) {
-      // const generator = getNestedValue(extendedFaker, type);
-      const generator = _get(extendedFaker, type);
+      const generator = getNestedValue(extendedFaker, type);
+      // console.log(`Validating ${type}:`, {
+      //   params: schemaItem.params,
+      //   generator: generator?.toString(),
+      // });
 
       try {
-        // @ts-ignore
-        // @ts-nocheck
-        generator(...schemaItem.params);
+        generator(schemaItem.params);
       } catch (e) {
+        console.error(`Error validating ${type}:`, e);
         errors.push(
           `${type}: ${
             e && typeof e === "object" && "toString" in e

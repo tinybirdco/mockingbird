@@ -1,4 +1,4 @@
-import { presetSchemas } from "@tinybirdco/mockingbird";
+import { presetSchemas } from "@tinybirdco/mockingbird/server";
 import fs from "fs";
 
 export const presetSchemaNames = Object.keys(presetSchemas);

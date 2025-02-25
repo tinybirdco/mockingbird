@@ -5,12 +5,8 @@ const simpleExample: Schema = {
     type: "number.int",
   },
   some_values: {
-    type: "mockingbird.pick",
-    params: [
-      {
-        values: [123, 456],
-      },
-    ],
+    type: "helpers.arrayElement",
+    params: [123, 456],
   },
 };
 

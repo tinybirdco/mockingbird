@@ -1,7 +1,7 @@
 import amqp from "amqplib";
 import { z } from "zod";
 import { Row } from "../types";
-import BaseGenerator, { baseConfigSchema } from "./BaseGenerator";
+import { BaseGenerator, baseConfigSchema } from "./BaseGenerator";
 
 const rabbitmqConfigSchema = baseConfigSchema.merge(
   z.object({
@@ -47,7 +47,7 @@ const rabbitmqConfigSchema = baseConfigSchema.merge(
 
 export type RabbitMQConfig = z.infer<typeof rabbitmqConfigSchema>;
 
-export default class RabbitMQGenerator extends BaseGenerator<RabbitMQConfig> {
+export class RabbitMQGenerator extends BaseGenerator<RabbitMQConfig> {
   connection: amqp.Connection | undefined;
 
   constructor(config: RabbitMQConfig) {

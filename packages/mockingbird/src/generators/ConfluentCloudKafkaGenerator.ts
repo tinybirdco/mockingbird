@@ -2,7 +2,7 @@ import fetch from "cross-fetch";
 import { z } from "zod";
 
 import { Row } from "../types";
-import BaseGenerator, { baseConfigSchema } from "./BaseGenerator";
+import { BaseGenerator, baseConfigSchema } from "./BaseGenerator";
 
 const confluentCloudKafkaConfigSchema = baseConfigSchema.merge(
   z.object({
@@ -31,7 +31,7 @@ export type ConfluentCloudKafkaConfig = z.infer<
   typeof confluentCloudKafkaConfigSchema
 >;
 
-export default class ConfluentCloudKafkaGenerator extends BaseGenerator<ConfluentCloudKafkaConfig> {
+export class ConfluentCloudKafkaGenerator extends BaseGenerator<ConfluentCloudKafkaConfig> {
   readonly token: string;
 
   constructor(config: ConfluentCloudKafkaConfig) {

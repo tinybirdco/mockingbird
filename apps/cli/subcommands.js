@@ -3,8 +3,11 @@ import {
   AWSSNSGenerator,
   LogGenerator,
   TinybirdGenerator,
-  NodeGenerators,
-} from "@tinybirdco/mockingbird";
+  GoogleSpannerGenerator,
+  AWSKinesisGenerator,
+  RabbitMQGenerator,
+  ConfluentCloudKafkaGenerator,
+} from "@tinybirdco/mockingbird/server";
 
 export const subcommands = [
   {
@@ -61,7 +64,7 @@ export const subcommands = [
   },
   {
     name: "confluent-cloud-kafka",
-    generator: NodeGenerators.ConfluentCloudKafkaGenerator,
+    generator: ConfluentCloudKafkaGenerator,
     options: {
       restEndpoint: {
         describe: "Confluent Cloud Kafka REST endpoint",
@@ -101,7 +104,7 @@ export const subcommands = [
   },
   {
     name: "rabbitmq",
-    generator: NodeGenerators.RabbitMQGenerator,
+    generator: RabbitMQGenerator,
     options: {
       endpoint: {
         describe: "RabbitMQ endpoint",
@@ -171,7 +174,7 @@ export const subcommands = [
   },
   {
     name: "aws-kinesis",
-    generator: NodeGenerators.AWSKinesisGenerator,
+    generator: AWSKinesisGenerator,
     options: {
       region: {
         describe: "AWS Region",
@@ -206,7 +209,7 @@ export const subcommands = [
   },
   {
     name: "google-spanner",
-    generator: NodeGenerators.GoogleSpannerGenerator,
+    generator: GoogleSpannerGenerator,
     options: {
       projectId: {
         describe: "GCP Project ID",

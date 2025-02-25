@@ -11,29 +11,21 @@ const webAnalytics: Schema = {
     type: "string.uuid",
   },
   page_url: {
-    type: "mockingbird.pick",
+    type: "helpers.arrayElement",
     params: [
-      {
-        values: [
-          "https://example.com/home",
-          "https://example.com/products",
-          "https://example.com/about",
-          "https://example.com/contact",
-        ],
-      },
+      "https://example.com/home",
+      "https://example.com/products",
+      "https://example.com/about",
+      "https://example.com/contact",
     ],
   },
   referrer: {
-    type: "mockingbird.pick",
+    type: "helpers.arrayElement",
     params: [
-      {
-        values: [
-          "https://google.com",
-          "https://facebook.com",
-          "https://twitter.com",
-          "direct",
-        ],
-      },
+      "https://google.com",
+      "https://facebook.com",
+      "https://twitter.com",
+      "direct",
     ],
   },
 };

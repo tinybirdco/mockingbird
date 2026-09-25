@@ -59,6 +59,7 @@ const mockingbirdModule = {
       .toISOString()
       .slice(0, 19),
   timestampNow: () => new Date().toISOString(),
+  timestampNowUnix: () => Math.floor(Date.now() / 1000),
   pickType: (
     params: { type: keyof typeof faker.datatype; length: number },
     opts: { state: Record<string, unknown> } | undefined

@@ -7,6 +7,7 @@ export { default as logAnalytics } from "./logAnalytics";
 export { default as flappybird } from "./flappybird";
 export { default as sportsbetting } from "./sportsbetting";
 export { default as flightBookings } from "./flightBookings";
+export { default as paymentFraud } from "./paymentFraud";
 
 import simpleExample from "./simpleExample";
 import ecommerceTransactions from "./ecommerceTransactions";
@@ -17,6 +18,7 @@ import logAnalytics from "./logAnalytics";
 import flappybird from "./flappybird";
 import sportsbetting from "./sportsbetting";
 import flightBookings from "./flightBookings";
+import paymentFraud from "./paymentFraud";
 
 import { Schema } from "../types";
 
@@ -30,6 +32,7 @@ export const presetSchemas: Record<string, Schema> = {
   Flappybird: flappybird,
   Sportsbetting: sportsbetting,
   "Flight Bookings": flightBookings,
+  "Payment Fraud Analytics": paymentFraud,
 };
 
 export const PRESET_SCHEMA_NAMES = Object.keys(presetSchemas);

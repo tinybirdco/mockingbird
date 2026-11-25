@@ -178,6 +178,26 @@ None
 }
 ```
 
+### timestampNowUnix
+
+Returns the current time as a number of milliseconds since the Unix epoch, equivalent to `new Date().getTime()`.
+
+**Parameters**
+
+None
+
+**Returns**
+
+`1680802317342`
+
+**Example usage**
+
+```json
+"my_timestamp": {
+    "type": "mockingbird.timestampNowUnix"
+}
+```
+
 ### browserName
 
 A random browser name, from one of: "Chrome", "Firefox", "IE", "Opera".

@@ -5,6 +5,10 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**", ".next/**"]
     },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
     "@tinybirdco/mockingbird#build": {
       "dependsOn": [],
       "outputs": ["dist/**"]

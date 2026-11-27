@@ -142,15 +142,15 @@ The Web UI is a Next.js application written in TypeScript.
 
 #### Running the local dev server
 
-To run the Mockingbird UI locally, first install Node.js (developed using v18).
+To run the Mockingbird UI locally, first install Node.js (developed using v18) and pnpm 9.4.0.
 
 Then, use these commands:
 
 ```bash
 git clone https://github.com/tinybirdco/mockingbird.git
 cd mockingbird
-npm install
-npm run dev
+pnpm install
+pnpm dev
 ```
 
 This will serve both the Web UI & the documentation site locally. By default, the UI is available on `http://localhost:3001` and the docs are on `http://localhost:3000`.
